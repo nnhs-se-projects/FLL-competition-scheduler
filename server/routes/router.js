@@ -36,7 +36,7 @@ route.get("/createEntry", (req, res) => {
 route.post("/createEntry", async (req, res) => {
   const entry = new Entry({
     date: req.body.date,
-    email: "gschmit@naperville203.org",
+    email: req.session.email,
     habit: req.body.habit,
     content: req.body.content,
   });
@@ -50,5 +50,8 @@ route.get("/editEntry/:id", async (req, res) => {
   console.log(entry);
   res.send(entry);
 });
+
+// delegate all authentication to the auth.js router
+route.use("/auth", require("./auth"));
 
 module.exports = route;
