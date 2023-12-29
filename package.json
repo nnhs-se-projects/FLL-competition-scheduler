@@ -1,7 +1,7 @@
 {
-  "name": "journal",
+  "name": "FLL Competition Scheduler",
   "version": "1.0.0",
-  "description": "application to record examples of applying the various Habits of Mind",
+  "description": "application create schedules for FLL competitions based on a variety of constraints and criteria",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
