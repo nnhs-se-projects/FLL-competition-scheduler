@@ -4,19 +4,19 @@
 // length of judging sessions (should be configurable, start with 15 minutes)
 // time between judging sessions (should be configurable; start with 10 minutes)
 
-let teamsShow = [];
+let teamsN = [];
 
 let judgingSeshs = 2;
 let numTeams = 32;
 for (let i = 0; i < judgingSeshs; i++) {
   for (let i = 1; i < numTeams + 1; i++) {
-    let str = "team " + i;
-    teamsShow.push(str);
+    let str = " team" + i;
+    teamsN.push(str);
   }
 }
 
 function getRandomNum() {
-  return Math.floor(Math.random() * teams.length);
+  return Math.floor(Math.random() * teamsN.length);
 }
 
 let judgingRooms = 8;
@@ -25,13 +25,15 @@ for (let i = 0; i < judgingRooms; i++) {
   rooms.push([]);
 }
 
-while (teamsShow.length > 0) {
+while (teamsN.length > 0) {
   for (let i = 0; i < rooms.length; i++) {
-    let randomNum = getRandom();
-    let team = teamsShow[randomNum];
+    let randomNum = getRandomNum();
+    let team = teamsN[randomNum];
     rooms[i].push(team);
-    teamsShow.splice(randomNum, 1);
+    teamsN.splice(randomNum, 1);
   }
 }
 
-console.log(rooms);
+for (let i = 0; i < rooms.length; i++) {
+  console.log("room " + (i + 1) + ": " + rooms[i]);
+}
