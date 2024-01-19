@@ -52,7 +52,7 @@ for (let i = 0; i < length; i++) {
       team != table3[table3.length - 1]
     ) {
       table4.push(team);
-      count++;
+      count = 1;
     } else {
       i--;
       continue;
