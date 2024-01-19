@@ -25,13 +25,24 @@ for (let i = 0; i < judgingRooms; i++) {
   rooms.push([]);
 }
 
+let timeSlot = 0;
 while (teamsN.length > 0) {
   for (let i = 0; i < rooms.length; i++) {
     let randomNum = getRandomNum();
     let team = teamsN[randomNum];
+    for (let j = 0; j < i; j++) {
+      {
+        if (rooms[j][timeSlot] === team) {
+          randomNum = getRandomNum();
+          team = teamsN[randomNum];
+          j = 0;
+        }
+      }
+    }
     rooms[i].push(team);
     teamsN.splice(randomNum, 1);
   }
+  timeSlot++;
 }
 
 for (let i = 0; i < rooms.length; i++) {
