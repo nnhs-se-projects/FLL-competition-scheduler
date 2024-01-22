@@ -5,11 +5,12 @@ let table2 = [];
 let table3 = [];
 let table4 = [];
 
-for (let i = 0; i < 3; i++) {
-  for (let i = 1; i < 33; i++) {
-    let str = "Team " + i;
-    teams.push(str);
-  }
+for (let i = 1; i < 33; i++) {
+  let arr = [];
+  arr.push({ indexLastCalled: -1 });
+  arr.push("Team " + i);
+  arr.push("Team " + i);
+  arr.push("Team " + i);
 }
 
 let length = teams.length;
@@ -24,12 +25,27 @@ for (let i = 0; i < length; i++) {
   let team = getRandomTeam();
   let index = teams.indexOf(team);
   if (count === 1) {
-    table1.push(team);
-    count++;
+    if (
+      table1.length - team.indexLastCalled > 2 ||
+      team.indexLastCalled === -1
+    ) {
+      table1.push(team.pop());
+      teams[index].indexLastCalled = table1.length - 1;
+      count++;
+    }
   } else if (count === 2) {
     if (team != table1[table1.length - 1]) {
-      table2.push(team);
-      count++;
+      if (
+        table2.length - team.indexLastCalled > 2 ||
+        team.indexLastCalled === -1
+      ) {
+        table2.push(team.pop());
+        teams[index].indexLastCalled = table1.length - 1;
+        count++;
+      } else {
+        i--;
+        continue;
+      }
     } else {
       i--;
       continue;
@@ -39,8 +55,17 @@ for (let i = 0; i < length; i++) {
       team != table1[table1.length - 1] &&
       team != table2[table2.length - 1]
     ) {
-      table3.push(team);
-      count++;
+      if (
+        table3.length - team.indexLastCalled > 2 ||
+        team.indexLastCalled === -1
+      ) {
+        table3.push(team.pop());
+        teams[index].indexLastCalled = table1.length - 1;
+        count++;
+      } else {
+        i--;
+        continue;
+      }
     } else {
       i--;
       continue;
@@ -51,14 +76,25 @@ for (let i = 0; i < length; i++) {
       team != table2[table2.length - 1] &&
       team != table3[table3.length - 1]
     ) {
-      table4.push(team);
-      count = 1;
+      if (
+        table4.length - team.indexLastCalled > 2 ||
+        team.indexLastCalled === -1
+      ) {
+        table4.push(team.pop());
+        teams[index].indexLastCalled = table1.length - 1;
+        count = 1;
+      } else {
+        i--;
+        continue;
+      }
     } else {
       i--;
       continue;
     }
   }
-  teams.splice(index, 1);
+  if (team.length === 1) {
+    teams.splice(index, 1);
+  }
 }
 
 console.log(teams);
