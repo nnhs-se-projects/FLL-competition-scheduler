@@ -23,6 +23,7 @@ let judgingRoomsRobot = 4;
 let judgingRoomsProj = 4;
 let robotRooms = [];
 let projectRooms = [];
+
 for (let i = 0; i < judgingRoomsRobot; i++) {
   robotRooms.push([]);
 }
@@ -30,12 +31,15 @@ for (let i = 0; i < judgingRoomsProj; i++) {
   projectRooms.push([]);
 }
 
+// let judgingIndex = [];
+
 let timeSlot = 0;
 while (teamsR.length > 0 || teamsP.length > 0) {
   for (let i = 0; i < robotRooms.length; i++) {
     let randomNum = getRandomNum();
     let team = teamsR[randomNum];
     robotRooms[i].push(team);
+    // judgingIndex(i + " " + team);
     teamsR.splice(randomNum, 1);
   }
   for (let i = 0; i < projectRooms.length; i++) {
@@ -49,6 +53,9 @@ while (teamsR.length > 0 || teamsP.length > 0) {
         j = 0;
       }
     }
+    // let index = robotRooms.indexOf(team);
+    // if(Math.abs(index - i) )
+
     projectRooms[i].push(team);
     teamsP.splice(randomNum, 1);
   }
