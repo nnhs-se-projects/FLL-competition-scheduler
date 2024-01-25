@@ -1,0 +1,94 @@
+// number of teams (must be configurable)
+// number of judging rooms (should be configurable; start with 8)
+// number of judging sessions per team (should be configurable from 1 to 3; start with 2)
+// length of judging sessions (should be configurable, start with 15 minutes)
+// time between judging sessions (should be configurable; start with 10 minutes)
+
+let teamsR = [];
+let teamsP = [];
+
+let judgingSeshs = 2;
+let numTeams = 32;
+for (let i = 1; i < numTeams + 1; i++) {
+  let str = " team" + i;
+  teamsR.push(str);
+  teamsP.push(str);
+}
+
+function getRandomNum() {
+  return Math.floor(Math.random() * teamsR.length); // doesnt matter if its teamsR or teamsP because they are the same length
+}
+
+let judgingRoomsRobot = 4;
+let judgingRoomsProj = 4;
+let robotRooms = [];
+let projectRooms = [];
+
+for (let i = 0; i < judgingRoomsRobot; i++) {
+  robotRooms.push([]);
+}
+for (let i = 0; i < judgingRoomsProj; i++) {
+  projectRooms.push([]);
+}
+
+// let judgingIndex = [];
+
+let timeSlot = 0;
+while (teamsR.length > 0 || teamsP.length > 0) {
+  for (let i = 0; i < robotRooms.length; i++) {
+    let randomNum = getRandomNum();
+    let team = teamsR[randomNum];
+    robotRooms[i].push(team);
+    // judgingIndex(i + " " + team);
+    teamsR.splice(randomNum, 1);
+  }
+  for (let i = 0; i < projectRooms.length; i++) {
+    let randomNum = getRandomNum();
+    let team = teamsP[randomNum];
+    for (let j = 0; j < robotRooms.length; j++) {
+      // check if team is in a different judging room at the same time
+      while (robotRooms[j][timeSlot] === team) {
+        randomNum = getRandomNum();
+        team = teamsP[randomNum];
+        j = 0;
+      }
+    }
+    // let index = robotRooms.indexOf(team);
+    // if(Math.abs(index - i) )
+
+    projectRooms[i].push(team);
+    teamsP.splice(randomNum, 1);
+  }
+  timeSlot++;
+}
+
+// let timeSlot = 0;
+// while (teamsN.length > 0) {
+//   for (let i = 0; i < rooms.length; i++) {
+//     let randomNum = getRandomNum();
+//     let team = teamsN[randomNum];
+//     for (let check = 0; check < judgingSeshs - 1; check++) {
+//       // check multiple times depending on how many judging sessions a team has
+//       for (let j = 0; j < i; j++) {
+//         // check if team is in a different judging room at the same time
+//         {
+//           if (rooms[j][timeSlot] === team) {
+//             randomNum = getRandomNum();
+//             team = teamsN[randomNum];
+//             j = 0;
+//           }
+//         }
+//       }
+//     }
+//     rooms[i].push(team);
+//     teamsN.splice(randomNum, 1);
+//   }
+//   timeSlot++;
+// }
+
+for (let i = 0; i < robotRooms.length; i++) {
+  console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
+}
+for (let i = 0; i < projectRooms.length; i++) {
+  console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
+}
