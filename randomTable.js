@@ -4,13 +4,12 @@ function randomTable() {
   let table2 = [];
   let table3 = [];
   let table4 = [];
-  for (let j = 0; j < 3; j++) {
+  for (let i = 0; i < 3; i++) {
     for (let i = 1; i < 33; i++) {
       let str = "Team " + i;
       teams.push(str);
     }
   }
-  console.log(teams);
   let length = teams.length;
   function getRandomTeam() {
     let randomTeam = Math.floor(Math.random() * teams.length);
@@ -58,20 +57,13 @@ function randomTable() {
     }
     teams.splice(index, 1);
   }
-  console.log(teams);
-  console.log("table 1: " + table1);
-  console.log("table 2: " + table2);
-  console.log("table 3: " + table3);
-  console.log("table 4: " + table4);
 
   let tables = [table1, table2, table3, table4];
   return tables;
 
-  console.log(teams);
-  console.log("table 1: " + table1);
-  console.log("table 2: " + table2);
-  console.log("table 3: " + table3);
-  console.log("table 4: " + table4);
+  //console.log(teams);
+  //console.log("table 1: " + table1);
+  //console.log("table 2: " + table2);
+  //console.log("table 3: " + table3);
+  //console.log("table 4: " + table4);
 }
-console.log(randomTable());
-export { randomTable };
