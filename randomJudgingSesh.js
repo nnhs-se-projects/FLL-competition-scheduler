@@ -3,10 +3,10 @@
 // number of judging sessions per team (should be configurable from 1 to 3; start with 2)
 // length of judging sessions (should be configurable, start with 15 minutes)
 // time between judging sessions (should be configurable; start with 10 minutes)
+
 function randomJS() {
   let teamsR = [];
   let teamsP = [];
-
   let judgingSeshs = 2;
   let numTeams = 32;
   for (let i = 1; i < numTeams + 1; i++) {
@@ -31,15 +31,12 @@ function randomJS() {
     projectRooms.push([]);
   }
 
-  // let judgingIndex = [];
-
   let timeSlot = 0;
   while (teamsR.length > 0 || teamsP.length > 0) {
     for (let i = 0; i < robotRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsR[randomNum];
       robotRooms[i].push(team);
-      // judgingIndex(i + " " + team);
       teamsR.splice(randomNum, 1);
     }
     for (let i = 0; i < projectRooms.length; i++) {
@@ -53,8 +50,6 @@ function randomJS() {
           j = 0;
         }
       }
-      // let index = robotRooms.indexOf(team);
-      // if(Math.abs(index - i) )
 
       projectRooms[i].push(team);
       teamsP.splice(randomNum, 1);

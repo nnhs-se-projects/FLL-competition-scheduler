@@ -5,10 +5,7 @@ const POPULATION = 10;
 const newPool = [];
 const oldPool = [];
 
-function crossover() {
-  let parentA = randomJS();
-  let parentB = randomJS();
-
+function crossover(x1, x2, parentA, parentB) {
   // determine the three even crossover points
   // needs to be checked
   const length = parentA.length;
