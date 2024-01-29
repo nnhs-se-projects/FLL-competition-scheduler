@@ -67,3 +67,4 @@ function randomTable() {
   //console.log("table 3: " + table3);
   //console.log("table 4: " + table4);
 }
+export { randomTable };
