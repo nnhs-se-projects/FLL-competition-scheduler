@@ -1,3 +1,4 @@
+import { json } from "express";
 import { randomJS } from "./randomJudgingSesh.js";
 
 const POPULATION = 10;
@@ -5,20 +6,67 @@ const POPULATION = 10;
 const newPool = [];
 const oldPool = [];
 
+let judgingRoomNum = 8;
+
+// x1 and x2 are cross over points
 function crossover(x1, x2, parentA, parentB) {
-  // determine the three even crossover points
-  // needs to be checked
   const length = parentA.length;
-  const interval = Math.floor(length / 4);
-  const crossoverPoint1 = interval;
-  const crossoverPoint2 = interval * 2;
-  const crossoverPoint3 = interval * 3;
 
-  // determine the child by crossing Parent A and Parent B
-  // const childA =
-  // const childB  =
+  /// create empty children, array of empty JR arrays
+  let childA = [];
+  for (let i = 0; i < judgingRoomNum; i++) {
+    childA.push([]);
+  }
+  let childB = [];
+  for (let i = 0; i < judgingRoomNum; i++) {
+    childB.push([]);
+  }
 
-  // mutate the child
+
+  // copy the 1st segment of parentA to the childA
+  for (int room = 0; room < parentA.length; room++ ) {
+    for(int i = 0; i < x1; i++) {
+      childA[room].push[parentA[room][i]];
+    }
+  }
+  // copy the 1st segment of parentB to the childB
+  for (int room = 0; room < parentB.length; room++ ) {
+    for(int i = 0; i < x1; i++) {
+      childB[room].push[parentB[room][i]];
+    }
+  }
+
+  // copy the middle section of parentA to child B
+  for (int room = 0; room < parentA.length; room++ ) {
+    for(int i = x1; i < x2; i++) {
+      childB[room].push[parentA[room][i]];
+    }
+  }
+  // copy the middle section of parentB to child A
+  for (int room = 0; room < parentB.length; room++ ) {
+    for(int i = x1; i < x2; i++) {
+      childA[room].push[parentB[room][i]];
+    }
+  }
+
+  // copy the last segment of parentA to childA
+  for (int room = 0; room < parentA.length; room++ ) {
+    for(int i = x2; i < parentA[room].length; i++) {
+      childA[room].push[parentA[room][i]];
+    }
+  }
+  // copy the last segment of parentB to childB
+  for (int room = 0; room < parentB.length; room++ ) {
+    for(int i = x2; i < parentB[room].length; i++) {
+      childB[room].push[parentB[room][i]];
+    }
+  }
+
+  // correct/get rid of duplicates, add teams that got lost in the crossover sections
+  // look at the crossed over section and scan for teams A previously had but B didnt
+  // switch the teams they didn't have in common 
 
   // add the child to the new pool
 }
+
+// after everything, determine criteria for good child and give scores to the children
