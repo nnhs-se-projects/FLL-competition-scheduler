@@ -57,9 +57,10 @@ function randomJS() {
     timeSlot++;
   }
 
-  let rooms = robotRooms + projectRooms;
+  let rooms = robotRooms.concat(projectRooms);
   return rooms;
 }
+module.exports = randomJS;
 
 // for (let i = 0; i < robotRooms.length; i++) {
 //   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
