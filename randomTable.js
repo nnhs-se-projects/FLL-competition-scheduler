@@ -57,14 +57,58 @@ function randomTable() {
     }
     teams.splice(index, 1);
   }
+  function checkDuplicate() {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (teams[i] === teams[j]) {
+          const rand = Math.floor(Math.random() * table1.length);
+          const teamSwap = teams[j];
+          teams[j] = table1[rand];
+          table1[rand] = teamSwap;
+        }
+      }
+    }
+  }
 
   for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {}
-    if (teams[i] === teams[j]) {
-      const rand = Math.floor(Math.random() * table1.length);
-      const teamSwap = teams[i];
-      teams[i] = table1[rand];
-      table1[rand] = teamSwap;
+    checkDuplicate();
+    if (count === 1) {
+      table1.push(teams[0]);
+      count++;
+    } else if (count === 2) {
+      if (teams[1] != table1[table1.length - 1]) {
+        table2.push(teams[1]);
+        count++;
+      } else {
+        checkDuplicate();
+        i--;
+        continue;
+      }
+    } else if (count === 3) {
+      if (
+        teams[2] != table1[table1.length - 1] &&
+        teams[2] != table2[table2.length - 1]
+      ) {
+        table3.push(teams[2]);
+        count++;
+      } else {
+        checkDuplicate();
+        i--;
+        continue;
+      }
+    } else if (count === 4) {
+      if (
+        teams[3] != table1[table1.length - 1] &&
+        teams[3] != table2[table2.length - 1] &&
+        teams[3] != table3[table3.length - 1]
+      ) {
+        table4.push(teams[3]);
+        count++;
+        count = 1;
+      } else {
+        checkDuplicate();
+        continue;
+      }
     }
   }
 
@@ -77,5 +121,4 @@ function randomTable() {
   //console.log("table 3: " + table3);
   //console.log("table 4: " + table4);
 }
-// export { randomTable };
-console.log(randomTable());
+export { randomTable };
