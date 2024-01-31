@@ -49,19 +49,22 @@ function crossOver(x1, x2, parentA, parentB) {
     c2t3.push(parentB[2][i]);
     c2t4.push(parentB[3][i]);
   }
-  console.log("parentA:", parentA);
-  console.log("parentB:", parentB);
-  console.log(
-    "child1 table1:",
-    c1t1,
-    "table 2: ",
-    c1t2,
-    "table 3: ",
-    c1t3,
-    "table4: ",
-    c1t4
-  );
-  console.log("x1: ", x1, "x2: ", x2);
+  // console.log("parentA:", parentA);
+  // console.log("parentB:", parentB);
+  // console.log(
+  //   "child1 table1:",
+  //   c1t1,
+  //   "table 2: ",
+  //   c1t2,
+  //   "table 3: ",
+  //   c1t3,
+  //   "table4: ",
+  //   c1t4
+  // );
+  // console.log("x1: ", x1, "x2: ", x2);
+
+  let child1 = [c1t1, c1t2, c1t3, c1t4];
+  let child2 = [c2t1, c2t2, c2t3, c2t4];
 }
 
 function geneticAlgorithm() {
@@ -72,6 +75,13 @@ function geneticAlgorithm() {
   let x2 = Math.floor(Math.random() * (parentA[0].length / 2) + x1 + 1);
 
   crossOver(x1, x2, parentA, parentB);
+}
+
+function replaceDuplicates(child1, child2) {
+  let duplicates = [];
+  for (let i = 0; i < child1.length; i++) {
+    for (let j = 0; j < child1[i].length; j++) {}
+  }
 }
 
 geneticAlgorithm();
