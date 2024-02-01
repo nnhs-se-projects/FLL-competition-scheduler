@@ -122,7 +122,4 @@ function randomTable() {
   //console.log("table 4: " + table4);
 }
 
-for (let i = 0; i < 10; i++) {
-  console.log(randomTable());
-}
-//export { randomTable };
+export { randomTable };
