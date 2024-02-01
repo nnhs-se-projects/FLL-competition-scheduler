@@ -1,6 +1,5 @@
-// import { json } from "express";
-// import { randomJS } from "./randomJudgingSesh.js";
-const randomJS = require("./randomJudgingSesh.js");
+import { randomJS } from "./randomJudgingSesh.js";
+// const randomJS = require("./randomJudgingSesh.js");
 
 const POPULATION = 10;
 
@@ -80,10 +79,10 @@ function crossover(x1, x2, parentA, parentB) {
 
   let children = childA.concat(childB);
 
+  console.log("Children: " + children);
   return children;
 
   // add the child to the new pool
 }
-module.exports = crossover;
-
+export { crossover };
 // after everything, determine criteria for good child and give scores to the children

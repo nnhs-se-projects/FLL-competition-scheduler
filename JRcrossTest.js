@@ -1,11 +1,14 @@
 // import { json } from "express";
-// import { randomJS } from "./randomJudgingSesh.js";
-// import { crossover } from "./JRcrossover.js";
-const randomJS = require("./randomJudgingSesh.js");
-const crossover = require("./JRcrossover.js");
+import { randomJS } from "./randomJudgingSesh.js";
+import { crossover } from "./JRcrossover.js";
+// const randomJS = require("./randomJudgingSesh.js");
+// const crossover = require("./JRcrossover.js");
 
+console.log("test");
 let parentA = randomJS();
 let parentB = randomJS();
+console.log(parentA);
+console.log(parentB);
 
 function getRandomNum() {
   return Math.floor(Math.random() * parentA.length);
@@ -13,6 +16,8 @@ function getRandomNum() {
 
 let x1 = getRandomNum();
 let x2 = getRandomNum();
+
+console.log(x1, " ", x2);
 
 let children = crossover(x1, x2, parentA, parentB);
 console.log(children);
