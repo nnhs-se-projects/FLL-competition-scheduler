@@ -65,8 +65,7 @@ function crossOver(x1, x2, parentA, parentB) {
 
   let child1 = [c1t1, c1t2, c1t3, c1t4];
   let child2 = [c2t1, c2t2, c2t3, c2t4];
-
-  replaceDuplicates(child1, child2);
+  replaceDuplicates(child1, child2, x1, x2);
 }
 
 function geneticAlgorithm() {
@@ -79,32 +78,27 @@ function geneticAlgorithm() {
   crossOver(x1, x2, parentA, parentB);
 }
 
-function replaceDuplicates(child1, child2) {
+function replaceDuplicates(child1, child2, x1, x2) {
   let duplicates = [];
   for (let t = 1; t < 33; t++) {
     let temp = [];
     for (let i = 0; i < child1.length; i++) {
       for (let j = 0; j < child1[i].length; j++) {
         if (child1[i][j].name === "team" + t) {
-          temp.push(i, j, child1[i][j]);
+          let arr = [i, j, child1[i][j]];
+          temp.push(arr);
         }
       }
     }
-    let run1 = 0;
-    let run2 = 0;
-    let run3 = 0;
-    for (let k = 0; k < temp.length; k++) {
-      if (temp[k].run === 1) {
-        run1++;
-      }
-      if (temp[k].run === 2) {
-        run2++;
-      }
-      if (temp[k].run === 3) {
-        run3++;
+    if (temp.length > 3) {
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i][1] >= x1 && temp[i][1] < x2) {
+          duplicates.push(temp[i]);
+        }
       }
     }
   }
+  console.log(duplicates);
 }
 
 geneticAlgorithm();
