@@ -2,6 +2,7 @@
 // import { randomJS } from "./randomJudgingSesh.js";
 // import { crossover } from "./JRcrossover.js";
 const randomJS = require("./randomJudgingSesh.js");
+const crossover = require("./JRcrossover.js");
 
 let parentA = randomJS();
 let parentB = randomJS();
@@ -14,7 +15,7 @@ let x1 = getRandomNum();
 let x2 = getRandomNum();
 
 let children = crossover(x1, x2, parentA, parentB);
-console.log(children);
+//console.log(children);
 
 console.log("Child A: ");
 for (let i = 0; i < children.length / 2; i++) {
