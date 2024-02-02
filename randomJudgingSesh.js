@@ -42,7 +42,9 @@ function randomJS() {
     for (let i = 0; i < projectRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsP[randomNum];
-      for (let j = 0; j < robotRooms.length; j++) {
+      for (let j = 0; j < robotRooms.length - 1; j++) {
+        //  doesn't check the last room because it would be in an infinite loops
+
         // check if team is in a different judging room at the same time
         while (robotRooms[j][timeSlot] === team) {
           randomNum = getRandomNum();
@@ -51,6 +53,7 @@ function randomJS() {
         }
       }
 
+      console.log("push");
       projectRooms[i].push(team);
       teamsP.splice(randomNum, 1);
     }

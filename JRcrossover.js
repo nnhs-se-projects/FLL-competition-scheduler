@@ -28,6 +28,7 @@ function crossover(x1, x2, parentA, parentB) {
       childA[room].push[parentA[room][i]];
     }
   }
+  console.log("Child A: " + childA);
   // copy the 1st segment of parentB to the childB
   for (let room = 0; room < parentB.length; room++) {
     for (let i = 0; i < x1; i++) {
@@ -61,10 +62,19 @@ function crossover(x1, x2, parentA, parentB) {
     }
   }
 
+  let children = replaceDuplicates(childA, childB, x1, x2);
+
+  console.log("Children: " + children);
+  return children;
+
+  // add the child to the new pool
+}
+
+function replaceDuplicates(childA, childB, x1, x2) {
   // correct/get rid of duplicates, add teams that got lost in the crossover sections
-  // look at the crossed over section and scan for teams A previously had but B didnt
+  // look at the crossed over section and scan for teams A previously had but B didn't
   // switch the teams they didn't have in common
-  for (let room = 0; room < parentA.length; room++) {
+  for (let room = 0; room < childA.length; room++) {
     for (let i = x1; i < x2; i++) {
       if (!childB[room].includes(childA[room][i])) {
         childB[room].push(childA[room][i]);
@@ -76,13 +86,9 @@ function crossover(x1, x2, parentA, parentB) {
       }
     }
   }
-
-  let children = childA.concat(childB);
-
-  console.log("Children: " + children);
-  return children;
-
-  // add the child to the new pool
+  return [childA, childB];
 }
+
+export { replaceDuplicates };
 export { crossover };
 // after everything, determine criteria for good child and give scores to the children
