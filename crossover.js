@@ -91,13 +91,44 @@ function replaceDuplicates(child1, child2, x1, x2) {
       }
     }
     if (temp.length > 3) {
+      let run1 = 0;
+      let run2 = 0;
+      let run3 = 0;
       for (let i = 0; i < temp.length; i++) {
-        if (temp[i][1] >= x1 && temp[i][1] < x2) {
-          duplicates.push(temp[i]);
+        if (temp[i][2].run === 1) {
+          run1++;
+        } else if (temp[i][2].run === 2) {
+          run2++;
+        } else if (temp[i][2].run === 3) {
+          run3++;
+        }
+      }
+      console.log(temp, "run1: ", run1, "run2: ", run2, "run3: ", run3);
+      console.log("x1: ", x1, "x2: ", x2);
+      if (run1 > 1) {
+        for (let k = 0; k < temp.length; k++) {
+          if (temp[k][2].run === 1 && temp[k][1] >= x1 && temp[k][1] < x2) {
+            duplicates.push(temp[k]);
+          }
+        }
+      }
+      if (run2 > 1) {
+        for (let j = 0; j < temp.length; j++) {
+          if (temp[j][2].run === 2 && temp[j][1] >= x1 && temp[j][1] < x2) {
+            duplicates.push(temp[j]);
+          }
+        }
+      }
+      if (run3 > 1) {
+        for (let i = 0; i < temp.length; i++) {
+          if (temp[i][2].run === 3 && temp[i][1] >= x1 && temp[i][1] < x2) {
+            duplicates.push(temp[i]);
+          }
         }
       }
     }
   }
+
   console.log(duplicates);
 }
 
