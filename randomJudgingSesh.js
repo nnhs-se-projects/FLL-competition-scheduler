@@ -4,6 +4,8 @@
 // length of judging sessions (should be configurable, start with 15 minutes)
 // time between judging sessions (should be configurable; start with 10 minutes)
 
+// import { replaceDuplicates } from "./JRcrossover";
+
 function randomJS() {
   let teamsR = [];
   let teamsP = [];
@@ -31,6 +33,45 @@ function randomJS() {
     projectRooms.push([]);
   }
 
+  function checkDuplicates() {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 1; j < 4; j++) {
+        if (robotRooms[i] === robotRooms[j]) {
+          const rand = Math.floor(Math.random() * robotRooms[0].length);
+          const teamSwap = robotRooms[j];
+          robotRooms[j] = robotRooms[0][rand];
+          robotRooms[0][rand] = teamSwap;
+        }
+      }
+      for (let j = 0; j < 4; j++) {
+        if (projectRooms[i] === robotRooms[j]) {
+          const rand = Math.floor(Math.random() * robotRooms[0].length);
+          const teamSwap = robotRooms[j];
+          robotRooms[j] = robotRooms[0][rand];
+          robotRooms[0][rand] = teamSwap;
+        }
+      }
+    }
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (robotRooms[i] === projectRooms[j]) {
+          const rand = Math.floor(Math.random() * robotRooms[0].length);
+          const teamSwap = robotRooms[j];
+          robotRooms[j] = robotRooms[0][rand];
+          robotRooms[0][rand] = teamSwap;
+        }
+      }
+      for (let j = 1; j < 4; j++) {
+        if (projectRooms[i] === projectRooms[j]) {
+          const rand = Math.floor(Math.random() * robotRooms[0].length);
+          const teamSwap = robotRooms[j];
+          robotRooms[j] = robotRooms[0][rand];
+          robotRooms[0][rand] = teamSwap;
+        }
+      }
+    }
+  }
+
   let timeSlot = 0;
   let count = 0;
   while (teamsR.length > 0 || teamsP.length > 0) {
@@ -43,23 +84,23 @@ function randomJS() {
     for (let i = 0; i < projectRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsP[randomNum];
-      for (let j = 0; j < robotRooms.length - 1; j++) {
-        //  doesn't check the last room because it would be in an infinite loops
+      // for (let j = 0; j < robotRooms.length; j++) {
+      //   //  doesn't check the last room because it would be in an infinite loops
 
-        // check if team is in a different judging room at the same time
-        while (robotRooms[j][timeSlot] === team) {
-          randomNum = getRandomNum();
-          team = teamsP[j][randomNum];
-          j = 0;
-        }
-      }
-
+      //   // check if team is in a different judging room at the same time
+      //   while (robotRooms[j][timeSlot] === team) {
+      //     randomNum = getRandomNum();
+      //     team = teamsP[randomNum];
+      //     j = 0;
+      //   }
+      // }
       projectRooms[i].push(team);
       count++;
       console.log(count + "push");
       teamsP.splice(randomNum, 1);
     }
     timeSlot++;
+    checkDuplicates();
   }
 
   let rooms = robotRooms.concat(projectRooms);
