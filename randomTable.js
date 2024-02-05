@@ -60,7 +60,7 @@ function randomTable() {
   function checkDuplicate() {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (teams[i].name === teams[j].name) {
+        if (teams[i].name === teams[j].name && i != j) {
           const rand = Math.floor(Math.random() * table1.length);
           const teamSwap = teams[j];
           teams[j] = table1[rand];
@@ -121,5 +121,4 @@ function randomTable() {
   //console.log("table 3: " + table3);
   //console.log("table 4: " + table4);
 }
-
 export { randomTable };
