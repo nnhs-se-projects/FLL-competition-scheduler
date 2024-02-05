@@ -79,7 +79,8 @@ function geneticAlgorithm() {
 }
 
 function replaceDuplicates(child1, child2, x1, x2) {
-  let duplicates = [];
+  const duplicates = [];
+  const missing = [];
   for (let t = 1; t < 33; t++) {
     let temp = [];
     for (let i = 0; i < child1.length; i++) {
@@ -103,14 +104,16 @@ function replaceDuplicates(child1, child2, x1, x2) {
           run3++;
         }
       }
-      console.log(temp, "run1: ", run1, "run2: ", run2, "run3: ", run3);
-      console.log("x1: ", x1, "x2: ", x2);
+      console.log(run1, run2, run3);
       if (run1 > 1) {
         for (let k = 0; k < temp.length; k++) {
           if (temp[k][2].run === 1 && temp[k][1] >= x1 && temp[k][1] < x2) {
             duplicates.push(temp[k]);
           }
         }
+      } else if (run1 < 1) {
+        let str = { name: "team" + t, run: 1 };
+        missing.push(str);
       }
       if (run2 > 1) {
         for (let j = 0; j < temp.length; j++) {
@@ -118,6 +121,9 @@ function replaceDuplicates(child1, child2, x1, x2) {
             duplicates.push(temp[j]);
           }
         }
+      } else if (run2 < 1) {
+        let str = { name: "team" + t, run: 2 };
+        missing.push(str);
       }
       if (run3 > 1) {
         for (let i = 0; i < temp.length; i++) {
@@ -125,10 +131,13 @@ function replaceDuplicates(child1, child2, x1, x2) {
             duplicates.push(temp[i]);
           }
         }
+      } else if (run3 < 1) {
+        let str = { name: "team" + t, run: 3 };
+        missing.push(str);
       }
     }
   }
-
+  console.log(missing);
   console.log(duplicates);
 }
 
