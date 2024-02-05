@@ -32,6 +32,7 @@ function randomJS() {
   }
 
   let timeSlot = 0;
+  let count = 0;
   while (teamsR.length > 0 || teamsP.length > 0) {
     for (let i = 0; i < robotRooms.length; i++) {
       let randomNum = getRandomNum();
@@ -48,13 +49,14 @@ function randomJS() {
         // check if team is in a different judging room at the same time
         while (robotRooms[j][timeSlot] === team) {
           randomNum = getRandomNum();
-          team = teamsP[randomNum];
+          team = teamsP[j][randomNum];
           j = 0;
         }
       }
 
-      console.log("push");
       projectRooms[i].push(team);
+      count++;
+      console.log(count + "push");
       teamsP.splice(randomNum, 1);
     }
     timeSlot++;
