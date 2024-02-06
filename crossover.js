@@ -91,50 +91,49 @@ function replaceDuplicates(child1, child2, x1, x2) {
         }
       }
     }
-    if (temp.length > 3) {
-      let run1 = 0;
-      let run2 = 0;
-      let run3 = 0;
+
+    let run1 = 0;
+    let run2 = 0;
+    let run3 = 0;
+    for (let i = 0; i < temp.length; i++) {
+      if (temp[i][2].run === 1) {
+        run1++;
+      } else if (temp[i][2].run === 2) {
+        run2++;
+      } else if (temp[i][2].run === 3) {
+        run3++;
+      }
+    }
+    console.log(run1, run2, run3);
+    if (run1 > 1) {
+      for (let k = 0; k < temp.length; k++) {
+        if (temp[k][2].run === 1 && temp[k][1] >= x1 && temp[k][1] < x2) {
+          duplicates.push(temp[k]);
+        }
+      }
+    } else if (run1 < 1) {
+      let str = { name: "team" + t, run: 1 };
+      missing.push(str);
+    }
+    if (run2 > 1) {
+      for (let j = 0; j < temp.length; j++) {
+        if (temp[j][2].run === 2 && temp[j][1] >= x1 && temp[j][1] < x2) {
+          duplicates.push(temp[j]);
+        }
+      }
+    } else if (run2 < 1) {
+      let str = { name: "team" + t, run: 2 };
+      missing.push(str);
+    }
+    if (run3 > 1) {
       for (let i = 0; i < temp.length; i++) {
-        if (temp[i][2].run === 1) {
-          run1++;
-        } else if (temp[i][2].run === 2) {
-          run2++;
-        } else if (temp[i][2].run === 3) {
-          run3++;
+        if (temp[i][2].run === 3 && temp[i][1] >= x1 && temp[i][1] < x2) {
+          duplicates.push(temp[i]);
         }
       }
-      console.log(run1, run2, run3);
-      if (run1 > 1) {
-        for (let k = 0; k < temp.length; k++) {
-          if (temp[k][2].run === 1 && temp[k][1] >= x1 && temp[k][1] < x2) {
-            duplicates.push(temp[k]);
-          }
-        }
-      } else if (run1 < 1) {
-        let str = { name: "team" + t, run: 1 };
-        missing.push(str);
-      }
-      if (run2 > 1) {
-        for (let j = 0; j < temp.length; j++) {
-          if (temp[j][2].run === 2 && temp[j][1] >= x1 && temp[j][1] < x2) {
-            duplicates.push(temp[j]);
-          }
-        }
-      } else if (run2 < 1) {
-        let str = { name: "team" + t, run: 2 };
-        missing.push(str);
-      }
-      if (run3 > 1) {
-        for (let i = 0; i < temp.length; i++) {
-          if (temp[i][2].run === 3 && temp[i][1] >= x1 && temp[i][1] < x2) {
-            duplicates.push(temp[i]);
-          }
-        }
-      } else if (run3 < 1) {
-        let str = { name: "team" + t, run: 3 };
-        missing.push(str);
-      }
+    } else if (run3 < 1) {
+      let str = { name: "team" + t, run: 3 };
+      missing.push(str);
     }
   }
   console.log(missing);
