@@ -104,7 +104,6 @@ function replaceDuplicates(child1, child2, x1, x2) {
         run3++;
       }
     }
-    console.log(run1, run2, run3);
     if (run1 > 1) {
       for (let k = 0; k < temp.length; k++) {
         if (temp[k][2].run === 1 && temp[k][1] >= x1 && temp[k][1] < x2) {
@@ -136,8 +135,28 @@ function replaceDuplicates(child1, child2, x1, x2) {
       missing.push(str);
     }
   }
-  console.log(missing);
-  console.log(duplicates);
+
+  const length = duplicates.length;
+  for (let i = 0; i < length; i++) {
+    let rand = Math.floor(Math.random() * missing.length);
+    const index = duplicates[i][1];
+    if (
+      missing[rand].name !== child1[0][index].name &&
+      missing[rand].name !== child1[1][index].name &&
+      missing[rand].name !== child1[2][index].name &&
+      missing[rand].name !== child1[3][index].name
+    ) {
+      child1[duplicates[i][0]][duplicates[i][1]] = missing[rand];
+      missing.splice(rand, 1);
+    } else {
+      i--;
+      continue;
+    }
+  }
+
+  console.log(child1);
 }
 
-geneticAlgorithm();
+for (let i = 0; i < 10; i++) {
+  geneticAlgorithm();
+}
