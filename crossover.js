@@ -156,12 +156,28 @@ function replaceDuplicates(child1, child2, x1, x2) {
 
   function swap(tableNum) {
     let rand = Math.floor(Math.random() * (x2 - x1) + x1);
-    let temp = child1[tableNum][rand];
-    child1[tableNum][rand] = missing[0];
+    const temp = child1[tableNum][rand];
+    child1[tableNum][rand] = missing[0]; // check if you can add here
     missing[0] = temp;
   }
 
-  console.log(child1);
+  for (let i = length - 4; i < length; i++) {
+    const index = duplicates[i][1];
+    if (
+      missing[0].name !== child1[0][index].name &&
+      missing[0].name !== child1[1][index].name &&
+      missing[0].name !== child1[2][index].name &&
+      missing[0].name !== child1[3][index].name
+    ) {
+      child1[duplicates[i][0]][duplicates[i][1]] = missing[0];
+      missing.splice(0, 1);
+    } else {
+      swap(duplicates[i][0]);
+      i--;
+      continue;
+    }
+    // still is an infinite loop
+  }
 }
 
 for (let i = 0; i < 10; i++) {
