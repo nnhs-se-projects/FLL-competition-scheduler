@@ -137,7 +137,7 @@ function replaceDuplicates(child1, child2, x1, x2) {
   }
 
   const length = duplicates.length;
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < length - 4; i++) {
     let rand = Math.floor(Math.random() * missing.length);
     const index = duplicates[i][1];
     if (
@@ -152,6 +152,13 @@ function replaceDuplicates(child1, child2, x1, x2) {
       i--;
       continue;
     }
+  }
+
+  function swap(tableNum) {
+    let rand = Math.floor(Math.random() * (x2 - x1) + x1);
+    let temp = child1[tableNum][rand];
+    child1[tableNum][rand] = missing[0];
+    missing[0] = temp;
   }
 
   console.log(child1);
