@@ -157,8 +157,15 @@ function replaceDuplicates(child1, child2, x1, x2) {
   function swap(tableNum) {
     let rand = Math.floor(Math.random() * (x2 - x1) + x1);
     const temp = child1[tableNum][rand];
-    child1[tableNum][rand] = missing[0]; // check if you can add here
-    missing[0] = temp;
+    if (
+      child1[0][rand].name !== missing[0].name &&
+      child1[1][rand].name !== missing[0].name &&
+      child1[2][rand].name !== missing[0].name &&
+      child1[3][rand].name !== missing[0].name
+    ) {
+      child1[tableNum][rand] = missing[0]; // check if you can add here
+      missing[0] = temp;
+    }
   }
 
   for (let i = length - 4; i < length; i++) {
@@ -178,8 +185,9 @@ function replaceDuplicates(child1, child2, x1, x2) {
     }
     // still is an infinite loop
   }
+  console.log("child1: ", child1);
 }
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 100; i++) {
   geneticAlgorithm();
 }
