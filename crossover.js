@@ -74,6 +74,13 @@ function geneticAlgorithm() {
 
   let x1 = Math.floor((Math.random() * parentA[0].length) / 2 + 1);
   let x2 = Math.floor(Math.random() * (parentA[0].length / 2) + x1 + 1);
+  if (x2 - x1 < 5) {
+    if (parentA[0].length - x2 > 4) {
+      x2 += 4;
+    } else if (x1 > 4) {
+      x1 = -4;
+    }
+  }
 
   crossOver(x1, x2, parentA, parentB);
 }
@@ -188,6 +195,6 @@ function replaceDuplicates(child1, child2, x1, x2) {
   console.log("child1: ", child1);
 }
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 1000; i++) {
   geneticAlgorithm();
 }
