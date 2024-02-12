@@ -33,39 +33,24 @@ function randomJS() {
     projectRooms.push([]);
   }
 
-  function checkDuplicates() {
-    for (let i = 0; i < 4; i++) {
-      for (let j = 1; j < 4; j++) {
-        if (robotRooms[i] === robotRooms[j]) {
-          const rand = Math.floor(Math.random() * robotRooms[0].length);
-          const teamSwap = robotRooms[j];
-          robotRooms[j] = robotRooms[0][rand];
-          robotRooms[0][rand] = teamSwap;
-        }
-      }
-      for (let j = 0; j < 4; j++) {
-        if (projectRooms[i] === robotRooms[j]) {
-          const rand = Math.floor(Math.random() * robotRooms[0].length);
-          const teamSwap = robotRooms[j];
-          robotRooms[j] = robotRooms[0][rand];
-          robotRooms[0][rand] = teamSwap;
-        }
-      }
-    }
+  function checkDuplicates(timeSlot) {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (robotRooms[i] === projectRooms[j]) {
-          const rand = Math.floor(Math.random() * robotRooms[0].length);
-          const teamSwap = robotRooms[j];
-          robotRooms[j] = robotRooms[0][rand];
-          robotRooms[0][rand] = teamSwap;
-        }
-      }
-      for (let j = 1; j < 4; j++) {
-        if (projectRooms[i] === projectRooms[j]) {
-          const rand = Math.floor(Math.random() * robotRooms[0].length);
-          const teamSwap = robotRooms[j];
-          robotRooms[j] = robotRooms[0][rand];
+        if (projectRooms[i][timeSlot] === robotRooms[j][timeSlot]) {
+          let rand = Math.floor(Math.random() * (timeSlot + 1));
+          const teamSwap = robotRooms[j][timeSlot];
+          //need to check index for conflicts
+          for (let r = 0; r < robotRooms.length; r++) {
+            if (robotRooms[r][rand] === teamSwap) {
+              rand = Math.floor(Math.random() * (timeSlot + 1));
+            }
+          }
+          for (let r = 0; r < projectRooms.length; r++) {
+            if (projectRooms[r][rand] === teamSwap) {
+              rand = Math.floor(Math.random() * (timeSlot + 1));
+            }
+          }
+          robotRooms[j][timeSlot] = robotRooms[0][rand];
           robotRooms[0][rand] = teamSwap;
         }
       }
@@ -96,17 +81,24 @@ function randomJS() {
       // }
       projectRooms[i].push(team);
       count++;
-      console.log(count + "push");
       teamsP.splice(randomNum, 1);
     }
     timeSlot++;
-    checkDuplicates();
+    checkDuplicates(timeSlot - 1);
+  }
+
+  for (let i = 0; i < robotRooms.length; i++) {
+    console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
+  }
+  for (let i = 0; i < projectRooms.length; i++) {
+    console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
   }
 
   let rooms = robotRooms.concat(projectRooms);
   return rooms;
 }
-export { randomJS };
+
+//console.log(randomJS());
 
 // for (let i = 0; i < robotRooms.length; i++) {
 //   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
@@ -114,3 +106,6 @@ export { randomJS };
 // for (let i = 0; i < projectRooms.length; i++) {
 //   console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
 // }
+
+export { randomJS };
+//export { checkDuplicates };

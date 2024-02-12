@@ -4,14 +4,14 @@ import { crossover } from "./JRcrossover.js";
 // const randomJS = require("./randomJudgingSesh.js");
 // const crossover = require("./JRcrossover.js");
 
-console.log("test");
+//console.log("test");
 let parentA = randomJS();
 let parentB = randomJS();
-console.log(parentA);
-console.log(parentB);
+// console.log(parentA);
+// console.log(parentB);
 
 function getRandomNum() {
-  return Math.floor(Math.random() * parentA.length);
+  return Math.floor(Math.random() * (parentA.length - 2) + 1);
 }
 
 let x1 = getRandomNum();
