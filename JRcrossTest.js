@@ -11,29 +11,41 @@ let parentB = randomJS();
 // console.log(parentB);
 
 function getRandomNum() {
-  return Math.floor(Math.random() * (parentA.length - 2) + 1);
+  return Math.floor(Math.random() * (parentA.length / 2) + 1);
+}
+
+function getRandomNumX2() {
+  return Math.floor(
+    Math.random() * (parentA.length / 2) + parentA.length / 2 - 1
+  );
 }
 
 let x1 = getRandomNum();
-let x2 = getRandomNum();
+let x2 = getRandomNumX2();
 
 console.log(x1, " ", x2);
 
 let children = crossover(x1, x2, parentA, parentB);
-console.log(children);
+//console.log(children);
 
 console.log("Child A: ");
 for (let i = 0; i < children.length / 2; i++) {
-  if (i < children.length / 4) {
-    console.log("Robot Room " + (i + 1) + ": " + children[i]);
+  for (let j = 0; j < children[i].length; j++) {
+    if (j < children[i].length / 2) {
+      console.log("Robot Room " + (j + 1) + ": " + children[i][j]);
+    } else {
+      console.log("Project Room " + (j + 1) + ": " + children[i][j]);
+    }
   }
-  console.log("Project Room " + (i + 1) + ": " + children[i]);
 }
 
 console.log("Child B: ");
 for (let i = children.length / 2; i < children.length; i++) {
-  if (i < children.length * (3 / 4)) {
-    console.log("Robot Room " + (i + 1) + ": " + children[i]);
+  for (let j = 0; j < children[i].length; j++) {
+    if (j < children[i].length / 2) {
+      console.log("Robot Room " + (j + 1) + ": " + children[i][j]);
+    } else {
+      console.log("Project Room " + (j + 1) + ": " + children[i][j]);
+    }
   }
-  console.log("Project Room " + (i + 1) + ": " + children[i]);
 }

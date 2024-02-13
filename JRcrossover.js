@@ -10,6 +10,7 @@ let judgingRoomNum = 8;
 
 // x1 and x2 are cross over points
 function crossover(x1, x2, parentA, parentB) {
+  // make sure x1 is greater than x2 and by a min amount otherwise there is no crossover in the middle section
   const length = parentA.length;
 
   /// create empty children, array of empty JR arrays
@@ -18,6 +19,7 @@ function crossover(x1, x2, parentA, parentB) {
     childA.push([]);
   }
   let childB = [];
+
   for (let i = 0; i < judgingRoomNum; i++) {
     childB.push([]);
   }
@@ -25,46 +27,47 @@ function crossover(x1, x2, parentA, parentB) {
   // copy the 1st segment of parentA to the childA
   for (let room = 0; room < parentA.length; room++) {
     for (let i = 0; i < x1; i++) {
-      childA[room].push[parentA[room][i]];
+      childA[room].push(parentA[room][i]); // Fix: Replace [] with ()
     }
   }
-  console.log("Child A: " + childA);
+  //console.log("Child A: " + childA);
   // copy the 1st segment of parentB to the childB
   for (let room = 0; room < parentB.length; room++) {
     for (let i = 0; i < x1; i++) {
-      childB[room].push[parentB[room][i]];
+      childB[room].push(parentB[room][i]);
     }
   }
 
   // copy the middle section of parentA to child B
   for (let room = 0; room < parentA.length; room++) {
     for (let i = x1; i < x2; i++) {
-      childB[room].push[parentA[room][i]];
+      childB[room].push(parentA[room][i]);
     }
   }
   // copy the middle section of parentB to child A
   for (let room = 0; room < parentB.length; room++) {
     for (let i = x1; i < x2; i++) {
-      childA[room].push[parentB[room][i]];
+      childA[room].push(parentB[room][i]);
     }
   }
 
   // copy the last segment of parentA to childA
   for (let room = 0; room < parentA.length; room++) {
     for (let i = x2; i < parentA[room].length; i++) {
-      childA[room].push[parentA[room][i]];
+      childA[room].push(parentA[room][i]);
     }
   }
   // copy the last segment of parentB to childB
   for (let room = 0; room < parentB.length; room++) {
     for (let i = x2; i < parentB[room].length; i++) {
-      childB[room].push[parentB[room][i]];
+      childB[room].push(parentB[room][i]);
     }
   }
 
-  let children = replaceDuplicates(childA, childB, x1, x2);
+  let children = [childA, childB];
+  // replaceDuplicates(childA, childB, x1, x2);
 
-  console.log("Children: " + children);
+  //console.log("Children: " + children);
   return children;
 
   // add the child to the new pool
