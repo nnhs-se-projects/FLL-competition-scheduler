@@ -1,8 +1,8 @@
 // import { json } from "express";
 import { randomJS } from "./randomJudgingSesh.js";
 import { crossover } from "./JRcrossover.js";
-// const randomJS = require("./randomJudgingSesh.js");
-// const crossover = require("./JRcrossover.js");
+import { getRandomNumX1 } from "./JRcrossover.js";
+import { getRandomNumX2 } from "./JRcrossover.js";
 
 //console.log("test");
 let parentA = randomJS();
@@ -10,18 +10,8 @@ let parentB = randomJS();
 // console.log(parentA);
 // console.log(parentB);
 
-function getRandomNum() {
-  return Math.floor(Math.random() * (parentA.length / 2) + 1);
-}
-
-function getRandomNumX2() {
-  return Math.floor(
-    Math.random() * (parentA.length / 2) + parentA.length / 2 - 1
-  );
-}
-
-let x1 = getRandomNum();
-let x2 = getRandomNumX2();
+let x1 = getRandomNumX1(parentA);
+let x2 = getRandomNumX2(parentA);
 
 console.log(x1, " ", x2);
 
