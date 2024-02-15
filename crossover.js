@@ -15,6 +15,7 @@ function crossOver(x1, x2, parentA, parentB) {
   let c2t2 = [];
   let c2t3 = [];
   let c2t4 = [];
+  let loops = 0;
 
   for (let i = 0; i < x1; i++) {
     c1t1.push(parentA[0][i]); // crossing over child 1 table 1
@@ -70,7 +71,15 @@ function crossOver(x1, x2, parentA, parentB) {
 
 function geneticAlgorithm() {
   let parentA = randomTable();
+  while (parentA === null) {
+    // console.log("parent A check"); not here
+    parentA = randomTable();
+  }
   let parentB = randomTable();
+  while (parentB === null) {
+    // console.log("parent B check"); not here
+    parentB = randomTable();
+  }
 
   let x1 = Math.floor((Math.random() * parentA[0].length) / 2 + 1);
   let x2 = Math.floor(Math.random() * (parentA[0].length / 2) + x1 + 1);
@@ -91,8 +100,12 @@ function replaceDuplicates(child1, child2, x1, x2) {
   for (let t = 1; t < 33; t++) {
     let temp = [];
     for (let i = 0; i < child1.length; i++) {
+      //console.log("test 1");
       for (let j = 0; j < child1[i].length; j++) {
+        // console.log("test 2"); ran for sooooo long I couldn't tell if it was loading or infinite
         if (child1[i][j].name === "team" + t) {
+          // rare but occasionally the name is undefined
+          //console.log("test 3");
           let arr = [i, j, child1[i][j]];
           temp.push(arr);
         }
@@ -170,8 +183,15 @@ function replaceDuplicates(child1, child2, x1, x2) {
       child1[2][rand].name !== missing[0].name &&
       child1[3][rand].name !== missing[0].name
     ) {
-      child1[tableNum][rand] = missing[0]; // check if you can add here
-      missing[0] = temp;
+      if (
+        child1[0][rand].name !== missing[0].name &&
+        child1[1][rand].name !== missing[0].name &&
+        child1[2][rand].name !== missing[0].name &&
+        child1[3][rand].name !== missing[0].name
+      ) {
+        child1[tableNum][rand] = missing[0];
+        missing[0] = temp;
+      }
     }
   }
 
@@ -192,9 +212,10 @@ function replaceDuplicates(child1, child2, x1, x2) {
     }
     // still is an infinite loop
   }
-  console.log("child1: ", child1);
+  console.log("child1: ", child1[0][0]);
 }
 
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 10000; i++) {
+  console.log("run", i + 1);
   geneticAlgorithm();
 }

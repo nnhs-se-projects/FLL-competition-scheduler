@@ -4,6 +4,7 @@ function randomTable() {
   let table2 = [];
   let table3 = [];
   let table4 = [];
+  let countLoops = 0;
   for (let j = 0; j < 3; j++) {
     for (let i = 1; i < 33; i++) {
       let str = { name: "team" + i, run: j + 1 };
@@ -61,7 +62,7 @@ function randomTable() {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         if (teams[i].name === teams[j].name && i != j) {
-          const rand = Math.floor(Math.random() * table1.length);
+          const rand = Math.floor(Math.random() * (table1.length - 1));
           const teamSwap = teams[j];
           teams[j] = table1[rand];
           table1[rand] = teamSwap;
@@ -71,6 +72,10 @@ function randomTable() {
   }
 
   for (let i = 0; i < 4; i++) {
+    countLoops++;
+    if (countLoops > 40) {
+      return null;
+    }
     checkDuplicate();
     if (count === 1) {
       table1.push(teams[0]);
@@ -113,6 +118,7 @@ function randomTable() {
   }
 
   let tables = [table1, table2, table3, table4];
+  // console.log(table1[0]);
   return tables;
 
   //console.log(teams);
