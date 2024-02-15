@@ -16,7 +16,7 @@ let x2 = getRandomNumX2(parentA);
 console.log(x1, " ", x2);
 
 let children = crossover(x1, x2, parentA, parentB);
-//console.log(children);
+//console.log("CHILDREN AFTER RD");
 
 console.log("Child A: ");
 for (let i = 0; i < children.length / 2; i++) {

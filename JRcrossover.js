@@ -75,6 +75,28 @@ function crossover(x1, x2, parentA, parentB) {
   }
 
   // let children = [childA, childB];
+  // console.log("Children BEFORE RD: ");
+  // console.log("Child A: ");
+  // for (let i = 0; i < children.length / 2; i++) {
+  //   for (let j = 0; j < children[i].length; j++) {
+  //     if (j < children[i].length / 2) {
+  //       console.log("Robot Room " + (j + 1) + ": " + children[i][j]);
+  //     } else {
+  //       console.log("Project Room " + (j + 1) + ": " + children[i][j]);
+  //     }
+  //   }
+  // }
+
+  // console.log("Child B: ");
+  // for (let i = children.length / 2; i < children.length; i++) {
+  //   for (let j = 0; j < children[i].length; j++) {
+  //     if (j < children[i].length / 2) {
+  //       console.log("Robot Room " + (j + 1) + ": " + children[i][j]);
+  //     } else {
+  //       console.log("Project Room " + (j + 1) + ": " + children[i][j]);
+  //     }
+  //   }
+  // }
   let children = replaceDuplicates(childA, childB, x1, x2);
 
   //console.log("Children: " + children);
@@ -86,49 +108,17 @@ function crossover(x1, x2, parentA, parentB) {
 function replaceDuplicates(childA, childB, x1, x2) {
   // correct/get rid of duplicates, add teams that got lost in the crossover sections
   // look at the crossed over section and scan for teams A previously had but B didn't
+  // and vice versa
   // switch the teams they didn't have in common
   let constB = childB;
   for (let room = 0; room < childA.length; room++) {
     for (let a = x1; a < x2; a++) {
-      for (let b = x1; b < x2; b++) {
-        if (childA[room][a] === childB[room][b]) {
-          let swap = childA[room][a];
-          childA[room][a] = childB[room][b];
-          childB[room][b] = swap;
-        }
-      }
-    }
-  }
-  return [childA, childB];
-}
-
-function replaceDuplicatesAI(childA, childB, x1, x2) {
-  // Correct/get rid of duplicates, add teams that got lost in the crossover sections
-  // Look at the crossed over section and scan for teams A previously had but B didn't
-  // Switch the teams they didn't have in common
-
-  // Create a set to keep track of teams in childB
-  const teamsInChildB = new Set();
-
-  // Add teams from childB to the set
-  for (let room = 0; room < childB.length; room++) {
-    for (let i = 0; i < childB[room].length; i++) {
-      teamsInChildB.add(childB[room][i]);
-    }
-  }
-
-  // Iterate over the crossed over section
-  for (let room = 0; room < childA.length; room++) {
-    for (let i = x1; i < x2; i++) {
-      // Check if the team in childA is not present in childB
-      if (!teamsInChildB.has(childA[room][i])) {
-        // Find the first occurrence of the team in childB and swap it with the team in childA
-        for (let j = x1; j < x2; j++) {
-          if (!teamsInChildB.has(childB[room][j])) {
-            let swap = childA[room][i];
-            childA[room][i] = childB[room][j];
-            childB[room][j] = swap;
-            break;
+      if (!constB.includes(childA[room][a])) {
+        for (let b = x1; b < x2; b++) {
+          if (!childA.includes(childB[room][b])) {
+            let swap = childA[room][a];
+            childA[room][a] = childB[room][b];
+            childB[room][b] = swap;
           }
         }
       }
