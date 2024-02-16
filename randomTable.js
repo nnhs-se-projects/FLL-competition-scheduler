@@ -63,9 +63,16 @@ function randomTable() {
       for (let j = 0; j < 4; j++) {
         if (teams[i].name === teams[j].name && i != j) {
           const rand = Math.floor(Math.random() * (table1.length - 1));
-          const teamSwap = teams[j];
-          teams[j] = table1[rand];
-          table1[rand] = teamSwap;
+          if (
+            table1[rand].name !== teams[j].name &&
+            table2[rand].name !== teams[j].name &&
+            table3[rand].name !== teams[j].name &&
+            table4[rand].name !== teams[j].name
+          ) {
+            const teamSwap = teams[j];
+            teams[j] = table1[rand];
+            table1[rand] = teamSwap;
+          }
         }
       }
     }
@@ -118,6 +125,9 @@ function randomTable() {
   }
 
   let tables = [table1, table2, table3, table4];
+  if (table4[23] == undefined) {
+    return null;
+  }
   // console.log(table1[0]);
   return tables;
 

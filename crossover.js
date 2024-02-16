@@ -103,11 +103,18 @@ function replaceDuplicates(child1, child2, x1, x2) {
       //console.log("test 1");
       for (let j = 0; j < child1[i].length; j++) {
         // console.log("test 2"); ran for sooooo long I couldn't tell if it was loading or infinite
-        if (child1[i][j].name === "team" + t) {
-          // rare but occasionally the name is undefined
-          //console.log("test 3");
-          let arr = [i, j, child1[i][j]];
-          temp.push(arr);
+        try {
+          if (child1[i][j].name === "team" + t) {
+            // rare but occasionally the name is undefined. Always is when i = 3 and j = 23
+            // There is a literal value of undefined in the array at that index.
+            // console.log("test 3");
+            let arr = [i, j, child1[i][j]];
+            temp.push(arr);
+          }
+        } catch {
+          console.log("error");
+          console.log(child1);
+          console.log("i: ", i, "j: ", j);
         }
       }
     }
@@ -215,7 +222,7 @@ function replaceDuplicates(child1, child2, x1, x2) {
   console.log("child1: ", child1[0][0]);
 }
 
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 100000; i++) {
   console.log("run", i + 1);
   geneticAlgorithm();
 }
