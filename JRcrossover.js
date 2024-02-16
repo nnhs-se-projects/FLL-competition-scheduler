@@ -7,12 +7,12 @@ const newPool = [];
 const oldPool = [];
 
 function getRandomNumX1(parent) {
-  return Math.floor(Math.random() * (parent.length / 2) + 1);
+  return Math.floor(Math.random() * (parent[0].length / 2) + 1);
 }
 
 function getRandomNumX2(parent) {
   return Math.floor(
-    Math.random() * (parent.length / 2 - 1) + parent.length / 2 + 1
+    Math.random() * (parent[0].length / 2 - 1) + parent[0].length / 2 + 1
   );
 }
 
