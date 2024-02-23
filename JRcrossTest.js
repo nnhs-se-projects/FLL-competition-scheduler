@@ -3,12 +3,13 @@ import { randomJS } from "./randomJudgingSesh.js";
 import { crossover } from "./JRcrossover.js";
 import { getRandomNumX1 } from "./JRcrossover.js";
 import { getRandomNumX2 } from "./JRcrossover.js";
+import { jrGrading } from "./JRGrading.js";
 
 //console.log("test");
 let parentA = randomJS();
 let parentB = randomJS();
 // console.log(parentA);
-// console.log(parentB);
+// console.log(parentB);d
 
 let x1 = getRandomNumX1(parentA);
 let x2 = getRandomNumX2(parentA);
@@ -39,3 +40,12 @@ for (let i = children.length / 2; i < children.length; i++) {
     }
   }
 }
+
+console.log("Parent A Score: ");
+console.log(jrGrading(parentA));
+console.log("Parent B Score: ");
+console.log(jrGrading(parentB));
+console.log("Child A Score: ");
+console.log(jrGrading(children[0]));
+console.log("Child B Score: ");
+console.log(jrGrading(children[1]));

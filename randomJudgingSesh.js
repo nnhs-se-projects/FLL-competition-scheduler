@@ -7,12 +7,13 @@
 // import { replaceDuplicates } from "./JRcrossover";
 
 function randomJS() {
+  //NOTE: make numTeams a param later then need to change jrGrading method
   let teamsR = [];
   let teamsP = [];
   let judgingSeshs = 2;
   let numTeams = 32;
   for (let i = 1; i < numTeams + 1; i++) {
-    let str = " team" + i;
+    let str = "team" + i;
     teamsR.push(str);
     teamsP.push(str);
   }
