@@ -7,6 +7,9 @@
 // add up all the team scores and divide by num of teams to get avg score => this is the final score of the child
 // return final score
 
+let newPool = [];
+let oldPool = [];
+
 function jrGrading(child) {
   let teamGrades = [];
   let numTeams = 32;
@@ -30,8 +33,8 @@ function jrGrading(child) {
     teamGrades.push(teamScore);
   }
 
-  console.log("Team Grades: ");
-  console.log(teamGrades);
+  //console.log("Team Grades: ");
+  //console.log(teamGrades);
 
   for (let i = 0; i < teamGrades.length; i++) {
     totalScore += teamGrades[i];
@@ -40,5 +43,9 @@ function jrGrading(child) {
 
   return totalScore;
 }
+
+//create pool of 100 parents
+
+//grade each parent in the array
 
 export { jrGrading };

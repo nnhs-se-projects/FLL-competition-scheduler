@@ -70,16 +70,6 @@ function randomJS() {
     for (let i = 0; i < projectRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsP[randomNum];
-      // for (let j = 0; j < robotRooms.length; j++) {
-      //   //  doesn't check the last room because it would be in an infinite loops
-
-      //   // check if team is in a different judging room at the same time
-      //   while (robotRooms[j][timeSlot] === team) {
-      //     randomNum = getRandomNum();
-      //     team = teamsP[randomNum];
-      //     j = 0;
-      //   }
-      // }
       projectRooms[i].push(team);
       count++;
       teamsP.splice(randomNum, 1);
@@ -88,12 +78,12 @@ function randomJS() {
     checkDuplicates(timeSlot - 1);
   }
 
-  for (let i = 0; i < robotRooms.length; i++) {
-    console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
-  }
-  for (let i = 0; i < projectRooms.length; i++) {
-    console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
-  }
+  // for (let i = 0; i < robotRooms.length; i++) {
+  //   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
+  // }
+  // for (let i = 0; i < projectRooms.length; i++) {
+  //   console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
+  // }
 
   let rooms = robotRooms.concat(projectRooms);
   return rooms;
