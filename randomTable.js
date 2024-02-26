@@ -5,6 +5,7 @@ function randomTable() {
   let table3 = [];
   let table4 = [];
   let countLoops = 0;
+  let countLoops2 = 0;
   for (let j = 0; j < 3; j++) {
     for (let i = 1; i < 33; i++) {
       let str = { name: "team" + i, run: j + 1 };
@@ -18,6 +19,10 @@ function randomTable() {
   }
   let count = 1;
   for (let i = 0; i < length - 4; i++) {
+    if (countLoops2 > 200) {
+      return null;
+    }
+    countLoops2++;
     let team = getRandomTeam();
     let index = teams.indexOf(team);
     if (count === 1) {
@@ -137,4 +142,11 @@ function randomTable() {
   //console.log("table 3: " + table3);
   //console.log("table 4: " + table4);
 }
+/* for (let i = 0; i < 1000000; i++) {
+  console.log("run: " + i);
+  let result = randomTable();
+  if (result == null) {
+    console.log("null");
+  } else console.log(result[0][0]);
+} */
 export { randomTable };
