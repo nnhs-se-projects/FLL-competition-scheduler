@@ -1,11 +1,48 @@
 import { randomTable } from "./randomTable.js";
 
-const POPULATION = 10;
+const POPULATION = 100;
 
-const newPool = [];
-const oldPool = [];
+let newPool = [];
+let oldPool = [];
+let best = null;
 
-function crossOver(x1, x2, parentA, parentB) {
+function run() {
+  oldPool = [];
+  for (let i = 0; i < POPULATION; i++) {
+    //console.log("i: ", i);
+    let parent = randomTable();
+    // console.log("pt1");
+    while (parent === null) {
+      console.log("parent change");
+      parent = randomTable();
+    }
+    oldPool.push(parent);
+  }
+  console.log("run");
+  performGeneticAlgorithm();
+  // SORT POOLS
+}
+
+function performGeneticAlgorithm() {
+  // console.log("performGeneticAlgorithm");
+  let parentA = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
+  let parentB = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
+
+  // STEP 2: CROSSOVER
+  // get the children
+  let children = crossOver(parentA, parentB);
+  while (children[0] == null || children[1] == null) {
+    // change later to fit children[0] and children[1]
+    console.log("crossover failed");
+    children = crossOver(parentA, parentB);
+  }
+
+  // STEP 3: MUTATION
+
+  // STEP 4: ADD TO NEW POOL
+}
+function crossOver(parentA, parentB) {
+  // console.log("crossOver");
   let children = [];
   let c1t1 = [];
   let c1t2 = [];
@@ -15,9 +52,18 @@ function crossOver(x1, x2, parentA, parentB) {
   let c2t2 = [];
   let c2t3 = [];
   let c2t4 = [];
-  let loops = 0;
+  let x1 = Math.floor((Math.random() * parentA[0].length) / 2 + 1);
+  let x2 = Math.floor(Math.random() * (parentA[0].length / 2) + x1 + 1);
+  if (x2 - x1 < 5) {
+    if (parentA[0].length - x2 > 4) {
+      x2 += 4;
+    } else if (x1 > 4) {
+      x1 = -4;
+    }
+  }
 
   for (let i = 0; i < x1; i++) {
+    // console.log("i1: ", i);
     c1t1.push(parentA[0][i]); // crossing over child 1 table 1
     c1t2.push(parentA[1][i]); // crossing over child 1 table 2
     c1t3.push(parentA[2][i]); // crossing over child 1 table 3
@@ -29,6 +75,7 @@ function crossOver(x1, x2, parentA, parentB) {
     c2t4.push(parentB[3][i]); // crossing over child 2 table 4
   }
   for (let i = x1; i < x2; i++) {
+    // console.log("i2: ", i);
     c1t1.push(parentB[0][i]);
     c1t2.push(parentB[1][i]);
     c1t3.push(parentB[2][i]);
@@ -40,6 +87,7 @@ function crossOver(x1, x2, parentA, parentB) {
     c2t4.push(parentA[3][i]);
   }
   for (let i = x2; i < parentA[0].length; i++) {
+    // console.log("i3: ", i);
     c1t1.push(parentA[0][i]);
     c1t2.push(parentA[1][i]);
     c1t3.push(parentA[2][i]);
@@ -66,55 +114,30 @@ function crossOver(x1, x2, parentA, parentB) {
 
   let child1 = [c1t1, c1t2, c1t3, c1t4];
   let child2 = [c2t1, c2t2, c2t3, c2t4];
-  replaceDuplicates(child1, child2, x1, x2);
+  let rChild1 = replaceDuplicates(child1, x1, x2);
+  let rChild2 = replaceDuplicates(child2, x1, x2);
+  return [rChild1, rChild2];
 }
 
-function geneticAlgorithm() {
-  let parentA = randomTable();
-  while (parentA === null) {
-    // console.log("parent A check"); not here
-    parentA = randomTable();
-  }
-  let parentB = randomTable();
-  while (parentB === null) {
-    // console.log("parent B check"); not here
-    parentB = randomTable();
-  }
-
-  let x1 = Math.floor((Math.random() * parentA[0].length) / 2 + 1);
-  let x2 = Math.floor(Math.random() * (parentA[0].length / 2) + x1 + 1);
-  if (x2 - x1 < 5) {
-    if (parentA[0].length - x2 > 4) {
-      x2 += 4;
-    } else if (x1 > 4) {
-      x1 = -4;
-    }
-  }
-
-  crossOver(x1, x2, parentA, parentB);
-}
-
-function replaceDuplicates(child1, child2, x1, x2) {
+function replaceDuplicates(child, x1, x2) {
+  // console.log("replaceDuplicates");
   const duplicates = [];
   const missing = [];
+  let loops = 0;
+  let loops2 = 0;
   for (let t = 1; t < 33; t++) {
+    // console.log("t: ", t);
     let temp = [];
-    for (let i = 0; i < child1.length; i++) {
+    for (let i = 0; i < child.length; i++) {
       //console.log("test 1");
-      for (let j = 0; j < child1[i].length; j++) {
+      for (let j = 0; j < child[i].length; j++) {
         // console.log("test 2"); ran for sooooo long I couldn't tell if it was loading or infinite
-        try {
-          if (child1[i][j].name === "team" + t) {
-            // rare but occasionally the name is undefined. Always is when i = 3 and j = 23
-            // There is a literal value of undefined in the array at that index.
-            // console.log("test 3");
-            let arr = [i, j, child1[i][j]];
-            temp.push(arr);
-          }
-        } catch {
-          console.log("error");
-          console.log(child1);
-          console.log("i: ", i, "j: ", j);
+        if (child[i][j].name === "team" + t) {
+          // rare but occasionally the name is undefined. Always is when i = 3 and j = 23
+          // There is a literal value of undefined in the array at that index.
+          // console.log("test 3");
+          let arr = [i, j, child[i][j]];
+          temp.push(arr);
         }
       }
     }
@@ -158,71 +181,95 @@ function replaceDuplicates(child1, child2, x1, x2) {
         }
       }
     } else if (run3 < 1) {
-      let str = { name: "team" + t, run: 3 };
+      const str = { name: "team" + t, run: 3 };
       missing.push(str);
     }
   }
 
-  const length = duplicates.length;
-  for (let i = 0; i < length - 4; i++) {
-    let rand = Math.floor(Math.random() * missing.length);
-    const index = duplicates[i][1];
+  function swap(tableNum) {
+    // console.log("swap");
+    loops2++;
+    if (loops2 > 100) {
+      return null;
+    }
+    const rand = Math.floor(Math.random() * (x2 - x1) + x1);
+    const temp = child[tableNum][rand];
     if (
-      missing[rand].name !== child1[0][index].name &&
-      missing[rand].name !== child1[1][index].name &&
-      missing[rand].name !== child1[2][index].name &&
-      missing[rand].name !== child1[3][index].name
+      child[0][rand].name !== missing[0].name &&
+      child[1][rand].name !== missing[0].name &&
+      child[2][rand].name !== missing[0].name &&
+      child[3][rand].name !== missing[0].name
     ) {
-      child1[duplicates[i][0]][duplicates[i][1]] = missing[rand];
-      missing.splice(rand, 1);
-    } else {
-      i--;
-      continue;
+      child[tableNum][rand] = missing[0];
+      missing[0] = temp;
     }
   }
 
-  function swap(tableNum) {
-    let rand = Math.floor(Math.random() * (x2 - x1) + x1);
-    const temp = child1[tableNum][rand];
-    if (
-      child1[0][rand].name !== missing[0].name &&
-      child1[1][rand].name !== missing[0].name &&
-      child1[2][rand].name !== missing[0].name &&
-      child1[3][rand].name !== missing[0].name
-    ) {
+  const length = duplicates.length;
+
+  if (length < 5) {
+    for (let i = 0; i < length; i++) {
+      // console.log("i: ", i);
+      const index = duplicates[i][1];
       if (
-        child1[0][rand].name !== missing[0].name &&
-        child1[1][rand].name !== missing[0].name &&
-        child1[2][rand].name !== missing[0].name &&
-        child1[3][rand].name !== missing[0].name
+        missing[i].name !== child[0][index].name &&
+        missing[i].name !== child[1][index].name &&
+        missing[i].name !== child[2][index].name &&
+        missing[i].name !== child[3][index].name
       ) {
-        child1[tableNum][rand] = missing[0];
-        missing[0] = temp;
+        child[duplicates[i][0]][duplicates[i][1]] = missing[i];
+        missing.splice(i, 1);
+      } else {
+        swap(duplicates[i][0]);
+        i--;
+        continue;
+      }
+    }
+  } else {
+    for (let i = 0; i < length - 4; i++) {
+      if (loops > 100) {
+        return null;
+      }
+      let rand = Math.floor(Math.random() * missing.length);
+      // console.log("test 1");
+      const index = duplicates[i][1];
+      if (
+        missing[rand].name !== child[0][index].name &&
+        missing[rand].name !== child[1][index].name &&
+        missing[rand].name !== child[2][index].name &&
+        missing[rand].name !== child[3][index].name
+      ) {
+        child[duplicates[i][0]][duplicates[i][1]] = missing[rand];
+        missing.splice(rand, 1);
+      } else {
+        loops++;
+        i--;
+        continue;
+      }
+    }
+    for (let i = length - 4; i < length; i++) {
+      const index = duplicates[i][1];
+      if (
+        missing[0].name !== child[0][index].name &&
+        missing[0].name !== child[1][index].name &&
+        missing[0].name !== child[2][index].name &&
+        missing[0].name !== child[3][index].name
+      ) {
+        child[duplicates[i][0]][duplicates[i][1]] = missing[0];
+        missing.splice(0, 1);
+      } else {
+        swap(duplicates[i][0]);
+        i--;
+        continue;
       }
     }
   }
-
-  for (let i = length - 4; i < length; i++) {
-    const index = duplicates[i][1];
-    if (
-      missing[0].name !== child1[0][index].name &&
-      missing[0].name !== child1[1][index].name &&
-      missing[0].name !== child1[2][index].name &&
-      missing[0].name !== child1[3][index].name
-    ) {
-      child1[duplicates[i][0]][duplicates[i][1]] = missing[0];
-      missing.splice(0, 1);
-    } else {
-      swap(duplicates[i][0]);
-      i--;
-      continue;
-    }
-    // still is an infinite loop
-  }
-  console.log("child1: ", child1[0][0]);
+  // still is an infinite loop
+  console.log("child: ", child);
+  return child;
 }
 
-for (let i = 0; i < 100000; i++) {
+for (let i = 0; i < 1; i++) {
   console.log("run", i + 1);
-  geneticAlgorithm();
+  run();
 }
