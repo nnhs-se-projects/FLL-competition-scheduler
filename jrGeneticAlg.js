@@ -18,19 +18,19 @@ function performGeneticAlg() {
   oldPool.sort((a, b) => {
     return jrGrading(b) - jrGrading(a);
   });
-  console.log("Old Pool: " + oldPool);
+  //console.log("Old Pool: " + oldPool);
   let ParentA = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
   let ParentB = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
 
-  console.log("Parent A: " + ParentA);
-  console.log("Parent B: " + ParentB);
+  // console.log("Parent A: " + ParentA);
+  // console.log("Parent B: " + ParentB);
 
   let x1 = getRandomNumX1(ParentA);
   let x2 = getRandomNumX2(ParentB);
 
   let children = crossover(x1, x2, ParentA, ParentB);
 
-  console.log("Children: " + children);
+  // console.log("Children: " + children);
 
   let childA = children[0];
   let childB = children[1];
@@ -38,7 +38,39 @@ function performGeneticAlg() {
   newPool.push(childA);
   newPool.push(childB);
 
-  console.log("New Pool: " + newPool);
+  // console.log("New Pool: " + newPool);
 }
 
-performGeneticAlg();
+console.log("Old Pool: " + oldPool);
+
+// for (let i = 0; i < 25; i++) {
+//   performGeneticAlg();
+// }
+// console.log("New Pool: " + newPool);
+
+// oldPool = newPool;
+// newPool = [];
+
+let runs = 25;
+while (oldPool.length > 2) {
+  for (let i = 0; i < runs; i++) {
+    performGeneticAlg();
+  }
+  runs = runs / 2;
+  console.log("New Pool: " + newPool);
+  oldPool = newPool;
+  newPool = [];
+}
+
+oldPool.sort((a, b) => {
+  return jrGrading(b) - jrGrading(a);
+});
+
+console.log("Best Judging Schedule: ");
+for (let j = 0; j < oldPool[0].length; j++) {
+  if (j < oldPool[0].length / 2) {
+    console.log("Robot Room " + (j + 1) + ": " + oldPool[0][j]);
+  } else {
+    console.log("Project Room " + (j + 1) + ": " + oldPool[0][j]);
+  }
+}
