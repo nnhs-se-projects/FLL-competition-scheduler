@@ -2,16 +2,13 @@ import { randomTable } from "./randomTable.js";
 
 const POPULATION = 100;
 
-let newPool = [];
-let oldPool = [];
-let best = null;
-
 function run() {
-  oldPool = [];
+  let newPool = [];
+  let oldPool = [];
+  let tmp_pool = [];
+  let best = null;
   for (let i = 0; i < POPULATION; i++) {
-    //console.log("i: ", i);
     let parent = randomTable();
-    // console.log("pt1");
     while (parent === null) {
       console.log("parent change");
       parent = randomTable();
