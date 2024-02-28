@@ -38,6 +38,8 @@ function performGeneticAlgorithm() {
   }
 
   // STEP 3: MUTATION
+  let childA = mutate(children[0]);
+  let childB = mutate(children[1]);
 
   // STEP 4: ADD TO NEW POOL
 }
@@ -269,7 +271,28 @@ function replaceDuplicates(child, x1, x2) {
   return child;
 }
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 100; i++) {
   console.log("run", i + 1);
   run();
+}
+
+function mutate(crossoverChildren) {
+  let randomNum = Math.floor(Math.random() * 10 + 1);
+  if (randomNum === 1) {
+    return swapRandTwo(crossoverChildren);
+    //update rating
+  } else {
+    return crossoverChildren;
+  }
+}
+
+function swapRandTwo(child) {
+  for (let i = 0; i < 4; i++) {
+    let rand1 = Math.floor(Math.random() * child[i].length);
+    let rand2 = Math.floor(Math.random() * child[i].length);
+    let teamSwap = child[i][rand1];
+    child[i][rand1] = child[i][rand2];
+    child[i][rand2] = teamSwap;
+  }
+  return child;
 }
