@@ -30,6 +30,12 @@ function jrGrading(child) {
       }
     }
     let teamScore = Math.abs(rr - pr) / parseFloat(child[0].length);
+
+    if (Math.abs(rr - pr) < 2) {
+      totalScore = 0;
+      return totalScore;
+    }
+
     teamGrades.push(teamScore);
   }
 

@@ -18,6 +18,12 @@ function performGeneticAlg() {
   oldPool.sort((a, b) => {
     return jrGrading(b) - jrGrading(a);
   });
+
+  console.log("SCORES: ");
+  for (let i = 0; i < oldPool.length; i++) {
+    console.log(jrGrading(oldPool[i]));
+  }
+
   //console.log("Old Pool: " + oldPool);
   let ParentA = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
   let ParentB = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
