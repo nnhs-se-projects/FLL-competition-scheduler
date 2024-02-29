@@ -9,6 +9,9 @@ let oldPool = [];
 
 for (let i = 0; i < 100; i++) {
   let temp = randomJS();
+  while (jrGrading(temp) === 0) {
+    temp = randomJS();
+  }
   oldPool.push(temp);
 }
 

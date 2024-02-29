@@ -57,6 +57,27 @@ function randomJS() {
       }
     }
   }
+  function checkIndex(timeSlot) {
+    let pr = -1;
+    for (let i = 0; i < robotRooms.length; i++) {
+      for (let j = 0; j < timeSlot; j++) {
+        for (let room = 0; room < projectRooms.length; room++) {
+          if (projectRooms[room].includes(robotRooms[i][j])) {
+            pr = projectRooms[room].indexOf(robotRooms[i][j]);
+          }
+        }
+        if (pr != -1 && Math.abs(pr - j) === 1) {
+          let rand = Math.floor(Math.random() * (timeSlot + 1));
+          while (Math.abs(rand - j) === 1) {
+            rand = Math.floor(Math.random() * (timeSlot + 1));
+          }
+          let teamSwap = robotRooms[i][j];
+          robotRooms[i][j] = robotRooms[0][rand];
+          robotRooms[0][rand] = teamSwap;
+        }
+      }
+    }
+  }
 
   let timeSlot = 0;
   let count = 0;
@@ -76,6 +97,9 @@ function randomJS() {
     }
     timeSlot++;
     checkDuplicates(timeSlot - 1);
+    if (timeSlot > 3) {
+      checkIndex(timeSlot - 1);
+    }
   }
 
   // for (let i = 0; i < robotRooms.length; i++) {
