@@ -1,12 +1,14 @@
 import { randomTable } from "./randomTable.js";
 
 const POPULATION = 100;
+const TOTAL_GENERATIONS = 100;
 
 function run() {
   let newPool = [];
   let oldPool = [];
-  let tmp_pool = [];
   let best = null;
+
+  // create an initial random population of tours
   for (let i = 0; i < POPULATION; i++) {
     let parent = randomTable();
     while (parent === null) {
@@ -15,9 +17,24 @@ function run() {
     }
     oldPool.push(parent);
   }
-  console.log("run");
-  performGeneticAlgorithm();
-  // SORT POOLS
+
+  // EVALUATE INITIAL POOLS
+
+  // iterate for the specific number of generations
+  for (let i = 0; i < TOTAL_GENERATIONS; i++) {
+    best; // set best to the current best tour
+
+    for (let j = 0; j < POPULATION / 2; j++) {
+      let children = performGeneticAlgorithm();
+      newPool.push(children[0]);
+      newPool.push(children[1]);
+    }
+
+    oldPool = newPool;
+    newPool = [];
+  }
+
+  // SORT OLD POOL
 }
 
 function performGeneticAlgorithm() {
@@ -39,6 +56,7 @@ function performGeneticAlgorithm() {
   let childB = mutate(children[1]);
 
   // STEP 4: ADD TO NEW POOL
+  return children;
 }
 function crossOver(parentA, parentB) {
   // console.log("crossOver");
