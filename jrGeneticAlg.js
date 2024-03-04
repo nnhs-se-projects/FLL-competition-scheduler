@@ -9,7 +9,7 @@ let oldPool = [];
 
 for (let i = 0; i < 100; i++) {
   let temp = randomJS();
-  while (jrGrading(temp) === 0) {
+  while (jrGrading(temp) < 0.46) {
     temp = randomJS();
   }
   oldPool.push(temp);
@@ -44,6 +44,14 @@ function performGeneticAlg() {
   let childA = children[0];
   let childB = children[1];
 
+  while (jrGrading(childA) < 0.46 || jrGrading(childB) < 0.46) {
+    let x1 = getRandomNumX1(ParentA);
+    let x2 = getRandomNumX2(ParentB);
+    let children = crossover(x1, x2, ParentA, ParentB);
+    childA = children[0];
+    childB = children[1];
+  }
+
   newPool.push(childA);
   newPool.push(childB);
 
@@ -61,7 +69,7 @@ console.log("Old Pool: " + oldPool);
 // newPool = [];
 
 let runs = 25;
-while (oldPool.length > 2) {
+while (oldPool.length > 4) {
   for (let i = 0; i < runs; i++) {
     performGeneticAlg();
   }
@@ -76,6 +84,7 @@ oldPool.sort((a, b) => {
 });
 
 console.log("Best Judging Schedule: ");
+console.log(jrGrading(oldPool[0]));
 for (let j = 0; j < oldPool[0].length; j++) {
   if (j < oldPool[0].length / 2) {
     console.log("Robot Room " + (j + 1) + ": " + oldPool[0][j]);
