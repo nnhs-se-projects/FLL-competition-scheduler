@@ -1,27 +1,32 @@
-function gradeTables(newPool, POPULATION) {
+function gradeTables(oldPool, POPULATION) {
   let grade = [];
   for (let i = 0; i < POPULATION; i++) {
-    for (let t = 1; t < 33; i++) {
+    let individualGrade = 0;
+    let invalid = 1;
+    for (let t = 1; t < 33; t++) {
       let arr = [];
-      let individualGrade = 0;
-      for (let j = 0; j < newPool[i].length; j++) {
-        for (let k = 0; k < newPool[i][j].length; k++) {
-          if (newPool[i][j][k].name === "team" + t) {
+      for (let j = 0; j < oldPool[i].length; j++) {
+        for (let k = 0; k < oldPool[i][j].length; k++) {
+          if (oldPool[i][j][k].name === "team" + t) {
             arr.push(k);
           }
         }
       }
       if (
-        Math.abs(arr[0] - arr[1]) > 2 &&
-        Math.abs(arr[0] - arr[2]) > 2 &&
-        Math.abs(arr[1] - arr[2]) > 2
+        Math.abs(arr[0] - arr[1]) > 1 &&
+        Math.abs(arr[0] - arr[2]) > 1 &&
+        Math.abs(arr[1] - arr[2]) > 1
       ) {
-        individualGrade += 1;
+        individualGrade++;
       } else {
-        grade.push(0);
+        invalid = 0;
       }
     }
-    grade.push(individualGrade);
+    if (invalid === 1) {
+      grade.push(individualGrade);
+    } else {
+      grade.push(0);
+    }
   }
   return grade;
 }

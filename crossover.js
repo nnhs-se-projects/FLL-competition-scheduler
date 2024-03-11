@@ -1,8 +1,8 @@
 import { randomTable } from "./randomTable.js";
 import { gradeTables } from "./tableGrading.js";
 
-const POPULATION = 20;
-const TOTAL_GENERATIONS = 1;
+const POPULATION = 100;
+const TOTAL_GENERATIONS = 10;
 
 function run() {
   let newPool = [];
@@ -22,20 +22,27 @@ function run() {
 
   // iterate for the specific number of generations
   for (let i = 0; i < TOTAL_GENERATIONS; i++) {
+    console.log("generation", i);
     best; // set best to the current best tour
 
     for (let j = 0; j < POPULATION / 2; j++) {
-      let children = performGeneticAlgorithm(oldPool);
+      let children = [];
+      children = performGeneticAlgorithm(oldPool);
       newPool.push(children[0]);
       newPool.push(children[1]);
-      console.log("children: ", children[0][0]);
     }
     oldPool = newPool;
     newPool = [];
     // console.log("oldPool: ", oldPool);
 
     // sort old pool
-    console.log(gradeTables(oldPool, POPULATION));
+    let grade = gradeTables(oldPool, POPULATION);
+    for (let i = 0; i < grade.length; i++) {
+      if (grade[i] > 0) {
+        console.log("yay");
+        console.log(grade[i]);
+      }
+    }
   }
 
   // SORT OLD POOL
@@ -205,10 +212,10 @@ function replaceDuplicates(child, x1, x2) {
     for (let i = 0; i < length; i++) {
       const index = duplicates[i][1];
       if (
-        missing[i].name !== child[0][index].name &&
-        missing[i].name !== child[1][index].name &&
-        missing[i].name !== child[2][index].name &&
-        missing[i].name !== child[3][index].name
+        missing[0].name !== child[0][index].name &&
+        missing[0].name !== child[1][index].name &&
+        missing[0].name !== child[2][index].name &&
+        missing[0].name !== child[3][index].name
       ) {
         child[duplicates[i][0]][duplicates[i][1]] = missing[i];
         missing.splice(i, 1);
@@ -239,8 +246,10 @@ function replaceDuplicates(child, x1, x2) {
         continue;
       }
     }
+    console.log("first time");
     for (let i = length - 4; i < length; i++) {
       const index = duplicates[i][1];
+      console.log("missing", missing);
       if (
         missing[0].name !== child[0][index].name &&
         missing[0].name !== child[1][index].name &&
