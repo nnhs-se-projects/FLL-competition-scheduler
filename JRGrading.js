@@ -35,7 +35,10 @@ function jrGrading(child) {
       totalScore = 0;
       return totalScore;
     }
-
+    if (Math.abs(rr - pr) > child[0].length - 3) {
+      totalScore = 0;
+      return totalScore;
+    }
     teamGrades.push(teamScore);
   }
 
