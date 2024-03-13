@@ -29,7 +29,13 @@ function jrGrading(child) {
         pr = child[room].indexOf("team" + i);
       }
     }
+
+    // make num = timeslot/2
+
+    //check if spacing is less than num/2 or greater than 3num/2 then teamScore = 0
     let teamScore = Math.abs(rr - pr) / parseFloat(child[0].length);
+
+    // if its in the range let teamScore instead equal rr-pr/num
 
     if (Math.abs(rr - pr) < 2) {
       totalScore = 0;
