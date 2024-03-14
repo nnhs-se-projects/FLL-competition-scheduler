@@ -9,7 +9,7 @@ let oldPool = [];
 
 for (let i = 0; i < 100; i++) {
   let temp = randomJS();
-  while (jrGrading(temp) < 0.45) {
+  while (jrGrading(temp) < 0.9) {
     temp = randomJS();
   }
   oldPool.push(temp);
@@ -44,7 +44,7 @@ function performGeneticAlg() {
   let childA = children[0];
   let childB = children[1];
 
-  while (jrGrading(childA) < 0.45 || jrGrading(childB) < 0.45) {
+  while (jrGrading(childA) < 0.9 || jrGrading(childB) < 0.9) {
     let x1 = getRandomNumX1(ParentA);
     let x2 = getRandomNumX2(ParentB);
     let children = crossover(x1, x2, ParentA, ParentB);
