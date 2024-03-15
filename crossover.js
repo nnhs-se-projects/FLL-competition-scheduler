@@ -1,7 +1,8 @@
 import { randomTable } from "./randomTable.js";
 import { gradeTables } from "./tableGrading.js";
+import { test } from "./test.js";
 
-const POPULATION = 100;
+const POPULATION = 10000;
 const TOTAL_GENERATIONS = 10;
 
 function run() {
@@ -28,17 +29,24 @@ function run() {
     for (let j = 0; j < POPULATION / 2; j++) {
       let children = [];
       children = performGeneticAlgorithm(oldPool);
-      newPool.push(children[0]);
-      newPool.push(children[1]);
+      let test1 = test(children[0]);
+      let test2 = test(children[1]);
+      if (test1 == "Failures: 1" || test2 == "Failures: 1") {
+        j--;
+        continue;
+      } else {
+        newPool.push(children[0]);
+        newPool.push(children[1]);
+      }
     }
     oldPool = newPool;
     newPool = [];
     // console.log("oldPool: ", oldPool);
-
     // sort old pool
     let grade = gradeTables(oldPool, POPULATION);
     for (let i = 0; i < grade.length; i++) {
       if (grade[i] > 0) {
+        console.log("i: ", i);
         console.log("yay");
         console.log(grade[i]);
       }
@@ -166,6 +174,7 @@ function replaceDuplicates(child, x1, x2) {
       let str = { name: "team" + t, run: 1 };
       missing.push(str);
     }
+
     if (run2 > 1) {
       for (let j = 0; j < temp.length; j++) {
         if (temp[j][2].run === 2 && temp[j][1] >= x1 && temp[j][1] < x2) {
@@ -176,6 +185,7 @@ function replaceDuplicates(child, x1, x2) {
       let str = { name: "team" + t, run: 2 };
       missing.push(str);
     }
+
     if (run3 > 1) {
       for (let i = 0; i < temp.length; i++) {
         if (temp[i][2].run === 3 && temp[i][1] >= x1 && temp[i][1] < x2) {
@@ -206,9 +216,13 @@ function replaceDuplicates(child, x1, x2) {
     }
   }
 
-  const length = duplicates.length;
+  let length = duplicates.length;
 
   if (length < 5) {
+    if (duplicates.length === 2 && duplicates[0][3] === duplicates[1][3]) {
+      duplicates.splice(0, 1);
+      length = duplicates.length;
+    }
     for (let i = 0; i < length; i++) {
       const index = duplicates[i][1];
       if (
@@ -217,8 +231,8 @@ function replaceDuplicates(child, x1, x2) {
         missing[0].name !== child[2][index].name &&
         missing[0].name !== child[3][index].name
       ) {
-        child[duplicates[i][0]][duplicates[i][1]] = missing[i];
-        missing.splice(i, 1);
+        child[duplicates[i][0]][duplicates[i][1]] = missing[0];
+        missing.splice(0, 1);
       } else {
         swap(duplicates[i][0]);
         i--;
@@ -246,10 +260,11 @@ function replaceDuplicates(child, x1, x2) {
         continue;
       }
     }
-    console.log("first time");
+    if (missing.length <= 3) {
+      return null;
+    }
     for (let i = length - 4; i < length; i++) {
       const index = duplicates[i][1];
-      console.log("missing", missing);
       if (
         missing[0].name !== child[0][index].name &&
         missing[0].name !== child[1][index].name &&

@@ -1,3 +1,4 @@
+import { test } from "./test.js";
 function gradeTables(oldPool, POPULATION) {
   let grade = [];
   for (let i = 0; i < POPULATION; i++) {
@@ -21,6 +22,11 @@ function gradeTables(oldPool, POPULATION) {
       } else {
         invalid = 0;
       }
+    }
+    var test1 = test(oldPool[i]);
+    if (test1.includes("Failures")) {
+      invalid = 0;
+      console.log("failed in grade");
     }
     if (invalid === 1) {
       grade.push(individualGrade);

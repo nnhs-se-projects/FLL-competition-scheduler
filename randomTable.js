@@ -1,3 +1,4 @@
+import { test } from "./test.js";
 function randomTable() {
   let teams = [];
   let table1 = [];
@@ -133,6 +134,10 @@ function randomTable() {
   if (table4[23] == undefined) {
     return null;
   }
+  let test1 = test(tables);
+  if (test1.includes("Failures")) {
+    console.log("failed in randomTable");
+  }
   // console.log(table1[0]);
   return tables;
 
@@ -142,11 +147,13 @@ function randomTable() {
   //console.log("table 3: " + table3);
   //console.log("table 4: " + table4);
 }
-/* for (let i = 0; i < 1000000; i++) {
+for (let i = 0; i < 100000; i++) {
   console.log("run: " + i);
   let result = randomTable();
   if (result == null) {
     console.log("null");
-  } else console.log(result[0][0]);
-} */
+  } else {
+    //console.log(result[0][0])}
+  }
+}
 export { randomTable };
