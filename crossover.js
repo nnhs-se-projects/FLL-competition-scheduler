@@ -1,8 +1,8 @@
-import { randomTable } from "./randomTable.js";
+import { randomTable } from "./newRandomTables.js";
 import { gradeTables } from "./tableGrading.js";
 import { test } from "./test.js";
 
-const POPULATION = 10000;
+const POPULATION = 100;
 const TOTAL_GENERATIONS = 10;
 
 function run() {
@@ -13,7 +13,8 @@ function run() {
   // create an initial random population of tours
   for (let i = 0; i < POPULATION; i++) {
     let parent = randomTable();
-    while (parent === null) {
+    let testResult = test(parent);
+    while (parent === null || testResult.includes("Failures")) {
       parent = randomTable();
     }
     oldPool.push(parent);
@@ -31,7 +32,7 @@ function run() {
       children = performGeneticAlgorithm(oldPool);
       let test1 = test(children[0]);
       let test2 = test(children[1]);
-      if (test1 == "Failures: 1" || test2 == "Failures: 1") {
+      if (test1 == "Failures" || test2 == "Failures") {
         j--;
         continue;
       } else {
@@ -44,13 +45,7 @@ function run() {
     // console.log("oldPool: ", oldPool);
     // sort old pool
     let grade = gradeTables(oldPool, POPULATION);
-    for (let i = 0; i < grade.length; i++) {
-      if (grade[i] > 0) {
-        console.log("i: ", i);
-        console.log("yay");
-        console.log(grade[i]);
-      }
-    }
+    console.log("grade: ", grade);
   }
 
   // SORT OLD POOL

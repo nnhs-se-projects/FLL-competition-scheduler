@@ -140,12 +140,12 @@ function randomTable() {
   return tables;
 }
 
-// let oldPool = [];
-// for (let i = 0; i < 100; i++) {
-//   oldPool.push(randomTable());
-// }
-// let grade = gradeTables(oldPool, 100);
-// console.log(grade);
+let oldPool = [];
+for (let i = 0; i < 100; i++) {
+  oldPool.push(randomTable());
+}
+let grade = gradeTables(oldPool, 100);
+console.log(grade);
 
 // for (let i = 0; i < 3; i++) {
 //   console.log("run: " + i);

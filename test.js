@@ -15,7 +15,7 @@ function test(child) {
     }
   }
   if (failures > 0) {
-    return "Failures: " + failures;
+    return "Failures";
   } else {
     return "All tests passed!";
   }

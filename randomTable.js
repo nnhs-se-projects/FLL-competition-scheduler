@@ -147,13 +147,13 @@ function randomTable() {
   //console.log("table 3: " + table3);
   //console.log("table 4: " + table4);
 }
-for (let i = 0; i < 100000; i++) {
+for (let i = 0; i < 1000; i++) {
   console.log("run: " + i);
   let result = randomTable();
   if (result == null) {
     console.log("null");
   } else {
-    //console.log(result[0][0])}
+    console.log(result[0][0]);
   }
 }
 export { randomTable };
