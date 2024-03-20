@@ -42,9 +42,23 @@ function run() {
     }
     oldPool = newPool;
     newPool = [];
+    let temp = [];
     // console.log("oldPool: ", oldPool);
     // sort old pool
     let grade = gradeTables(oldPool, POPULATION);
+    for (let i = 0; i < grade.length; i++) {
+      if (grade[i] === 32) {
+        temp.push(oldPool[i]);
+      }
+    }
+    for (let i = 0; i < grade.length; i++) {
+      if (grade[i] === 0) {
+        temp.push(oldPool[i]);
+      }
+    }
+    oldPool = temp;
+    let newGrade = gradeTables(oldPool, POPULATION);
+    console.log("newGrade: ", newGrade);
     console.log("grade: ", grade);
   }
 
