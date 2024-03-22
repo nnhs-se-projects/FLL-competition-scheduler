@@ -1,7 +1,10 @@
 import { test } from "./test.js";
 function gradeTables(oldPool, POPULATION) {
   let grade = [];
-  for (let i = 0; i < POPULATION; i++) {
+  if (oldPool.length !== POPULATION) {
+    console.log("Shock");
+  }
+  for (let i = 0; i < oldPool.length; i++) {
     let individualGrade = 0;
     let invalid = 1;
     for (let t = 1; t < 33; t++) {
@@ -28,11 +31,7 @@ function gradeTables(oldPool, POPULATION) {
       invalid = 0;
       console.log("failed in grade");
     }
-    if (invalid === 1) {
-      grade.push(individualGrade);
-    } else {
-      grade.push(0);
-    }
+    grade.push(individualGrade);
   }
   return grade;
 }

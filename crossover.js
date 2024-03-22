@@ -45,6 +45,11 @@ function run() {
     let temp = [];
     // console.log("oldPool: ", oldPool);
     // sort old pool
+    if (oldPool.length !== POPULATION) {
+      console.log("oldPool: ", oldPool.length);
+      console.log("Population: ", POPULATION);
+      console.log("Shocks");
+    }
     let grade = gradeTables(oldPool, POPULATION);
     for (let i = 0; i < grade.length; i++) {
       if (grade[i] === 32) {
@@ -52,7 +57,7 @@ function run() {
       }
     }
     for (let i = 0; i < grade.length; i++) {
-      if (grade[i] === 0) {
+      if (grade[i] >= 0 && grade[i] < 32) {
         temp.push(oldPool[i]);
       }
     }
@@ -222,6 +227,25 @@ function replaceDuplicates(child, x1, x2) {
         child[tableNum][rand] = missing[0];
         missing[0] = temp;
         break;
+      } else if (x1 > 1 && x2 < 31) {
+        if (
+          child[0][rand].name !== temp.name &&
+          child[1][rand].name !== temp.name &&
+          child[2][rand].name !== temp.name &&
+          child[3][rand].name !== temp.name &&
+          child[0][rand - 1].name !== temp.name &&
+          child[1][rand - 1].name !== temp.name &&
+          child[2][rand - 1].name !== temp.name &&
+          child[3][rand - 1].name !== temp.name &&
+          child[0][rand + 1].name !== temp.name &&
+          child[1][rand + 1].name !== temp.name &&
+          child[2][rand + 1].name !== temp.name &&
+          child[3][rand + 1].name !== temp.name
+        ) {
+          child[tableNum][rand] = missing[0];
+          missing[0] = temp;
+          break;
+        }
       }
     }
   }
@@ -239,6 +263,25 @@ function replaceDuplicates(child, x1, x2) {
     for (let i = 0; i < length; i++) {
       const index = duplicates[i][1];
       if (
+        missing.length > 0 &&
+        x1 > 1 &&
+        x2 < 31 &&
+        missing[0].name !== child[0][index].name &&
+        missing[0].name !== child[1][index].name &&
+        missing[0].name !== child[2][index].name &&
+        missing[0].name !== child[3][index].name &&
+        missing[0].name !== child[0][index - 1].name &&
+        missing[0].name !== child[1][index - 1].name &&
+        missing[0].name !== child[2][index - 1].name &&
+        missing[0].name !== child[3][index - 1].name &&
+        missing[0].name !== child[0][index + 1].name &&
+        missing[0].name !== child[1][index + 1].name &&
+        missing[0].name !== child[2][index + 1].name &&
+        missing[0].name !== child[3][index + 1].name
+      ) {
+        child[duplicates[i][0]][duplicates[i][1]] = missing[0];
+        missing.splice(0, 1);
+      } else if (
         missing.length > 0 &&
         missing[0].name !== child[0][index].name &&
         missing[0].name !== child[1][index].name &&

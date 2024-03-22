@@ -147,12 +147,12 @@ for (let i = 0; i < 100; i++) {
 let grade = gradeTables(oldPool, 100);
 console.log(grade);
 
-// for (let i = 0; i < 3; i++) {
-//   console.log("run: " + i);
-//   let result = randomTable();
-//   if (result == null) {
-//     console.log("null");
-//   } else console.log(result);
-// }
+for (let i = 0; i < 3; i++) {
+  console.log("run: " + i);
+  let result = randomTable();
+  if (result == null) {
+    console.log("null");
+  } else console.log(result);
+}
 
 export { randomTable };
