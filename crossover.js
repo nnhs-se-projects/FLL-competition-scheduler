@@ -42,7 +42,6 @@ function run() {
     }
     oldPool = newPool;
     newPool = [];
-    let temp = [];
     // console.log("oldPool: ", oldPool);
     // sort old pool
     if (oldPool.length !== POPULATION) {
@@ -51,20 +50,20 @@ function run() {
       console.log("Shocks");
     }
     let grade = gradeTables(oldPool, POPULATION);
-    for (let i = 0; i < grade.length; i++) {
-      if (grade[i] === 32) {
-        temp.push(oldPool[i]);
+    console.log("grade: ", grade);
+
+    let temp = [];
+    for (let i = 32; i > -1; i--) {
+      for (let j = 0; j < grade.length; j++) {
+        if (grade[j] === i) {
+          temp.push(oldPool[j]);
+        }
       }
     }
-    for (let i = 0; i < grade.length; i++) {
-      if (grade[i] >= 0 && grade[i] < 32) {
-        temp.push(oldPool[i]);
-      }
-    }
+
     oldPool = temp;
     let newGrade = gradeTables(oldPool, POPULATION);
     console.log("newGrade: ", newGrade);
-    console.log("grade: ", grade);
   }
 
   // SORT OLD POOL
@@ -154,6 +153,7 @@ function replaceDuplicates(child, x1, x2) {
   let duplicates = [];
   let missing = [];
   let loops = 0;
+  let loops2 = 0;
   for (let t = 1; t < 33; t++) {
     let temp = [];
     for (let i = 0; i < child.length; i++) {
@@ -212,9 +212,9 @@ function replaceDuplicates(child, x1, x2) {
   }
 
   function swap(tableNum) {
-    let loops2 = 0;
     while (loops2 < 100) {
       loops2++;
+      console.log("swap", loops2);
       const rand = Math.floor(Math.random() * (x2 - x1) + x1);
       const temp = child[tableNum][rand];
       if (
@@ -226,7 +226,7 @@ function replaceDuplicates(child, x1, x2) {
       ) {
         child[tableNum][rand] = missing[0];
         missing[0] = temp;
-        break;
+        return "done";
       } else if (x1 > 1 && x2 < 31) {
         if (
           child[0][rand].name !== temp.name &&
@@ -244,9 +244,12 @@ function replaceDuplicates(child, x1, x2) {
         ) {
           child[tableNum][rand] = missing[0];
           missing[0] = temp;
-          break;
+          return "done";
         }
       }
+    }
+    if (loops2 === 100) {
+      return null;
     }
   }
 
@@ -291,9 +294,13 @@ function replaceDuplicates(child, x1, x2) {
         child[duplicates[i][0]][duplicates[i][1]] = missing[0];
         missing.splice(0, 1);
       } else {
-        swap(duplicates[i][0]);
-        i--;
-        continue;
+        let swapResult = swap(duplicates[i][0]);
+        if (swapResult === "done") {
+          i--;
+          continue;
+        } else if (swapResult === null) {
+          return null;
+        }
       }
     }
   } else {
@@ -333,9 +340,13 @@ function replaceDuplicates(child, x1, x2) {
         child[duplicates[i][0]][duplicates[i][1]] = missing[0];
         missing.splice(0, 1);
       } else {
-        swap(duplicates[i][0]);
-        i--;
-        continue;
+        let swapResult = swap(duplicates[i][0]);
+        if (swapResult === "done") {
+          i--;
+          continue;
+        } else if (swapResult === null) {
+          return null;
+        }
       }
     }
   }
