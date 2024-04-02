@@ -1,6 +1,7 @@
 import { randomTable } from "./newRandomTables.js";
 import { gradeTables } from "./tableGrading.js";
 import { test } from "./test.js";
+import { tableTest } from "./tableTest.js";
 
 const POPULATION = 100;
 const TOTAL_GENERATIONS = 100;
@@ -14,12 +15,16 @@ function run() {
   for (let i = 0; i < POPULATION; i++) {
     let parent = randomTable();
     let testResult = test(parent);
-    while (parent === null || testResult.includes("Failures")) {
+    let tableTester = tableTest(parent, 1);
+    while (
+      parent === null ||
+      testResult.includes("Failures") ||
+      tableTester.includes("Failure")
+    ) {
       parent = randomTable();
     }
     oldPool.push(parent);
   }
-  // console.log("oldPool: ", oldPool);
   // EVALUATE INITIAL POOLS
 
   // iterate for the specific number of generations
@@ -42,15 +47,8 @@ function run() {
     }
     oldPool = newPool;
     newPool = [];
-    // console.log("oldPool: ", oldPool);
     // sort old pool
-    if (oldPool.length !== POPULATION) {
-      console.log("oldPool: ", oldPool.length);
-      console.log("Population: ", POPULATION);
-      console.log("Shocks");
-    }
     let grade = gradeTables(oldPool, POPULATION);
-    console.log("grade: ", grade);
 
     let temp = [];
     for (let i = 32; i > -1; i--) {
@@ -214,7 +212,6 @@ function replaceDuplicates(child, x1, x2) {
   function swap(tableNum) {
     while (loops2 < 100) {
       loops2++;
-      console.log("swap", loops2);
       const rand = Math.floor(Math.random() * (x2 - x1) + x1);
       const temp = child[tableNum][rand];
       if (
@@ -227,7 +224,7 @@ function replaceDuplicates(child, x1, x2) {
         child[tableNum][rand] = missing[0];
         missing[0] = temp;
         return "done";
-      } else if (x1 > 1 && x2 < 31) {
+      } else if (x1 > 1 && x2 < 30) {
         if (
           child[0][rand].name !== temp.name &&
           child[1][rand].name !== temp.name &&
@@ -268,7 +265,7 @@ function replaceDuplicates(child, x1, x2) {
       if (
         missing.length > 0 &&
         x1 > 1 &&
-        x2 < 31 &&
+        x2 < 30 &&
         missing[0].name !== child[0][index].name &&
         missing[0].name !== child[1][index].name &&
         missing[0].name !== child[2][index].name &&

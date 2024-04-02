@@ -1,5 +1,5 @@
 import { test } from "./test.js";
-function gradeTables(oldPool, POPULATION) {
+function tableTest(oldPool, POPULATION) {
   let grade = [];
   for (let i = 0; i < oldPool.length; i++) {
     let individualGrade = 0;
@@ -14,9 +14,9 @@ function gradeTables(oldPool, POPULATION) {
         }
       }
       if (
-        Math.abs(arr[0] - arr[1]) > 2 &&
-        Math.abs(arr[0] - arr[2]) > 2 &&
-        Math.abs(arr[1] - arr[2]) > 2
+        Math.abs(arr[0] - arr[1]) > 3 &&
+        Math.abs(arr[0] - arr[2]) > 3 &&
+        Math.abs(arr[1] - arr[2]) > 3
       ) {
         individualGrade++;
       } else {
@@ -24,13 +24,13 @@ function gradeTables(oldPool, POPULATION) {
       }
     }
     var test1 = test(oldPool[i]);
-    if (test1.includes("Failures")) {
+    if (test1.includes("Failure")) {
       invalid = 0;
-      console.log("failed in grade");
+      // console.log("failed in grade");
     }
     grade.push(individualGrade);
   }
   return grade;
 }
 
-export { gradeTables };
+export { tableTest };
