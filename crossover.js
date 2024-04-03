@@ -51,7 +51,7 @@ function run() {
     let grade = gradeTables(oldPool, POPULATION);
 
     let temp = [];
-    for (let i = 32; i > -1; i--) {
+    for (let i = 132; i > -100; i--) {
       for (let j = 0; j < grade.length; j++) {
         if (grade[j] === i) {
           temp.push(oldPool[j]);
@@ -262,42 +262,48 @@ function replaceDuplicates(child, x1, x2) {
     }
     for (let i = 0; i < length; i++) {
       const index = duplicates[i][1];
-      if (
-        missing.length > 0 &&
-        x1 > 1 &&
-        x2 < 30 &&
-        missing[0].name !== child[0][index].name &&
-        missing[0].name !== child[1][index].name &&
-        missing[0].name !== child[2][index].name &&
-        missing[0].name !== child[3][index].name &&
-        missing[0].name !== child[0][index - 1].name &&
-        missing[0].name !== child[1][index - 1].name &&
-        missing[0].name !== child[2][index - 1].name &&
-        missing[0].name !== child[3][index - 1].name &&
-        missing[0].name !== child[0][index + 1].name &&
-        missing[0].name !== child[1][index + 1].name &&
-        missing[0].name !== child[2][index + 1].name &&
-        missing[0].name !== child[3][index + 1].name
-      ) {
-        child[duplicates[i][0]][duplicates[i][1]] = missing[0];
-        missing.splice(0, 1);
-      } else if (
-        missing.length > 0 &&
-        missing[0].name !== child[0][index].name &&
-        missing[0].name !== child[1][index].name &&
-        missing[0].name !== child[2][index].name &&
-        missing[0].name !== child[3][index].name
-      ) {
-        child[duplicates[i][0]][duplicates[i][1]] = missing[0];
-        missing.splice(0, 1);
-      } else {
-        let swapResult = swap(duplicates[i][0]);
-        if (swapResult === "done") {
-          i--;
-          continue;
-        } else if (swapResult === null) {
-          return null;
+      try {
+        if (
+          missing.length > 0 &&
+          x1 > 1 &&
+          x2 < 30 &&
+          missing[0].name !== child[0][index].name &&
+          missing[0].name !== child[1][index].name &&
+          missing[0].name !== child[2][index].name &&
+          missing[0].name !== child[3][index].name &&
+          missing[0].name !== child[0][index - 1].name &&
+          missing[0].name !== child[1][index - 1].name &&
+          missing[0].name !== child[2][index - 1].name &&
+          missing[0].name !== child[3][index - 1].name &&
+          missing[0].name !== child[0][index + 1].name &&
+          missing[0].name !== child[1][index + 1].name &&
+          missing[0].name !== child[2][index + 1].name &&
+          missing[0].name !== child[3][index + 1].name
+        ) {
+          child[duplicates[i][0]][duplicates[i][1]] = missing[0];
+          missing.splice(0, 1);
+        } else if (
+          missing.length > 0 &&
+          missing[0].name !== child[0][index].name &&
+          missing[0].name !== child[1][index].name &&
+          missing[0].name !== child[2][index].name &&
+          missing[0].name !== child[3][index].name
+        ) {
+          child[duplicates[i][0]][duplicates[i][1]] = missing[0];
+          missing.splice(0, 1);
+        } else {
+          let swapResult = swap(duplicates[i][0]);
+          if (swapResult === "done") {
+            i--;
+            continue;
+          } else if (swapResult === null) {
+            return null;
+          }
         }
+      } catch (e) {
+        console.log("error", e);
+        console.log("index", index);
+        console.log("child[0]", child[0]);
       }
     }
   } else {
