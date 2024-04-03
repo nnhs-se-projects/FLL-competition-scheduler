@@ -3,10 +3,10 @@ function gradeTables(oldPool, POPULATION) {
   let grade = [];
   for (let i = 0; i < oldPool.length; i++) {
     let individualGrade = 0;
-    let invalid = 1;
     for (let t = 1; t < 33; t++) {
       let arr = [];
       let arr2 = [];
+      let invalid = 1;
       for (let j = 0; j < oldPool[i].length; j++) {
         for (let k = 0; k < oldPool[i][j].length; k++) {
           if (oldPool[i][j][k].name === "team" + t) {
@@ -28,7 +28,7 @@ function gradeTables(oldPool, POPULATION) {
       }
       // CHECK DIFFERENT TABLES
       if (arr2[0] === arr2[1] && arr2[1] === arr2[2] && arr2[2] === arr2[0]) {
-        individualGrade -= 3;
+        invalid = 0;
       } else if (
         arr2[0] === arr2[1] ||
         arr2[1] === arr2[2] ||
@@ -38,12 +38,6 @@ function gradeTables(oldPool, POPULATION) {
       } else {
         individualGrade += 3;
       }
-    }
-
-    var test1 = test(oldPool[i]);
-    if (test1.includes("Failures")) {
-      invalid = 0;
-      console.log("failed in grade");
     }
     grade.push(individualGrade);
   }

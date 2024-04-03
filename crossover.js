@@ -23,15 +23,39 @@ function run() {
     ) {
       parent = randomTable();
     }
+    let grade1 = gradeTables(oldPool, POPULATION);
     oldPool.push(parent);
+    let temp = [];
+    for (let i = 132; i > -100; i--) {
+      for (let j = 0; j < grade1.length; j++) {
+        if (grade1[j] === i) {
+          temp.push(oldPool[j]);
+        }
+      }
+    }
   }
   // EVALUATE INITIAL POOLS
+
+  let oldGrade = gradeTables(oldPool, POPULATION);
+  let temp1 = [];
+  for (let i = 132; i > -100; i--) {
+    for (let j = 0; j < oldGrade.length; j++) {
+      if (oldGrade[j] === i) {
+        temp1.push(oldPool[j]);
+      }
+    }
+  }
+  oldPool = temp1;
+  best = temp1[0];
 
   // iterate for the specific number of generations
   for (let i = 0; i < TOTAL_GENERATIONS; i++) {
     console.log("generation", i);
-    best; // set best to the current best tour
-
+    if (tableTest(oldPool, POPULATION)) {
+      if (gradeTables([oldPool[0]], 1) > gradeTables([best], 1)) {
+        best = oldPool[0];
+      }
+    }
     for (let j = 0; j < POPULATION / 2; j++) {
       let children = [];
       children = performGeneticAlgorithm(oldPool);
@@ -63,8 +87,8 @@ function run() {
     let newGrade = gradeTables(oldPool, POPULATION);
     console.log("newGrade: ", newGrade);
   }
-
-  // SORT OLD POOL
+  console.log("grade", gradeTables([best], 1));
+  console.log("best", best);
 }
 
 function performGeneticAlgorithm(oldPool) {
