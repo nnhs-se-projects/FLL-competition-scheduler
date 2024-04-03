@@ -7,12 +7,13 @@
 // import { replaceDuplicates } from "./JRcrossover";
 
 function randomJS() {
+  //NOTE: make numTeams a param later then need to change jrGrading method
   let teamsR = [];
   let teamsP = [];
   let judgingSeshs = 2;
   let numTeams = 32;
   for (let i = 1; i < numTeams + 1; i++) {
-    let str = " team" + i;
+    let str = "team" + i;
     teamsR.push(str);
     teamsP.push(str);
   }
@@ -56,6 +57,27 @@ function randomJS() {
       }
     }
   }
+  function checkIndex(timeSlot) {
+    let pr = -1;
+    for (let i = 0; i < robotRooms.length; i++) {
+      for (let j = 0; j < timeSlot; j++) {
+        for (let room = 0; room < projectRooms.length; room++) {
+          if (projectRooms[room].includes(robotRooms[i][j])) {
+            pr = projectRooms[room].indexOf(robotRooms[i][j]);
+          }
+        }
+        if (pr != -1 && Math.abs(pr - j) === 1) {
+          let rand = Math.floor(Math.random() * (timeSlot + 1));
+          while (Math.abs(rand - j) === 1) {
+            rand = Math.floor(Math.random() * (timeSlot + 1));
+          }
+          let teamSwap = robotRooms[i][j];
+          robotRooms[i][j] = robotRooms[0][rand];
+          robotRooms[0][rand] = teamSwap;
+        }
+      }
+    }
+  }
 
   let timeSlot = 0;
   let count = 0;
@@ -69,30 +91,23 @@ function randomJS() {
     for (let i = 0; i < projectRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsP[randomNum];
-      // for (let j = 0; j < robotRooms.length; j++) {
-      //   //  doesn't check the last room because it would be in an infinite loops
-
-      //   // check if team is in a different judging room at the same time
-      //   while (robotRooms[j][timeSlot] === team) {
-      //     randomNum = getRandomNum();
-      //     team = teamsP[randomNum];
-      //     j = 0;
-      //   }
-      // }
       projectRooms[i].push(team);
       count++;
       teamsP.splice(randomNum, 1);
     }
     timeSlot++;
     checkDuplicates(timeSlot - 1);
+    if (timeSlot > 3) {
+      checkIndex(timeSlot - 1);
+    }
   }
 
-  for (let i = 0; i < robotRooms.length; i++) {
-    console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
-  }
-  for (let i = 0; i < projectRooms.length; i++) {
-    console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
-  }
+  // for (let i = 0; i < robotRooms.length; i++) {
+  //   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
+  // }
+  // for (let i = 0; i < projectRooms.length; i++) {
+  //   console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
+  // }
 
   let rooms = robotRooms.concat(projectRooms);
   return rooms;

@@ -3,9 +3,6 @@ import { randomJS } from "./randomJudgingSesh.js";
 
 const POPULATION = 10;
 
-const newPool = [];
-const oldPool = [];
-
 function getRandomNumX1(parent) {
   return Math.floor(Math.random() * (parent[0].length / 2) + 1);
 }

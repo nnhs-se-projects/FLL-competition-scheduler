@@ -16,6 +16,12 @@
       "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}/assets",
       "outputCapture": "std"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug jrGeneticAlg.js",
+      "program": "${workspaceFolder}/jrGeneticAlg.js"
     }
   ]
 }
