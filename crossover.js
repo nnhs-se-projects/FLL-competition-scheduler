@@ -66,6 +66,40 @@ function run() {
         j--;
         continue;
       } else {
+        for (let i = 0; i < children[0][0].length; i++) {
+          let int = i * 10;
+          if (int > 140) {
+            int = int + 50;
+          }
+          children[0][0][i].start = int;
+          children[1][0][i].start = int;
+          children[0][0][i].duration = 10;
+          children[1][0][i].duration = 10;
+        }
+        for (let i = 0; i < children[0][1].length; i++) {
+          let int = i * 10;
+          if (int > 140) {
+            int = int + 50;
+          }
+          children[0][1][i].start = int;
+          children[1][1][i].start = int;
+        }
+        for (let i = 0; i < children[0][2].length; i++) {
+          let int = i * 10 + 5;
+          if (int > 140) {
+            int = int + 50;
+          }
+          children[0][2][i].start = int;
+          children[1][2][i].start = int;
+        }
+        for (let i = 0; i < children[0][3].length; i++) {
+          let int = i * 10 + 5;
+          if (int > 140) {
+            int = int + 50;
+          }
+          children[0][3][i].start = int;
+          children[1][3][i].start = int;
+        }
         newPool.push(children[0]);
         newPool.push(children[1]);
       }
