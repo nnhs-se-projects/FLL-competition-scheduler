@@ -1,4 +1,4 @@
-import { randomJS } from "./randomJudgingSesh.js";
+import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
 // const randomJS = require("./randomJudgingSesh.js");
 
 const POPULATION = 10;

@@ -12,10 +12,12 @@ function randomJS() {
   let teamsP = [];
   let judgingSeshs = 2;
   let numTeams = 32;
+  let offsetT = 5;
   for (let i = 1; i < numTeams + 1; i++) {
-    let str = "team" + i;
-    teamsR.push(str);
-    teamsP.push(str);
+    let str1 = { name: "team" + i, startT: 0, duration: 15 };
+    teamsR.push(str1);
+    let str2 = { name: "team" + i, startT: 0, duration: 15 };
+    teamsP.push(str2);
   }
 
   function getRandomNum() {
