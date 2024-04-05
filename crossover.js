@@ -1,3 +1,4 @@
+// HI Angela and Alyssa
 import { randomTable } from "./newRandomTables.js";
 import { gradeTables } from "./tableGrading.js";
 import { test } from "./test.js";
