@@ -1,8 +1,8 @@
-import { jrGrading } from "./judgingRooms/JRGrading.js";
-import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
-import { crossover } from "./judgingRooms/JRcrossover.js";
-import { getRandomNumX1 } from "./judgingRooms/JRcrossover.js";
-import { getRandomNumX2 } from "./judgingRooms/JRcrossover.js";
+import { jrGrading } from "./JRGrading.js";
+import { randomJS } from "./randomJudgingSesh.js";
+import { crossover } from "./JRcrossover.js";
+import { getRandomNumX1 } from "./JRcrossover.js";
+import { getRandomNumX2 } from "./JRcrossover.js";
 
 let newPool = [];
 let oldPool = [];

@@ -39,17 +39,17 @@ function randomJS() {
   function checkDuplicates(timeSlot) {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (projectRooms[i][timeSlot] === robotRooms[j][timeSlot]) {
+        if (projectRooms[i][timeSlot].name === robotRooms[j][timeSlot].name) {
           let rand = Math.floor(Math.random() * (timeSlot + 1));
           const teamSwap = robotRooms[j][timeSlot];
           //need to check index for conflicts
           for (let r = 0; r < robotRooms.length; r++) {
-            if (robotRooms[r][rand] === teamSwap) {
+            if (robotRooms[r][rand].name === teamSwap.name) {
               rand = Math.floor(Math.random() * (timeSlot + 1));
             }
           }
           for (let r = 0; r < projectRooms.length; r++) {
-            if (projectRooms[r][rand] === teamSwap) {
+            if (projectRooms[r][rand].name === teamSwap.name) {
               rand = Math.floor(Math.random() * (timeSlot + 1));
             }
           }
@@ -64,8 +64,12 @@ function randomJS() {
     for (let i = 0; i < robotRooms.length; i++) {
       for (let j = 0; j < timeSlot; j++) {
         for (let room = 0; room < projectRooms.length; room++) {
-          if (projectRooms[room].includes(robotRooms[i][j])) {
-            pr = projectRooms[room].indexOf(robotRooms[i][j]);
+          if (
+            projectRooms[room].some((e) => e.name === robotRooms[i][j].name)
+          ) {
+            pr = projectRooms[room].findIndex(
+              (e) => e.name === robotRooms[i][j].name
+            );
           }
         }
         if (pr != -1 && Math.abs(pr - j) === 1) {
@@ -115,13 +119,20 @@ function randomJS() {
   return rooms;
 }
 
-//console.log(randomJS());
+// let js = randomJS();
+// console.log("random JS:");
+// console.log(js);
 
-// for (let i = 0; i < robotRooms.length; i++) {
-//   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
+// console.log("random JS formatted: ");
+// for (let i = 0; i < 4; i++) {
+//   console.log(
+//     `Robot Room ${i + 1}: ${js[i].map((team) => team.name).join(", ")}`
+//   );
 // }
-// for (let i = 0; i < projectRooms.length; i++) {
-//   console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
+// for (let i = 0; i < 4; i++) {
+//   console.log(
+//     `Project Room ${i + 1}: ${js[i + 4].map((team) => team.name).join(", ")}`
+//   );
 // }
 
 export { randomJS };
