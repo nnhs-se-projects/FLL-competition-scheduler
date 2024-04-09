@@ -51,7 +51,7 @@ function run() {
 
   // iterate for the specific number of generations
   for (let i = 0; i < TOTAL_GENERATIONS; i++) {
-    console.log("generation", i);
+    //console.log("generation", i);
     if (tableTest(oldPool, POPULATION)) {
       if (gradeTables([oldPool[0]], 1) > gradeTables([best], 1)) {
         best = oldPool[0];
@@ -66,64 +66,59 @@ function run() {
         j--;
         continue;
       } else {
-        for (let i = 0; i < children[0][0].length; i++) {
-          let int = i * 10;
-          if (int > 140) {
-            int = int + 50;
+        for (let k = 0; k < 2; k++) {
+          let int = 0;
+          for (let l = 0; l < children[0][k].length; l++) {
+            children[0][k][l].start = int;
+            children[0][k][l].duration = 10;
+            children[1][k][l].start = int;
+            children[1][k][l].duration = 10;
+            if (int === 150) {
+              int += 50;
+            } else {
+              int += 10;
+            }
           }
-          children[0][0][i].start = int;
-          children[1][0][i].start = int;
-          children[0][0][i].duration = 10;
-          children[1][0][i].duration = 10;
         }
-        for (let i = 0; i < children[0][1].length; i++) {
-          let int = i * 10;
-          if (int > 140) {
-            int = int + 50;
+        for (let k = 2; k < 4; k++) {
+          let int = 5;
+          for (let l = 0; l < children[0][k].length; l++) {
+            children[0][k][l].start = int;
+            children[0][k][l].duration = 10;
+            children[1][k][l].start = int;
+            children[1][k][l].duration = 10;
+            if (int === 145) {
+              int += 60;
+            } else {
+              int += 10;
+            }
           }
-          children[0][1][i].start = int;
-          children[1][1][i].start = int;
-        }
-        for (let i = 0; i < children[0][2].length; i++) {
-          let int = i * 10 + 5;
-          if (int > 140) {
-            int = int + 50;
-          }
-          children[0][2][i].start = int;
-          children[1][2][i].start = int;
-        }
-        for (let i = 0; i < children[0][3].length; i++) {
-          let int = i * 10 + 5;
-          if (int > 140) {
-            int = int + 50;
-          }
-          children[0][3][i].start = int;
-          children[1][3][i].start = int;
-        }
-        newPool.push(children[0]);
-        newPool.push(children[1]);
-      }
-    }
-    oldPool = newPool;
-    newPool = [];
-    // sort old pool
-    let grade = gradeTables(oldPool, POPULATION);
-
-    let temp = [];
-    for (let i = 132; i > -100; i--) {
-      for (let j = 0; j < grade.length; j++) {
-        if (grade[j] === i) {
-          temp.push(oldPool[j]);
+          newPool.push(children[0]);
+          newPool.push(children[1]);
         }
       }
-    }
 
-    oldPool = temp;
-    let newGrade = gradeTables(oldPool, POPULATION);
-    console.log("newGrade: ", newGrade);
+      oldPool = newPool;
+      newPool = [];
+      // sort old pool
+      let grade = gradeTables(oldPool, POPULATION);
+
+      let temp = [];
+      for (let i = 132; i > -100; i--) {
+        for (let j = 0; j < grade.length; j++) {
+          if (grade[j] === i) {
+            temp.push(oldPool[j]);
+          }
+        }
+      }
+
+      oldPool = temp;
+      let newGrade = gradeTables(oldPool, POPULATION);
+      //console.log("newGrade: ", newGrade);
+    }
+    //console.log("grade", gradeTables([best], 1));
+    console.log("best", best);
   }
-  console.log("grade", gradeTables([best], 1));
-  console.log("best", best);
 }
 
 function performGeneticAlgorithm(oldPool) {
