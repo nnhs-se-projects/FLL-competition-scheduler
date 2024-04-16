@@ -1,4 +1,4 @@
-import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
+import { randomJS } from "./randomJudgingSesh.js";
 // const randomJS = require("./randomJudgingSesh.js");
 
 const POPULATION = 10;
@@ -110,9 +110,9 @@ function replaceDuplicates(childA, childB, x1, x2) {
   let constB = childB;
   for (let room = 0; room < childA.length; room++) {
     for (let a = x1; a < x2; a++) {
-      if (!constB.includes(childA[room][a])) {
+      if (!constB.some((e) => e.name === childA[room][a].name)) {
         for (let b = x1; b < x2; b++) {
-          if (!childA.includes(childB[room][b])) {
+          if (!childA.some((e) => e.name === childB[room][b].name)) {
             let swap = childA[room][a];
             childA[room][a] = childB[room][b];
             childB[room][b] = swap;

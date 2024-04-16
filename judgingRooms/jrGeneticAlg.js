@@ -1,8 +1,8 @@
-import { jrGrading } from "./judgingRooms/JRGrading.js";
-import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
-import { crossover } from "./judgingRooms/JRcrossover.js";
-import { getRandomNumX1 } from "./judgingRooms/JRcrossover.js";
-import { getRandomNumX2 } from "./judgingRooms/JRcrossover.js";
+import { jrGrading } from "./JRGrading.js";
+import { randomJS } from "./randomJudgingSesh.js";
+import { crossover } from "./JRcrossover.js";
+import { getRandomNumX1 } from "./JRcrossover.js";
+import { getRandomNumX2 } from "./JRcrossover.js";
 
 let newPool = [];
 let oldPool = [];
@@ -91,4 +91,18 @@ for (let j = 0; j < oldPool[0].length; j++) {
   } else {
     console.log("Project Room " + (j + 1) + ": " + oldPool[0][j]);
   }
+}
+
+console.log("Best JS formatted: ");
+for (let i = 0; i < 4; i++) {
+  console.log(
+    `Robot Room ${i + 1}: ${oldPool[0][i].map((team) => team.name).join(", ")}`
+  );
+}
+for (let i = 0; i < 4; i++) {
+  console.log(
+    `Project Room ${i + 1}: ${oldPool[0][i + 4]
+      .map((team) => team.name)
+      .join(", ")}`
+  );
 }

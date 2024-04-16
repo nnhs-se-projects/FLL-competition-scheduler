@@ -20,13 +20,13 @@ function jrGrading(child) {
     let pr = 0;
 
     for (let room = 0; room < child.length / 2; room++) {
-      if (child[room].includes("team" + i)) {
-        rr = child[room].indexOf("team" + i);
+      if (child[room].some((e) => e.name === "team" + i)) {
+        rr = child[room].findIndex((e) => e.name == "team" + i);
       }
     }
     for (let room = child.length / 2; room < child.length; room++) {
-      if (child[room].includes("team" + i)) {
-        pr = child[room].indexOf("team" + i);
+      if (child[room].some((e) => e.name === "team" + i)) {
+        pr = child[room].findIndex((e) => e.name == "team" + i);
       }
     }
 

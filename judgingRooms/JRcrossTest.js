@@ -1,9 +1,9 @@
 // import { json } from "express";
-import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
-import { crossover } from "./judgingRooms/JRcrossover.js";
-import { getRandomNumX1 } from "./judgingRooms/JRcrossover.js";
-import { getRandomNumX2 } from "./judgingRooms/JRcrossover.js";
-import { jrGrading } from "./judgingRooms/JRGrading.js";
+import { randomJS } from "./randomJudgingSesh.js";
+import { crossover } from "./JRcrossover.js";
+import { getRandomNumX1 } from "./JRcrossover.js";
+import { getRandomNumX2 } from "./JRcrossover.js";
+import { jrGrading } from "./JRGrading.js";
 
 //console.log("test");
 let parentA = randomJS();
@@ -49,3 +49,5 @@ console.log("Child A Score: ");
 console.log(jrGrading(children[0]));
 console.log("Child B Score: ");
 console.log(jrGrading(children[1]));
+
+// UPDATE LATER IF U WAN TTO USE

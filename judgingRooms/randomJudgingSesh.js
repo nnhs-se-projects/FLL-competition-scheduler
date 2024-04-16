@@ -69,7 +69,7 @@ function randomJS() {
             projectRooms[room].some((e) => e.name === robotRooms[i][j].name)
           ) {
             pr = projectRooms[room].findIndex(
-              (e) => e.name === robotRooms[i][j].name
+              (e) => e.name == robotRooms[i][j].name
             );
           }
         }
@@ -109,12 +109,12 @@ function randomJS() {
     }
   }
 
-  for (let i = 0; i < robotRooms.length; i++) {
-    console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
-  }
-  for (let i = 0; i < projectRooms.length; i++) {
-    console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
-  }
+  // for (let i = 0; i < robotRooms.length; i++) {
+  //   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
+  // }
+  // for (let i = 0; i < projectRooms.length; i++) {
+  //   console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
+  // }
 
   let rooms = robotRooms.concat(projectRooms);
   return rooms;
