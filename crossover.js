@@ -1,4 +1,3 @@
-// HI Angela and Alyssa
 import { randomTable } from "./newRandomTables.js";
 import { gradeTables } from "./tableGrading.js";
 import { test } from "./test.js";
@@ -51,7 +50,7 @@ function run() {
 
   // iterate for the specific number of generations
   for (let i = 0; i < TOTAL_GENERATIONS; i++) {
-    //console.log("generation", i);
+    console.log("generation", i);
     if (tableTest(oldPool, POPULATION)) {
       if (gradeTables([oldPool[0]], 1) > gradeTables([best], 1)) {
         best = oldPool[0];
@@ -66,6 +65,7 @@ function run() {
         j--;
         continue;
       } else {
+        // Create schedule start times and durations
         for (let k = 0; k < 2; k++) {
           let int = 0;
           for (let l = 0; l < children[0][k].length; l++) {
@@ -93,32 +93,34 @@ function run() {
               int += 10;
             }
           }
-          newPool.push(children[0]);
-          newPool.push(children[1]);
         }
+        newPool.push(children[0]);
+        newPool.push(children[1]);
       }
-
-      oldPool = newPool;
-      newPool = [];
-      // sort old pool
-      let grade = gradeTables(oldPool, POPULATION);
-
-      let temp = [];
-      for (let i = 132; i > -100; i--) {
-        for (let j = 0; j < grade.length; j++) {
-          if (grade[j] === i) {
-            temp.push(oldPool[j]);
-          }
-        }
-      }
-
-      oldPool = temp;
-      let newGrade = gradeTables(oldPool, POPULATION);
-      //console.log("newGrade: ", newGrade);
     }
+
+    oldPool = newPool;
+    newPool = [];
+    // sort old pool
+    let grade = gradeTables(oldPool, POPULATION);
+
+    let temp = [];
+    for (let i = 132; i > -100; i--) {
+      for (let j = 0; j < grade.length; j++) {
+        if (grade[j] === i) {
+          temp.push(oldPool[j]);
+        }
+      }
+    }
+
+    oldPool = temp;
+    let newGrade = gradeTables(oldPool, POPULATION);
+    console.log("newGrade: ", newGrade);
+
     //console.log("grade", gradeTables([best], 1));
-    console.log("best", best);
   }
+  console.log("grade", gradeTables([best], 1));
+  console.log("best", best);
 }
 
 function performGeneticAlgorithm(oldPool) {
@@ -278,7 +280,7 @@ function replaceDuplicates(child, x1, x2) {
         child[tableNum][rand] = missing[0];
         missing[0] = temp;
         return "done";
-      } else if (x1 > 1 && x2 < 30) {
+      } else if (x1 > 1 && x2 < 22) {
         if (
           child[0][rand].name !== temp.name &&
           child[1][rand].name !== temp.name &&
@@ -316,48 +318,42 @@ function replaceDuplicates(child, x1, x2) {
     }
     for (let i = 0; i < length; i++) {
       const index = duplicates[i][1];
-      try {
-        if (
-          missing.length > 0 &&
-          x1 > 1 &&
-          x2 < 30 &&
-          missing[0].name !== child[0][index].name &&
-          missing[0].name !== child[1][index].name &&
-          missing[0].name !== child[2][index].name &&
-          missing[0].name !== child[3][index].name &&
-          missing[0].name !== child[0][index - 1].name &&
-          missing[0].name !== child[1][index - 1].name &&
-          missing[0].name !== child[2][index - 1].name &&
-          missing[0].name !== child[3][index - 1].name &&
-          missing[0].name !== child[0][index + 1].name &&
-          missing[0].name !== child[1][index + 1].name &&
-          missing[0].name !== child[2][index + 1].name &&
-          missing[0].name !== child[3][index + 1].name
-        ) {
-          child[duplicates[i][0]][duplicates[i][1]] = missing[0];
-          missing.splice(0, 1);
-        } else if (
-          missing.length > 0 &&
-          missing[0].name !== child[0][index].name &&
-          missing[0].name !== child[1][index].name &&
-          missing[0].name !== child[2][index].name &&
-          missing[0].name !== child[3][index].name
-        ) {
-          child[duplicates[i][0]][duplicates[i][1]] = missing[0];
-          missing.splice(0, 1);
-        } else {
-          let swapResult = swap(duplicates[i][0]);
-          if (swapResult === "done") {
-            i--;
-            continue;
-          } else if (swapResult === null) {
-            return null;
-          }
+      if (
+        missing.length > 0 &&
+        x1 > 1 &&
+        x2 < 22 &&
+        missing[0].name !== child[0][index].name &&
+        missing[0].name !== child[1][index].name &&
+        missing[0].name !== child[2][index].name &&
+        missing[0].name !== child[3][index].name &&
+        missing[0].name !== child[0][index - 1].name &&
+        missing[0].name !== child[1][index - 1].name &&
+        missing[0].name !== child[2][index - 1].name &&
+        missing[0].name !== child[3][index - 1].name &&
+        missing[0].name !== child[0][index + 1].name &&
+        missing[0].name !== child[1][index + 1].name &&
+        missing[0].name !== child[2][index + 1].name &&
+        missing[0].name !== child[3][index + 1].name
+      ) {
+        child[duplicates[i][0]][duplicates[i][1]] = missing[0];
+        missing.splice(0, 1);
+      } else if (
+        missing.length > 0 &&
+        missing[0].name !== child[0][index].name &&
+        missing[0].name !== child[1][index].name &&
+        missing[0].name !== child[2][index].name &&
+        missing[0].name !== child[3][index].name
+      ) {
+        child[duplicates[i][0]][duplicates[i][1]] = missing[0];
+        missing.splice(0, 1);
+      } else {
+        let swapResult = swap(duplicates[i][0]);
+        if (swapResult === "done") {
+          i--;
+          continue;
+        } else if (swapResult === null) {
+          return null;
         }
-      } catch (e) {
-        console.log("error", e);
-        console.log("index", index);
-        console.log("child[0]", child[0]);
       }
     }
   } else {

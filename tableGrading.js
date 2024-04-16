@@ -22,7 +22,10 @@ function gradeTables(oldPool, POPULATION) {
         Math.abs(arr[0] - arr[2]) > 3 &&
         Math.abs(arr[1] - arr[2]) > 3
       ) {
-        individualGrade++;
+        individualGrade +=
+          Math.abs(arr[0] - arr[1]) +
+          Math.abs(arr[0] - arr[2]) +
+          Math.abs(arr[1] - arr[2]);
       } else {
         invalid = 0;
       }
@@ -37,6 +40,10 @@ function gradeTables(oldPool, POPULATION) {
         individualGrade -= 2;
       } else {
         individualGrade += 3;
+      }
+      individualGrade /= 2;
+      if (invalid === 0) {
+        individualGrade = 0;
       }
     }
     grade.push(individualGrade);
