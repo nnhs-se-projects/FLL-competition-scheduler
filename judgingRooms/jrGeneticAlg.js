@@ -85,13 +85,14 @@ oldPool.sort((a, b) => {
 
 console.log("Best Judging Schedule: ");
 console.log(jrGrading(oldPool[0]));
-for (let j = 0; j < oldPool[0].length; j++) {
-  if (j < oldPool[0].length / 2) {
-    console.log("Robot Room " + (j + 1) + ": " + oldPool[0][j]);
-  } else {
-    console.log("Project Room " + (j + 1) + ": " + oldPool[0][j]);
-  }
-}
+console.log(oldPool[0]);
+// for (let j = 0; j < oldPool[0].length; j++) {
+//   if (j < oldPool[0].length / 2) {
+//     console.log("Robot Room " + (j + 1) + ": " + oldPool[0][j]);
+//   } else {
+//     console.log("Project Room " + (j + 1) + ": " + oldPool[0][j]);
+//   }
+// }
 
 console.log("Best JS formatted: ");
 for (let i = 0; i < 4; i++) {

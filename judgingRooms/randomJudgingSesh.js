@@ -14,9 +14,9 @@ function randomJS() {
   let numTeams = 32;
   let offsetT = 5;
   for (let i = 1; i < numTeams + 1; i++) {
-    let str1 = { name: "team" + i, startT: 0, duration: 15 };
+    let str1 = { name: "team" + i, startT: 0, duration: 25 }; // 15 minute actual duration + 10 minute break
     teamsR.push(str1);
-    let str2 = { name: "team" + i, startT: 0, duration: 15 };
+    let str2 = { name: "team" + i, startT: 0, duration: 25 };
     teamsP.push(str2);
   }
 
@@ -109,12 +109,16 @@ function randomJS() {
     }
   }
 
-  // for (let i = 0; i < robotRooms.length; i++) {
-  //   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
-  // }
-  // for (let i = 0; i < projectRooms.length; i++) {
-  //   console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
-  // }
+  for (let i = 0; i < robotRooms.length; i++) {
+    for (let j = 0; j < robotRooms[i].length; j++) {
+      robotRooms[i][j].startT = offsetT * i + robotRooms[i][j].duration * j;
+    }
+  }
+  for (let i = 0; i < projectRooms.length; i++) {
+    for (let j = 0; j < projectRooms[i].length; j++) {
+      projectRooms[i][j].startT = offsetT * i + projectRooms[i][j].duration * j;
+    }
+  }
 
   let rooms = robotRooms.concat(projectRooms);
   return rooms;
