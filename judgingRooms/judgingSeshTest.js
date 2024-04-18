@@ -1,4 +1,4 @@
-//import { name } from "ejs";
+
 import { randomJS } from "./randomJudgingSesh.js";
 
 let js = randomJS();
@@ -17,6 +17,7 @@ for (let i = 0; i < 4; i++) {
   );
 }
 
+
 let obj1 = { name: "team1" };
 let obj2 = { name: "team2" };
 let obj3 = { name: "team1" };
@@ -33,3 +34,4 @@ if (array1.some((e) => e.name === obj4.name)) {
 if (array1.some((e) => e.name === obj5.name)) {
   console.log(array1.findIndex((e) => e.name == obj5.name));
 }
+
