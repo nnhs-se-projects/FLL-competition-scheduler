@@ -69,11 +69,7 @@ function randomJS() {
             projectRooms[room].some((e) => e.name === robotRooms[i][j].name)
           ) {
             pr = projectRooms[room].findIndex(
-
               (e) => e.name == robotRooms[i][j].name
-
-              (e) => e.name === robotRooms[i][j].name
-
             );
           }
         }
@@ -128,13 +124,11 @@ function randomJS() {
   return rooms;
 }
 
-
 console.log(randomJS());
 
 // let js = randomJS();
 // console.log("random JS:");
 // console.log(js);
-
 
 // console.log("random JS formatted: ");
 // for (let i = 0; i < 4; i++) {
