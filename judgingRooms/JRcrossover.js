@@ -96,28 +96,41 @@ function crossover(x1, x2, parentA, parentB) {
   // }
   let children = replaceDuplicates(childA, childB, x1, x2);
   let offsetT = 5;
+  let lunchBreak = 45;
 
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < children[0][0].length; j++) {
       children[0][i][j].startT = offsetT * i + children[0][i][j].duration * j;
+      if (children[0][i][j].startT >= 135) {
+        children[0][i][j].startT += lunchBreak;
+      }
     }
   }
   for (let i = 4; i < 8; i++) {
     for (let j = 0; j < children[0][i].length; j++) {
       children[0][i][j].startT =
         offsetT * (i - 4) + children[0][i][j].duration * j;
+      if (children[0][i][j].startT >= 135) {
+        children[0][i][j].startT += lunchBreak;
+      }
     }
   }
 
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < children[1][0].length; j++) {
       children[1][i][j].startT = offsetT * i + children[1][i][j].duration * j;
+      if (children[1][i][j].startT >= 135) {
+        children[1][i][j].startT += lunchBreak;
+      }
     }
   }
   for (let i = 4; i < 8; i++) {
     for (let j = 0; j < children[1][i].length; j++) {
       children[1][i][j].startT =
         offsetT * (i - 4) + children[1][i][j].duration * j;
+      if (children[1][i][j].startT >= 135) {
+        children[1][i][j].startT += lunchBreak;
+      }
     }
   }
 
