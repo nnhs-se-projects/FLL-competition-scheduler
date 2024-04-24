@@ -49,3 +49,5 @@ console.log("Child A Score: ");
 console.log(jrGrading(children[0]));
 console.log("Child B Score: ");
 console.log(jrGrading(children[1]));
+
+// UPDATE LATER IF U WAN TTO USE

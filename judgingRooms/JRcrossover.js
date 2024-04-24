@@ -95,6 +95,44 @@ function crossover(x1, x2, parentA, parentB) {
   //   }
   // }
   let children = replaceDuplicates(childA, childB, x1, x2);
+  let offsetT = 5;
+  let lunchBreak = 45;
+
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < children[0][0].length; j++) {
+      children[0][i][j].startT = offsetT * i + children[0][i][j].duration * j;
+      if (children[0][i][j].startT >= 135) {
+        children[0][i][j].startT += lunchBreak;
+      }
+    }
+  }
+  for (let i = 4; i < 8; i++) {
+    for (let j = 0; j < children[0][i].length; j++) {
+      children[0][i][j].startT =
+        offsetT * (i - 4) + children[0][i][j].duration * j;
+      if (children[0][i][j].startT >= 135) {
+        children[0][i][j].startT += lunchBreak;
+      }
+    }
+  }
+
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < children[1][0].length; j++) {
+      children[1][i][j].startT = offsetT * i + children[1][i][j].duration * j;
+      if (children[1][i][j].startT >= 135) {
+        children[1][i][j].startT += lunchBreak;
+      }
+    }
+  }
+  for (let i = 4; i < 8; i++) {
+    for (let j = 0; j < children[1][i].length; j++) {
+      children[1][i][j].startT =
+        offsetT * (i - 4) + children[1][i][j].duration * j;
+      if (children[1][i][j].startT >= 135) {
+        children[1][i][j].startT += lunchBreak;
+      }
+    }
+  }
 
   //console.log("Children: " + children);
   return children;
@@ -110,9 +148,9 @@ function replaceDuplicates(childA, childB, x1, x2) {
   let constB = childB;
   for (let room = 0; room < childA.length; room++) {
     for (let a = x1; a < x2; a++) {
-      if (!constB.includes(childA[room][a])) {
+      if (!constB.some((e) => e.name === childA[room][a].name)) {
         for (let b = x1; b < x2; b++) {
-          if (!childA.includes(childB[room][b])) {
+          if (!childA.some((e) => e.name === childB[room][b].name)) {
             let swap = childA[room][a];
             childA[room][a] = childB[room][b];
             childB[room][b] = swap;
