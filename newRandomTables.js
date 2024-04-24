@@ -12,7 +12,12 @@ function randomTable() {
   for (let j = 0; j < 3; j++) {
     let teams = [];
     for (let i = 1; i < 33; i++) {
-      let str = { name: "team" + i, run: j + 1 };
+      let str = {
+        name: "team" + i,
+        run: j + 1,
+        start: 0,
+        duration: 10,
+      };
       teams.push(str);
     }
     let length = teams.length;
@@ -127,6 +132,34 @@ function randomTable() {
         }
       }
     }
+  }
+  for (let i = 0; i < table1.length; i++) {
+    let int = i * 10;
+    if (int > 140) {
+      int = int + 50;
+    }
+    table1[i].start = int;
+  }
+  for (let i = 0; i < table2.length; i++) {
+    let int = i * 10;
+    if (int > 140) {
+      int = int + 50;
+    }
+    table2[i].start = int;
+  }
+  for (let i = 0; i < table3.length; i++) {
+    let int = i * 10 + 5;
+    if (int > 140) {
+      int = int + 50;
+    }
+    table3[i].start = int;
+  }
+  for (let i = 0; i < table4.length; i++) {
+    let int = i * 10 + 5;
+    if (int > 140) {
+      int = int + 50;
+    }
+    table4[i].start = int;
   }
 
   tables.push(table1, table2, table3, table4);

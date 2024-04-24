@@ -1,6 +1,6 @@
 function test(child) {
   let failures = 0;
-  for (let t = 1; t < child.length + 1; t++) {
+  for (let t = 1; t < 33; t++) {
     let temp = [];
     for (let i = 0; i < child.length; i++) {
       for (let j = 0; j < child[i].length; j++) {
