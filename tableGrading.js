@@ -41,7 +41,7 @@ function gradeTables(oldPool, POPULATION) {
       } else {
         individualGrade += 3;
       }
-      individualGrade /= 2;
+      individualGrade = Math.floor(individualGrade / 2);
       if (invalid === 0) {
         individualGrade = 0;
       }

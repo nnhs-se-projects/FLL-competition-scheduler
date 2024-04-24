@@ -4,7 +4,7 @@ import { test } from "./test.js";
 import { tableTest } from "./tableTest.js";
 
 const POPULATION = 100;
-const TOTAL_GENERATIONS = 100;
+const TOTAL_GENERATIONS = 10;
 
 function run() {
   let newPool = [];
@@ -26,9 +26,9 @@ function run() {
     let grade1 = gradeTables(oldPool, POPULATION);
     oldPool.push(parent);
     let temp = [];
-    for (let i = 132; i > -100; i--) {
+    for (let x = 60; x > -50; x--) {
       for (let j = 0; j < grade1.length; j++) {
-        if (grade1[j] === i) {
+        if (grade1[j] === x) {
           temp.push(oldPool[j]);
         }
       }
@@ -38,9 +38,9 @@ function run() {
 
   let oldGrade = gradeTables(oldPool, POPULATION);
   let temp1 = [];
-  for (let i = 132; i > -100; i--) {
+  for (let x = 60; x > -50; x--) {
     for (let j = 0; j < oldGrade.length; j++) {
-      if (oldGrade[j] === i) {
+      if (oldGrade[j] === x) {
         temp1.push(oldPool[j]);
       }
     }
@@ -105,7 +105,7 @@ function run() {
     let grade = gradeTables(oldPool, POPULATION);
 
     let temp = [];
-    for (let i = 132; i > -100; i--) {
+    for (let i = 60; i > -50; i--) {
       for (let j = 0; j < grade.length; j++) {
         if (grade[j] === i) {
           temp.push(oldPool[j]);
@@ -139,7 +139,40 @@ function performGeneticAlgorithm(oldPool) {
   let childB = mutate(children[1]);
 
   // STEP 4: ADD TO NEW POOL
+
+  // for (let i = 0; i < childA[0].length; i++) {
+  //   let int = i * 10;
+  //   if (int > 140) {
+  //     // lunch break
+  //     int = int + 50;
+  //   }
+  //   childA[0][i].start = int;
+  //   childA[0][i].duration = 10;
+  //   childB[0][i].start = int;
+  //   childB[0][i].duration = 10;
+  //   childA[1][i].start = int;
+  //   childA[1][i].duration = 10;
+  //   childB[1][i].start = int;
+  //   childB[1][i].duration = 10;
+  // }
+  // for (let i = 0; i < childA[2].length; i++) {
+  //   let int = i * 10 + 5;
+  //   if (int > 140) {
+  //     // lunch break
+  //     int = int + 50;
+  //   }
+  //   childA[2][i].start = int;
+  //   childA[2][i].duration = 10;
+  //   childB[2][i].start = int;
+  //   childB[2][i].duration = 10;
+  //   childA[3][i].start = int;
+  //   childA[3][i].duration = 10;
+  //   childB[3][i].start = int;
+  //   childB[3][i].duration = 10;
+  // }
+
   children = [childA, childB];
+
   return children;
 }
 function crossOver(parentA, parentB) {
@@ -163,37 +196,37 @@ function crossOver(parentA, parentB) {
   }
 
   for (let i = 0; i < x1; i++) {
-    c1t1.push(parentA[0][i]); // crossing over child 1 table 1
-    c1t2.push(parentA[1][i]); // crossing over child 1 table 2
-    c1t3.push(parentA[2][i]); // crossing over child 1 table 3
-    c1t4.push(parentA[3][i]); // crossing over child 1 table 4
+    c1t1.push({ name: parentA[0][i].name, run: parentA[0][i].run }); // crossing over child 1 table 1
+    c1t2.push({ name: parentA[1][i].name, run: parentA[1][i].run }); // crossing over child 1 table 2
+    c1t3.push({ name: parentA[2][i].name, run: parentA[2][i].run }); // crossing over child 1 table 3
+    c1t4.push({ name: parentA[3][i].name, run: parentA[3][i].run }); // crossing over child 1 table 4
 
-    c2t1.push(parentB[0][i]); // crossing over child 2 table 1
-    c2t2.push(parentB[1][i]); // crossing over child 2 table 2
-    c2t3.push(parentB[2][i]); // crossing over child 2 table 3
-    c2t4.push(parentB[3][i]); // crossing over child 2 table 4
+    c2t1.push({ name: parentB[0][i].name, run: parentB[0][i].run }); // crossing over child 2 table 1
+    c2t2.push({ name: parentB[1][i].name, run: parentB[1][i].run }); // crossing over child 2 table 2
+    c2t3.push({ name: parentB[2][i].name, run: parentB[2][i].run }); // crossing over child 2 table 3
+    c2t4.push({ name: parentB[3][i].name, run: parentB[3][i].run }); // crossing over child 2 table 4
   }
   for (let i = x1; i < x2; i++) {
-    c1t1.push(parentB[0][i]);
-    c1t2.push(parentB[1][i]);
-    c1t3.push(parentB[2][i]);
-    c1t4.push(parentB[3][i]);
+    c1t1.push({ name: parentB[0][i].name, run: parentB[0][i].run });
+    c1t2.push({ name: parentB[1][i].name, run: parentB[1][i].run });
+    c1t3.push({ name: parentB[2][i].name, run: parentB[2][i].run });
+    c1t4.push({ name: parentB[3][i].name, run: parentB[3][i].run });
 
-    c2t1.push(parentA[0][i]);
-    c2t2.push(parentA[1][i]);
-    c2t3.push(parentA[2][i]);
-    c2t4.push(parentA[3][i]);
+    c2t1.push({ name: parentA[0][i].name, run: parentA[0][i].run });
+    c2t2.push({ name: parentA[1][i].name, run: parentA[1][i].run });
+    c2t3.push({ name: parentA[2][i].name, run: parentA[2][i].run });
+    c2t4.push({ name: parentA[3][i].name, run: parentA[3][i].run });
   }
   for (let i = x2; i < parentA[0].length; i++) {
-    c1t1.push(parentA[0][i]);
-    c1t2.push(parentA[1][i]);
-    c1t3.push(parentA[2][i]);
-    c1t4.push(parentA[3][i]);
+    c1t1.push({ name: parentA[0][i].name, run: parentA[0][i].run });
+    c1t2.push({ name: parentA[1][i].name, run: parentA[1][i].run });
+    c1t3.push({ name: parentA[2][i].name, run: parentA[2][i].run });
+    c1t4.push({ name: parentA[3][i].name, run: parentA[3][i].run });
 
-    c2t1.push(parentB[0][i]);
-    c2t2.push(parentB[1][i]);
-    c2t3.push(parentB[2][i]);
-    c2t4.push(parentB[3][i]);
+    c2t1.push({ name: parentB[0][i].name, run: parentB[0][i].run });
+    c2t2.push({ name: parentB[1][i].name, run: parentB[1][i].run });
+    c2t3.push({ name: parentB[2][i].name, run: parentB[2][i].run });
+    c2t4.push({ name: parentB[3][i].name, run: parentB[3][i].run });
   }
 
   let child1 = [c1t1, c1t2, c1t3, c1t4];

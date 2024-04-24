@@ -23,11 +23,7 @@ function tableTest(oldPool, POPULATION) {
         invalid = 0;
       }
     }
-    var test1 = test(oldPool[i]);
-    if (test1.includes("Failure")) {
-      invalid = 0;
-      // console.log("failed in grade");
-    }
+
     grade.push(individualGrade);
   }
   return grade;

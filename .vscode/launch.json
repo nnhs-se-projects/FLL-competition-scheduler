@@ -22,6 +22,12 @@
       "request": "launch",
       "name": "Debug jrGeneticAlg.js",
       "program": "${workspaceFolder}/jrGeneticAlg.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug crossover.js",
+      "program": "${workspaceFolder}/crossover.js"
     }
   ]
 }
