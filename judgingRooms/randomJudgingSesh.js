@@ -132,7 +132,7 @@ function randomJS() {
   return rooms;
 }
 
-console.log(randomJS());
+// console.log(randomJS());
 
 // let js = randomJS();
 // console.log("random JS:");
