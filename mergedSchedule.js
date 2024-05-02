@@ -1,9 +1,21 @@
 import { randomTable } from "./newRandomTables.js";
 import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
+import { tableTest } from "./tableTest.js";
+import { jrGrading } from "./judgingRooms/JRGrading.js";
 
 function randomMerge() {
   let tables = randomTable();
+  let result1 = tableTest([tables], 1);
+  while (result1 == 0) {
+    tables = randomTable();
+    result1 = tableTest([tables], 1);
+    console.log("Table Test: " + result1);
+  }
   let judgingRooms = randomJS();
+  while (jrGrading(judgingRooms) === 0) {
+    judgingRooms = randomJS();
+    console.log("Judging Room Grading: " + jrGrading(judgingRooms));
+  }
   let mapArray = [];
   let t1 = new Map();
   let t2 = new Map();
@@ -101,5 +113,8 @@ function randomMerge() {
     }
   }
   return mapArray;
+}
+for (let i = 0; i < 25; i++) {
+  randomMerge();
 }
 export { randomMerge };

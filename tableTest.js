@@ -13,17 +13,23 @@ function tableTest(oldPool, POPULATION) {
           }
         }
       }
+      if (arr.length !== 3) {
+        invalid = 0;
+        break;
+      }
       if (
-        Math.abs(arr[0] - arr[1]) > 3 &&
-        Math.abs(arr[0] - arr[2]) > 3 &&
-        Math.abs(arr[1] - arr[2]) > 3
+        Math.abs(arr[0] - arr[1]) > 2 &&
+        Math.abs(arr[0] - arr[2]) > 2 &&
+        Math.abs(arr[1] - arr[2]) > 2
       ) {
         individualGrade++;
       } else {
         invalid = 0;
       }
     }
-
+    if (invalid === 0) {
+      individualGrade = 0;
+    }
     grade.push(individualGrade);
   }
   return grade;

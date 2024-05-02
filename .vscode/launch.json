@@ -28,6 +28,12 @@
       "request": "launch",
       "name": "Debug crossover.js",
       "program": "${workspaceFolder}/crossover.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug mergedSchedule.js",
+      "program": "${workspaceFolder}/mergedSchedule.js"
     }
   ]
 }
