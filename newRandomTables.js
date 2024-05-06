@@ -1,5 +1,5 @@
 import { test } from "./test.js";
-import { gradeTables } from "./tableGrading.js";
+import { tableTest } from "./tableTest.js";
 function randomTable() {
   let tables = [];
   let table1 = [];
@@ -173,19 +173,26 @@ function randomTable() {
   return tables;
 }
 
-// let oldPool = [];
-// for (let i = 0; i < 100; i++) {
-//   oldPool.push(randomTable());
-// }
-// let grade = gradeTables(oldPool, 100);
-// console.log(grade);
-
-// for (let i = 0; i < 3; i++) {
-//   console.log("run: " + i);
-//   let result = randomTable();
-//   if (result == null) {
-//     console.log("null");
-//   } else console.log(result);
-// }
-
+let tables = randomTable();
+let result1 = tableTest([tables], 1);
+while (result1 == 0) {
+  tables = randomTable();
+  result1 = tableTest([tables], 1);
+}
+console.log(tables);
+let str1 = "table 1: ";
+let str2 = "table 2: ";
+let str3 = "table 3: ";
+let str4 = "table 4: ";
+for (let i = 0; i < tables[0].length; i++) {
+  var add = tables[0][i].name + ", ";
+  str1 = str1.concat(add);
+  str2 = str2.concat(tables[1][i].name + ", ");
+  str3 = str3.concat(tables[2][i].name + ", ");
+  str4 = str4.concat(tables[3][i].name + ", ");
+}
+console.log(str1);
+console.log(str2);
+console.log(str3);
+console.log(str4);
 export { randomTable };

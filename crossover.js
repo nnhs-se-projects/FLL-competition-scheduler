@@ -126,6 +126,9 @@ function run() {
 function performGeneticAlgorithm(oldPool) {
   let parentA = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
   let parentB = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
+  while (parentA === parentB) {
+    parentB = oldPool[Math.floor(Math.random() * (oldPool.length / 2))];
+  }
 
   // STEP 2: CROSSOVER
   // get the children
