@@ -34,6 +34,12 @@
       "request": "launch",
       "name": "Debug mergedSchedule.js",
       "program": "${workspaceFolder}/mergedSchedule.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug attempt.js",
+      "program": "${workspaceFolder}/attempt.js"
     }
   ]
 }
