@@ -35,7 +35,8 @@ For the duration of our time working on the project, Visual Studio Code was the 
 
 ## Configuring Project to be Runnable
 
-The project should be easily runnable if all of the previous installations are there, especially node. Once the project is checked out from Github, and everything is installed is should be runnable
+The most updated version is not in main **ALL FILES SHOULD BE RUN FROM THE MERGE BRANCH** for the most updated version. The project should be easily runnable if all of the previous installations are there, especially node. Once the project is checked out from Github, and everything is installed it should be runnable.
+
 
 ### Debugging
 
@@ -69,6 +70,12 @@ This is kind of considered a failed story but you might find something useful in
 
 The file mergeStructureTest.js takes the output of mergedSchedule.js and tests if the two random schedules that were originally generated would return a valid schedule. If a schedule is valid the code will return said schedule. However, this occurs on a time scale that would probably require the entire period to even return one schedule and hence why it is considered as having failed.
 
+### Full Random Schedule
+
+This file, fullRandomSchedule.js is only found in the **merge** branch.
+
+This function should return either null or a full schedule with both judging rooms and tables not having a conflict. If it returns null that means it either was stuck or it didn't have a possible solution and therefore has not completed a schedule. However, it should more likely return a full and working schedule. This result however, has NOT been properly tested so I would recommend **creating a test for a full schedule**. This will benefit you in checking the result of the random schedule and the result of your genetic algorithm.
+
 ## Architecture
 
 In terms of this project’s architecture, there is not that much complexity. As of right now, everything is in JavaScript files in the folder. We do however have a genetic algorithm and many many files, so I will describe those here.
@@ -77,6 +84,11 @@ For the genetic algorithms, we first have a grading function. Both tableRun sche
 Next, there's the crossover files and functions. Both of these functions work the same way. First, it takes the two points and crosses over the two parent schedules using those points. After crossing over, the algorithm checks if there are any errors such as a team being in two places at once and fixes them. The function then returns the children.  
  Finally, there's an actual genetic algorithm (there are still two separate functions for the two different schedules at this point). The genetic algorithm first generates a pool of 100 valid schedules, then it grades all of them and sorts them in order of highest to lowest grades. It then takes the top half best graded schedules and randomly selects schedules to be crossed over. The children from the crossover are added to a new pool which repeats this entire process until there are only a couple of the best schedules left. It then takes that schedule and returns it. One difference between the judgingSession genetic algorithm and the tableRun genetic algorithm is that the judgingSession genetic algorithm continually halves the old pool until there are two left. The tableRun algorithm does not, and instead just continues to keep the pool the same length.
 Asides from the two separate genetic algorithms, we also have two files for the sake of merging the two schedules. How it works at the moment is it’ll generate a judgingRoom schedule and a tableRun schedule, and then use an intermediate structure to format the schedule. This intermediate structure is created in mergedSchedule.js and is essentially an array of maps, one for each team. Each map contains every judging session and table run of that team. The mergeStructuretest.js checks to see if this merged schedule is valid. Unfortunately this is a very faulty algorithm and will likely need to be scrapped or rewritten.
+
+A visual for how the genetic algorithm can be found here: [slides](https://docs.google.com/presentation/d/1RVjUeKI7246r_ZDXprFyxotVa0rsB8iHquuw-sJFdgM/edit?usp=sharing)
+
+fullRandomSchedule.js takes a valid judging room schedule and then uses that as a template to create a table schedule. The code uses a pool of each team 3 times then randomly takes a value to try and put into the schedule. Then it should check against the judging room schedule and what's already in the tables to see if that team can be inserted into the table based on time conflicts. It continues to do this until either all teams have been inserted three times or all teams left are invalid.
+====
 
 ## Data Schema - Judging Rooms JavaScript Object Organization
 
@@ -108,6 +120,8 @@ Each team is an object. For tables the properties are name, run, start, and dura
 ## Data Schema - Merge JavaScript Object Organization
 
 The merge structure is an array of maps. An array of 32 maps (each map being a team) and each map having 5 keys with times. The keys sesh1 and sesh2 refer to judging rooms and there are also runs 1, 2, and 3 referring to table runs. The reason it’s in an array is just so that the value can be returned and each map can be called based on index.
+
+For fullSchedule.js there is an array with index 0 being an array of tables and index 1 being the array of judging rooms. The tables and judging rooms are in the same structure as they would be separately but are not just put into one array that is returned.
 
 ## Remaining User Stories
 
