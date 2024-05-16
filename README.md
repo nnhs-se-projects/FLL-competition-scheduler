@@ -37,6 +37,7 @@ For the duration of our time working on the project, Visual Studio Code was the 
 
 The most updated version is not in main **ALL FILES SHOULD BE RUN FROM THE MERGE BRANCH** for the most updated version. The project should be easily runnable if all of the previous installations are there, especially node. Once the project is checked out from Github, and everything is installed it should be runnable.
 
+
 ### Debugging
 
 In the .vscode file, you will find the launch.json file. In order to debug a file, you need to add a new launch configuration. The format should be the same as the examples found in the file such as the ‘Debug crossover.js’. All that should be changed to debug a different file should be a different name and changing the program to a different file name.
@@ -83,9 +84,11 @@ For the genetic algorithms, we first have a grading function. Both tableRun sche
 Next, there's the crossover files and functions. Both of these functions work the same way. First, it takes the two points and crosses over the two parent schedules using those points. After crossing over, the algorithm checks if there are any errors such as a team being in two places at once and fixes them. The function then returns the children.  
  Finally, there's an actual genetic algorithm (there are still two separate functions for the two different schedules at this point). The genetic algorithm first generates a pool of 100 valid schedules, then it grades all of them and sorts them in order of highest to lowest grades. It then takes the top half best graded schedules and randomly selects schedules to be crossed over. The children from the crossover are added to a new pool which repeats this entire process until there are only a couple of the best schedules left. It then takes that schedule and returns it. One difference between the judgingSession genetic algorithm and the tableRun genetic algorithm is that the judgingSession genetic algorithm continually halves the old pool until there are two left. The tableRun algorithm does not, and instead just continues to keep the pool the same length.
 Asides from the two separate genetic algorithms, we also have two files for the sake of merging the two schedules. How it works at the moment is it’ll generate a judgingRoom schedule and a tableRun schedule, and then use an intermediate structure to format the schedule. This intermediate structure is created in mergedSchedule.js and is essentially an array of maps, one for each team. Each map contains every judging session and table run of that team. The mergeStructuretest.js checks to see if this merged schedule is valid. Unfortunately this is a very faulty algorithm and will likely need to be scrapped or rewritten.
+
 A visual for how the genetic algorithm can be found here: [slides](https://docs.google.com/presentation/d/1RVjUeKI7246r_ZDXprFyxotVa0rsB8iHquuw-sJFdgM/edit?usp=sharing)
 
 fullRandomSchedule.js takes a valid judging room schedule and then uses that as a template to create a table schedule. The code uses a pool of each team 3 times then randomly takes a value to try and put into the schedule. Then it should check against the judging room schedule and what's already in the tables to see if that team can be inserted into the table based on time conflicts. It continues to do this until either all teams have been inserted three times or all teams left are invalid.
+====
 
 ## Data Schema - Judging Rooms JavaScript Object Organization
 
