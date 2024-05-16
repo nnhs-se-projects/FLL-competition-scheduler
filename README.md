@@ -88,7 +88,6 @@ Asides from the two separate genetic algorithms, we also have two files for the 
 A visual for how the genetic algorithm can be found here: [slides](https://docs.google.com/presentation/d/1RVjUeKI7246r_ZDXprFyxotVa0rsB8iHquuw-sJFdgM/edit?usp=sharing)
 
 fullRandomSchedule.js takes a valid judging room schedule and then uses that as a template to create a table schedule. The code uses a pool of each team 3 times then randomly takes a value to try and put into the schedule. Then it should check against the judging room schedule and what's already in the tables to see if that team can be inserted into the table based on time conflicts. It continues to do this until either all teams have been inserted three times or all teams left are invalid.
-====
 
 ## Data Schema - Judging Rooms JavaScript Object Organization
 
