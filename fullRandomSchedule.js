@@ -1,12 +1,14 @@
+// THIS FUNCTION IS UNTESTED
 import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
 import { jrGrading } from "./judgingRooms/JRGrading.js";
 
-function createRandom() {
+function fullRandom() {
+  // creates valid random judging room
   let judgingRooms = randomJS();
   while (jrGrading(judgingRooms) === 0) {
     judgingRooms = randomJS();
   }
-
+  // creates array of 32 teams each present 3 times
   let tables = [];
   let tablePool = [];
   for (let i = 0; i < 3; i++) {
@@ -20,6 +22,7 @@ function createRandom() {
       tablePool.push(team);
     }
   }
+  // initializes 4 tables, and an array for tested teams.
   let t1 = [];
   let t2 = [];
   let t3 = [];
@@ -28,6 +31,7 @@ function createRandom() {
   for (let i = 0; i < 4; i++) {
     let count = 0;
     for (let j = 0; j < 24; j++) {
+      // exit conditions
       if (count > 300) {
         return null;
       }
@@ -35,7 +39,9 @@ function createRandom() {
         return null;
       }
       count++;
+      // gets random number
       let randomNum = Math.floor(Math.random() * tablePool.length);
+      // establishes start time of the team
       let startTime = 0;
       if (i === 0 || i === 1) {
         startTime = j * 10;
@@ -48,9 +54,12 @@ function createRandom() {
           startTime = startTime + 50;
         }
       }
+      // sets start time of the team
       tablePool[randomNum].start = startTime;
       let judgingTime = [];
       let tableTimes = [];
+      // gets any other times the team is already present at the tables
+      // ranges 0-2
       for (let k = 0; k < t1.length; k++) {
         if (t1[k].name === tablePool[randomNum].name)
           tableTimes.push(t1[k].start);
@@ -67,6 +76,7 @@ function createRandom() {
         if (t4[k].name === tablePool[randomNum].name)
           tableTimes.push(t4[k].start);
       }
+      // gets the times the team is at the judging rooms
       for (let k = 0; k < 8; k++) {
         for (let l = 0; l < 8; l++) {
           if (judgingRooms[k][l].name === tablePool[randomNum].name) {
@@ -75,6 +85,7 @@ function createRandom() {
         }
       }
       let fail = false;
+      // checks if the team would have an overlap if it was placed at the table
       if (
         Math.abs(startTime - judgingTime[0]) < 20 ||
         Math.abs(startTime - judgingTime[1]) < 20
@@ -87,17 +98,22 @@ function createRandom() {
         }
       }
       if (fail === true) {
+        // adds the team to test and removes it from the table pool if it would overlap
         tested.push(tablePool[randomNum]);
         tablePool.splice(randomNum, 1);
         j--;
       } else {
+        // adds the team to the table if it would not overlap
         if (i === 0) {
           t1.push(tablePool[randomNum]);
           let length = tested.length;
           for (let x = 0; x < length; x++) {
+            // add tested teams back to the table pool
             tablePool.push(tested[x]);
           }
+          // removes tested teams from the tested array
           tested.splice(0, tested.length);
+          // removes the team from the table pool
           tablePool.splice(randomNum, 1);
         } else if (i === 1) {
           t2.push(tablePool[randomNum]);
@@ -134,9 +150,10 @@ function createRandom() {
 
 for (let i = 0; i < 100; i++) {
   console.log("Test " + i);
-  let test = createRandom();
+  let test = fullRandom();
   if (test !== null) {
     console.log(test[0]);
     console.log(test[1]);
   }
 }
+export { fullRandom };

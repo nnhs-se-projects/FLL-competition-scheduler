@@ -244,6 +244,8 @@ function replaceDuplicates(child, x1, x2) {
   let missing = [];
   let loops = 0;
   let loops2 = 0;
+  // adds to a temporary array each time a specific team is found. Then checks and adds any missing or duplicates
+  // repeats for each team
   for (let t = 1; t < 33; t++) {
     let temp = [];
     for (let i = 0; i < child.length; i++) {
@@ -254,7 +256,7 @@ function replaceDuplicates(child, x1, x2) {
         }
       }
     }
-
+    // checks for duplicates and missing teams
     let run1 = 0;
     let run2 = 0;
     let run3 = 0;
@@ -302,6 +304,7 @@ function replaceDuplicates(child, x1, x2) {
   }
 
   function swap(tableNum) {
+    // swaps a duplicate with a missing team
     while (loops2 < 100) {
       loops2++;
       const rand = Math.floor(Math.random() * (x2 - x1) + x1);
@@ -353,6 +356,7 @@ function replaceDuplicates(child, x1, x2) {
       length = duplicates.length;
     }
     for (let i = 0; i < length; i++) {
+      // swaps all duplicates if there are less than 5
       const index = duplicates[i][1];
       if (
         missing.length > 0 &&
@@ -373,6 +377,7 @@ function replaceDuplicates(child, x1, x2) {
       ) {
         child[duplicates[i][0]][duplicates[i][1]] = missing[0];
         missing.splice(0, 1);
+        // goes to else if when x1 is greater than 1 and x2 is less than 22
       } else if (
         missing.length > 0 &&
         missing[0].name !== child[0][index].name &&
@@ -394,6 +399,7 @@ function replaceDuplicates(child, x1, x2) {
     }
   } else {
     for (let i = 0; i < length - 4; i++) {
+      // swaps all but 4 duplicates
       if (loops > 100) {
         return null;
       }
@@ -418,6 +424,7 @@ function replaceDuplicates(child, x1, x2) {
       return null;
     }
     for (let i = length - 4; i < length; i++) {
+      // swaps the last 4 duplicates
       const index = duplicates[i][1];
       if (
         missing.length > 0 &&
@@ -448,10 +455,10 @@ for (let i = 0; i < 1; i++) {
 }
 
 function mutate(crossoverChildren) {
+  // decides if mutation will occur
   let randomNum = Math.floor(Math.random() * 10 + 1);
   if (randomNum === 1) {
     return swapRandTwo(crossoverChildren);
-    //update rating
   } else {
     return crossoverChildren;
   }
@@ -459,6 +466,7 @@ function mutate(crossoverChildren) {
 
 function swapRandTwo(child) {
   for (let i = 0; i < 4; i++) {
+    // swaps two random teams
     let rand1 = Math.floor(Math.random() * child[i].length);
     let rand2 = Math.floor(Math.random() * child[i].length);
     let teamSwap = child[i][rand1];

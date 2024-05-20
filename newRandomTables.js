@@ -11,6 +11,7 @@ function randomTable() {
   let countLoops2 = 0;
   for (let j = 0; j < 3; j++) {
     let teams = [];
+    // creates an array of 32 teams
     for (let i = 1; i < 33; i++) {
       let str = {
         name: "team" + i,
@@ -22,6 +23,7 @@ function randomTable() {
     }
     let length = teams.length;
     let count = 1;
+    // adds teams to tables
     for (let i = 0; i < length - 4; i++) {
       if (countLoops2 > 200) {
         return null;
@@ -33,6 +35,11 @@ function randomTable() {
         table1.push(team);
         count++;
       } else if (count === 2) {
+        /**
+         * checks if the times would overlap
+         * does not ensure teams still won't overlap as it only checks the same index it is at.
+         * Times could still overlap with the neighboring indices
+         */
         if (team.name != table1[table1.length - 1].name) {
           table2.push(team);
           count++;
@@ -68,6 +75,7 @@ function randomTable() {
       teams.splice(index, 1);
     }
     function checkDuplicate() {
+      // swaps two teams if there was a conflict.
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
           if (teams[i].name === teams[j].name && i != j) {
@@ -133,6 +141,7 @@ function randomTable() {
       }
     }
   }
+  // adds times to each team
   for (let i = 0; i < table1.length; i++) {
     let int = i * 10;
     if (int > 140) {
@@ -161,14 +170,16 @@ function randomTable() {
     }
     table4[i].start = int;
   }
-
+  // this one is necessary because of an unsolved error
   tables.push(table1, table2, table3, table4);
   if (table4[23] == undefined) {
     return null;
   }
+  // I don't think this test is necessary
   let test1 = test(tables);
   if (test1.includes("Failures")) {
     console.log("failed in randomTable");
+    tables = randomTable();
   }
   return tables;
 }
@@ -180,6 +191,7 @@ while (result1 == 0) {
   result1 = tableTest([tables], 1);
 }
 console.log(tables);
+// logs the tables in a more readable format
 let str1 = "table 1: ";
 let str2 = "table 2: ";
 let str3 = "table 3: ";
