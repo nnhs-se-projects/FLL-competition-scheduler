@@ -15,9 +15,9 @@ function randomJS() {
   let offsetT = 5;
   let lunchBreak = 45;
   for (let i = 1; i < numTeams + 1; i++) {
-    let str1 = { name: "team" + i, startT: 0, duration: 25 }; // 15 minute actual duration + 10 minute break
+    let str1 = { id: i, name: "team" + i, startT: 0, duration: 25 }; // 15 minute actual duration + 10 minute break
     teamsR.push(str1);
-    let str2 = { name: "team" + i, startT: 0, duration: 25 };
+    let str2 = { id: i, name: "team" + i, startT: 0, duration: 25 };
     teamsP.push(str2);
   }
 

@@ -14,6 +14,7 @@ function fullRandom() {
   for (let i = 0; i < 3; i++) {
     for (let j = 1; j < 33; j++) {
       let team = {
+        id: j,
         name: "team" + j,
         run: i,
         duration: 10,
