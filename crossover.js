@@ -2,7 +2,13 @@ import { randomTable } from "./newRandomTables.js";
 import { gradeTables } from "./tableGrading.js";
 import { test } from "./test.js";
 import { tableTest } from "./tableTest.js";
-import { createFullSchedule, scoreSchedule } from "./fullRandomSchedule.js";
+import {
+  createFullSchedule,
+  logJudgingRoomsSchedule,
+  logTableRunsSchedule,
+  scoreSchedule,
+  buildTeamsSchedule,
+} from "./fullRandomSchedule.js";
 
 const POPULATION = 10;
 const TOTAL_GENERATIONS = 10;
@@ -31,6 +37,9 @@ function run() {
     best = oldPool[0];
 
     console.log("best score", scoreSchedule(best));
+    console.log(getScheduleEndTime(best));
+    console.log(logJudgingRoomsSchedule(best));
+    console.log(logTableRunsSchedule(best));
 
     for (let j = 0; j < POPULATION / 2; j++) {
       let children = [];
@@ -450,4 +459,18 @@ function swapRandTwo(child) {
     child[i][rand2] = teamSwap;
   }
   return child;
+}
+
+function getScheduleEndTime(schedule) {
+  let teamsSchedule = buildTeamsSchedule(schedule);
+  let endTime = 0;
+  endTime = teamsSchedule.reduce((max, current) => {
+    max = Math.max(
+      max,
+      current[current.length - 1].startTime +
+        current[current.length - 1].duration
+    );
+    return max;
+  }, 0);
+  return endTime;
 }
