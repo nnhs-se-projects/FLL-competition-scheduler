@@ -149,12 +149,4 @@ function fullRandom() {
   return fullSchedule;
 }
 
-for (let i = 0; i < 100; i++) {
-  console.log("Test " + i);
-  let test = fullRandom();
-  if (test !== null) {
-    console.log(test[0]);
-    console.log(test[1]);
-  }
-}
 export { fullRandom };
