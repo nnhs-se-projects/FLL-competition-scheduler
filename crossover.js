@@ -2,6 +2,7 @@ import { randomTable } from "./newRandomTables.js";
 import { gradeTables } from "./tableGrading.js";
 import { test } from "./test.js";
 import { tableTest } from "./tableTest.js";
+import { createFullSchedule, scoreSchedule } from "./fullRandomSchedule.js";
 
 const POPULATION = 100;
 const TOTAL_GENERATIONS = 10;
@@ -11,29 +12,13 @@ function run() {
   let oldPool = [];
   let best = null;
 
-  // create an initial random population of tours
+  // create an initial random population of schedules
   for (let i = 0; i < POPULATION; i++) {
-    let parent = randomTable();
-    let testResult = test(parent);
-    let tableTester = tableTest(parent, 1);
-    while (
-      parent === null ||
-      testResult.includes("Failures") ||
-      tableTester.includes("Failure")
-    ) {
-      parent = randomTable();
-    }
-    let grade1 = gradeTables(oldPool, POPULATION);
-    oldPool.push(parent);
-    let temp = [];
-    for (let x = 60; x > -50; x--) {
-      for (let j = 0; j < grade1.length; j++) {
-        if (grade1[j] === x) {
-          temp.push(oldPool[j]);
-        }
-      }
-    }
+    let parent = createFullSchedule();
+    let score = scoreSchedule(parent);
+    oldPool.push({ schedule: parent, score: score });
   }
+
   // EVALUATE INITIAL POOLS
 
   let oldGrade = gradeTables(oldPool, POPULATION);

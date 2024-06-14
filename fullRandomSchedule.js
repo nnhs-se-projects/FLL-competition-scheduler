@@ -7,7 +7,7 @@ function createFullSchedule() {
   let valid = false;
   while (!valid) {
     schedule = fullRandom();
-    valid = schedule !== null && score(schedule) > 0.0;
+    valid = schedule !== null && scoreSchedule(schedule) > 0.0;
   }
   return schedule;
 }
@@ -163,7 +163,7 @@ function fullRandom() {
   return fullSchedule;
 }
 
-function score(schedule) {
+function scoreSchedule(schedule) {
   const tableSchedule = schedule[0];
   const judgingSchedule = schedule[1];
   const teamsSchedule = buildTeamsSchedule(schedule);
@@ -262,4 +262,4 @@ function buildTeamsSchedule(schedule) {
   return teamsSchedule;
 }
 
-export { createFullSchedule, score };
+export { createFullSchedule, scoreSchedule };
