@@ -15,23 +15,23 @@ function run() {
   // create an initial random population of schedules
   for (let i = 0; i < POPULATION; i++) {
     let parent = createFullSchedule();
-    let score = scoreSchedule(parent);
-    oldPool.push({ schedule: parent, score: score });
+    oldPool.push(parent);
   }
 
   // EVALUATE INITIAL POPULATION
 
-  oldPool.sort((a, b) => b.score - a.score);
+  oldPool.sort((a, b) => scoreSchedule(b) - scoreSchedule(a));
   best = oldPool[0];
 
   // iterate for the specific number of generations
   for (let i = 0; i < TOTAL_GENERATIONS; i++) {
     console.log("generation", i);
-    if (tableTest(oldPool, POPULATION)) {
-      if (gradeTables([oldPool[0]], 1) > gradeTables([best], 1)) {
-        best = oldPool[0];
-      }
-    }
+
+    oldPool.sort((a, b) => scoreSchedule(b) - scoreSchedule(a));
+    best = oldPool[0];
+
+    console.log("best score", scoreSchedule(best));
+
     for (let j = 0; j < POPULATION / 2; j++) {
       let children = [];
       children = performGeneticAlgorithm(oldPool);
