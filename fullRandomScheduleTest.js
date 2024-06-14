@@ -1,6 +1,4 @@
 import { fullRandom, score } from "./fullRandomSchedule.js";
-import { jrGrading } from "./judgingRooms/JRGrading.js";
-import { gradeTables } from "./tableGrading.js";
 
 function validateSchedule(schedule) {
   const tableSchedule = schedule[0];
