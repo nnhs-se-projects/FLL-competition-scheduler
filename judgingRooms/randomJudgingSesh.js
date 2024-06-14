@@ -14,10 +14,11 @@ function randomJS() {
   let numTeams = 32;
   let offsetT = 5;
   let lunchBreak = 45;
+  const ROOM_TIME_INCREMENT = 25; // 15 minute actual duration + 10 minute break
   for (let i = 1; i < numTeams + 1; i++) {
-    let str1 = { id: i, name: "team" + i, startT: 0, duration: 25 }; // 15 minute actual duration + 10 minute break
+    let str1 = { id: i, name: "team" + i, startT: 0, duration: 15 };
     teamsR.push(str1);
-    let str2 = { id: i, name: "team" + i, startT: 0, duration: 25 };
+    let str2 = { id: i, name: "team" + i, startT: 0, duration: 15 };
     teamsP.push(str2);
   }
 
@@ -112,7 +113,7 @@ function randomJS() {
 
   for (let i = 0; i < robotRooms.length; i++) {
     for (let j = 0; j < robotRooms[i].length; j++) {
-      robotRooms[i][j].startT = offsetT * i + robotRooms[i][j].duration * j;
+      robotRooms[i][j].startT = offsetT * i + ROOM_TIME_INCREMENT * j;
       if (robotRooms[i][j].startT >= 135) {
         // lunch start is 150, 135 is 150-15(the duration of the session)
         robotRooms[i][j].startT += lunchBreak;
@@ -121,7 +122,7 @@ function randomJS() {
   }
   for (let i = 0; i < projectRooms.length; i++) {
     for (let j = 0; j < projectRooms[i].length; j++) {
-      projectRooms[i][j].startT = offsetT * i + projectRooms[i][j].duration * j;
+      projectRooms[i][j].startT = offsetT * i + ROOM_TIME_INCREMENT * j;
       if (projectRooms[i][j].startT >= 135) {
         projectRooms[i][j].startT += lunchBreak;
       }
