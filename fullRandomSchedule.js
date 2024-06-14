@@ -9,7 +9,6 @@ function fullRandom() {
     judgingRooms = randomJS();
   }
   // creates array of 32 teams each present 3 times
-  let tables = [];
   let tablePool = [];
   for (let i = 0; i < 3; i++) {
     for (let j = 1; j < 33; j++) {
@@ -28,6 +27,7 @@ function fullRandom() {
   let t2 = [];
   let t3 = [];
   let t4 = [];
+  let tables = [t1, t2, t3, t4];
   let tested = [];
   for (let i = 0; i < 4; i++) {
     let count = 0;
@@ -98,6 +98,11 @@ function fullRandom() {
           fail = true;
         }
       }
+      // checks if the team is already scheduled on this table
+      if (tables[i].some((e) => e.name == tablePool[randomNum].name)) {
+        fail = true;
+      }
+
       if (fail === true) {
         // adds the team to test and removes it from the table pool if it would overlap
         tested.push(tablePool[randomNum]);
@@ -144,7 +149,6 @@ function fullRandom() {
       }
     }
   }
-  tables = [t1, t2, t3, t4];
   let fullSchedule = [tables, judgingRooms];
   return fullSchedule;
 }
