@@ -40,6 +40,12 @@
       "request": "launch",
       "name": "Debug attempt.js",
       "program": "${workspaceFolder}/attempt.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug fullRandomScheduleTest.js",
+      "program": "${workspaceFolder}/fullRandomScheduleTest.js"
     }
   ]
 }
