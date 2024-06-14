@@ -2,6 +2,8 @@
 import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
 import { jrGrading } from "./judgingRooms/JRGrading.js";
 
+const DEBUG = true;
+
 function createFullSchedule() {
   let schedule;
   let valid = false;
@@ -168,7 +170,42 @@ function scoreSchedule(schedule) {
   const judgingSchedule = schedule[1];
   const teamsSchedule = buildTeamsSchedule(schedule);
 
-  // check that each time is scheduled for 3 table runs and 2 judging sessions
+  // extra checks when debugging
+  if (DEBUG) {
+    // iterate through each table
+    for (let i = 0; i < tableSchedule.length; i++) {
+      tableSchedule[i].sort((a, b) => a.start - b.start);
+      // iterate through each table run at the table
+      for (let j = 0; j < tableSchedule[i].length - 1; j++) {
+        if (
+          tableSchedule[i][j].start + tableSchedule[i][j].duration >
+          tableSchedule[i][j + 1].start
+        ) {
+          console.log("Table " + i + " has overlapping table runs");
+          return 0.0;
+        }
+      }
+    }
+
+    // iterate through each judging room
+    for (let i = 0; i < judgingSchedule.length; i++) {
+      judgingSchedule[i].sort((a, b) => a.startT - b.startT);
+      // iterate through each team in the judging room
+      for (let j = 0; j < judgingSchedule[i].length - 1; j++) {
+        if (
+          judgingSchedule[i][j].startT + judgingSchedule[i][j].duration >
+          judgingSchedule[i][j + 1].startT
+        ) {
+          console.log(
+            "Judging room " + i + " has overlapping judging sessions"
+          );
+          return 0.0;
+        }
+      }
+    }
+  }
+
+  // check that each team is scheduled for 3 table runs and 2 judging sessions
   for (let i = 1; i <= 32; i++) {
     let tableRunCount = 0;
     let judgingSessionCount = 0;
@@ -223,6 +260,61 @@ function scoreSchedule(schedule) {
   return score / 32.0;
 }
 
+function logTeamSchedules(schedule) {
+  const teamsSchedule = buildTeamsSchedule(schedule);
+
+  for (let i = 1; i <= 32; i++) {
+    console.log("Team " + i + ":");
+    for (const event of teamsSchedule[i]) {
+      if (event.event === "tableRun") {
+        console.log(
+          "  Table Run: " +
+            event.startTime +
+            " - " +
+            (event.startTime + event.duration)
+        );
+      } else {
+        console.log(
+          "  Judging Session: " +
+            event.startTime +
+            " - " +
+            (event.startTime + event.duration)
+        );
+      }
+    }
+  }
+}
+
+function logJudgingRoomsSchedule(schedule) {
+  const judgingSchedule = schedule[1];
+
+  // iterate through each judging room
+  for (let i = 0; i < judgingSchedule.length; i++) {
+    // iterate through each team in the judging room
+    let displayString = "Judging Room " + i + ":\t";
+    for (let j = 0; j < judgingSchedule[i].length; j++) {
+      const session = judgingSchedule[i][j];
+      displayString += session.id + "\t";
+    }
+    console.log(displayString);
+  }
+}
+
+function logTableRunsSchedule(schedule) {
+  const tableSchedule = schedule[0];
+
+  // iterate through each table
+  for (let i = 0; i < tableSchedule.length; i++) {
+    // iterate through each table run at the table
+    let displayString = "Table Run " + i + ":\t";
+    for (let j = 0; j < tableSchedule[i].length; j++) {
+      const tableRun = tableSchedule[i][j];
+      displayString += tableRun.id + "\t";
+    }
+    console.log(displayString);
+  }
+}
+
 function buildTeamsSchedule(schedule) {
   const tableSchedule = schedule[0];
   const judgingSchedule = schedule[1];
@@ -259,7 +351,18 @@ function buildTeamsSchedule(schedule) {
     }
   }
 
+  teamsSchedule.forEach((teamSchedule) => {
+    teamSchedule.sort((a, b) => a.startTime - b.startTime);
+  });
+
   return teamsSchedule;
 }
 
-export { createFullSchedule, scoreSchedule };
+export {
+  createFullSchedule,
+  scoreSchedule,
+  buildTeamsSchedule,
+  logTeamSchedules,
+  logJudgingRoomsSchedule,
+  logTableRunsSchedule,
+};
