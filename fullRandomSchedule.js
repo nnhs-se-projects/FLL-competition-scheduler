@@ -2,6 +2,16 @@
 import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
 import { jrGrading } from "./judgingRooms/JRGrading.js";
 
+function createFullSchedule() {
+  let schedule;
+  let valid = false;
+  while (!valid) {
+    schedule = fullRandom();
+    valid = schedule !== null && score(schedule) > 0.0;
+  }
+  return schedule;
+}
+
 function fullRandom() {
   // creates valid random judging room
   let judgingRooms = randomJS();
@@ -156,38 +166,7 @@ function fullRandom() {
 function score(schedule) {
   const tableSchedule = schedule[0];
   const judgingSchedule = schedule[1];
-  const teamsSchedule = [];
-
-  // initialize teamsSchedule
-  for (let i = 1; i <= 32; i++) {
-    teamsSchedule[i] = [];
-  }
-
-  // iterate through each table
-  for (let i = 0; i < tableSchedule.length; i++) {
-    // iterate through each table run at the table
-    for (let j = 0; j < tableSchedule[i].length; j++) {
-      const tableRun = tableSchedule[i][j];
-      teamsSchedule[tableRun.id].push({
-        startTime: tableRun.start,
-        duration: tableRun.duration,
-        event: "tableRun",
-      });
-    }
-  }
-
-  // iterate through each judging room
-  for (let i = 0; i < judgingSchedule.length; i++) {
-    // iterate through each team in the judging room
-    for (let j = 0; j < judgingSchedule[i].length; j++) {
-      const session = judgingSchedule[i][j];
-      teamsSchedule[session.id].push({
-        startTime: session.startT,
-        duration: session.duration,
-        event: "judgingSession",
-      });
-    }
-  }
+  const teamsSchedule = buildTeamsSchedule(schedule);
 
   // check that each time is scheduled for 3 table runs and 2 judging sessions
   for (let i = 1; i <= 32; i++) {
@@ -244,4 +223,43 @@ function score(schedule) {
   return score / 32.0;
 }
 
-export { fullRandom, score };
+function buildTeamsSchedule(schedule) {
+  const tableSchedule = schedule[0];
+  const judgingSchedule = schedule[1];
+  const teamsSchedule = [];
+
+  // initialize teamsSchedule
+  for (let i = 1; i <= 32; i++) {
+    teamsSchedule[i] = [];
+  }
+
+  // iterate through each table
+  for (let i = 0; i < tableSchedule.length; i++) {
+    // iterate through each table run at the table
+    for (let j = 0; j < tableSchedule[i].length; j++) {
+      const tableRun = tableSchedule[i][j];
+      teamsSchedule[tableRun.id].push({
+        startTime: tableRun.start,
+        duration: tableRun.duration,
+        event: "tableRun",
+      });
+    }
+  }
+
+  // iterate through each judging room
+  for (let i = 0; i < judgingSchedule.length; i++) {
+    // iterate through each team in the judging room
+    for (let j = 0; j < judgingSchedule[i].length; j++) {
+      const session = judgingSchedule[i][j];
+      teamsSchedule[session.id].push({
+        startTime: session.startT,
+        duration: session.duration,
+        event: "judgingSession",
+      });
+    }
+  }
+
+  return teamsSchedule;
+}
+
+export { createFullSchedule, score };
