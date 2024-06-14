@@ -11,42 +11,47 @@ let newPool = [];
 let oldPool = [];
 
 function jrGrading(child) {
-  const teamsSchedule = [];
+  let teamGrades = [];
+  let numTeams = 32;
+  let totalScore = 0.0;
 
-  // initialize teamsSchedule
-  for (let i = 1; i <= 32; i++) {
-    teamsSchedule[i] = [];
-  }
+  for (let i = 1; i < numTeams + 1; i++) {
+    let rr = 0;
+    let pr = 0;
 
-  // iterate through each judging room
-  for (let i = 0; i < child.length; i++) {
-    // iterate through each team in the judging room
-    for (let j = 0; j < child[i].length; j++) {
-      const session = child[i][j];
-      teamsSchedule[session.id].push({
-        startTime: session.startT,
-        duration: session.duration,
-      });
+    for (let room = 0; room < child.length / 2; room++) {
+      if (child[room].some((e) => e.name === "team" + i)) {
+        rr = child[room].findIndex((e) => e.name == "team" + i);
+      }
     }
-  }
-
-  let grade = 0.0;
-
-  for (let i = 1; i <= 32; i++) {
-    const teamSchedule = teamsSchedule[i];
-    const timeDiff = Math.abs(
-      teamSchedule[0].startTime - teamSchedule[1].startTime
-    );
-
-    // if the times overlap, this is an invalid schedule, return 0
-    if (timeDiff < 20) {
-      return 0;
-    } else if (timeDiff > 30 && timeDiff < 90) {
-      grade += 1.0;
+    for (let room = child.length / 2; room < child.length; room++) {
+      if (child[room].some((e) => e.name === "team" + i)) {
+        pr = child[room].findIndex((e) => e.name == "team" + i);
+      }
     }
+
+    let num = child[0].length / 2;
+
+    //check if spacing is less than num/2 or greater than 3num/2 then teamScore = 0
+    if (Math.abs(rr - pr) < num / 2 || Math.abs(rr - pr) > (3 * num) / 2) {
+      totalScore = 0;
+      return totalScore;
+    }
+
+    let teamScore = Math.abs(rr - pr) / parseFloat(num);
+
+    teamGrades.push(teamScore);
   }
 
-  return grade / 32.0;
+  //console.log("Team Grades: ");
+  //console.log(teamGrades);
+
+  for (let i = 0; i < teamGrades.length; i++) {
+    totalScore += teamGrades[i];
+  }
+  totalScore /= numTeams;
+
+  return totalScore;
 }
 
 //create pool of 100 parents
