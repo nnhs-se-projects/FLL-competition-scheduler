@@ -1,4 +1,6 @@
 import { fullRandom } from "./fullRandomSchedule.js";
+import { jrGrading } from "./judgingRooms/JRGrading.js";
+import { gradeTables } from "./tableGrading.js";
 
 function validateSchedule(schedule) {
   const tableSchedule = schedule[0];
@@ -83,6 +85,9 @@ for (let i = 0; i < 100; i++) {
   if (schedule !== null) {
     if (!validateSchedule(schedule)) {
       console.log("test failed");
+    } else {
+      console.log("judging schedule score: " + jrGrading(schedule[1]));
+      console.log("table schedule score: " + gradeTables(schedule[0]));
     }
   } else {
     i--;
