@@ -4,7 +4,7 @@ import { test } from "./test.js";
 import { tableTest } from "./tableTest.js";
 import { createFullSchedule, scoreSchedule } from "./fullRandomSchedule.js";
 
-const POPULATION = 100;
+const POPULATION = 10;
 const TOTAL_GENERATIONS = 10;
 
 function run() {
@@ -19,19 +19,10 @@ function run() {
     oldPool.push({ schedule: parent, score: score });
   }
 
-  // EVALUATE INITIAL POOLS
+  // EVALUATE INITIAL POPULATION
 
-  let oldGrade = gradeTables(oldPool, POPULATION);
-  let temp1 = [];
-  for (let x = 60; x > -50; x--) {
-    for (let j = 0; j < oldGrade.length; j++) {
-      if (oldGrade[j] === x) {
-        temp1.push(oldPool[j]);
-      }
-    }
-  }
-  oldPool = temp1;
-  best = temp1[0];
+  oldPool.sort((a, b) => b.score - a.score);
+  best = oldPool[0];
 
   // iterate for the specific number of generations
   for (let i = 0; i < TOTAL_GENERATIONS; i++) {
