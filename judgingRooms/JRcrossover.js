@@ -148,8 +148,11 @@ function replaceDuplicates(childA, childB, x1, x2) {
   let constB = childB;
   for (let room = 0; room < childA.length; room++) {
     for (let a = x1; a < x2; a++) {
+      // FIXME: e.name is undefined; should be constB[room].some
+      // FIXME: this is overly stringent as we don't care if teams move among robot rooms or move among project rooms
       if (!constB.some((e) => e.name === childA[room][a].name)) {
         for (let b = x1; b < x2; b++) {
+          // FIXME: e.name is undefined; should be childA[room].some
           if (!childA.some((e) => e.name === childB[room][b].name)) {
             let swap = childA[room][a];
             childA[room][a] = childB[room][b];
