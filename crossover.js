@@ -164,58 +164,85 @@ function performGeneticAlgorithm(oldPool) {
   return children;
 }
 function crossOver(parentA, parentB) {
-  let children = [];
-  let c1t1 = [];
-  let c1t2 = [];
-  let c1t3 = [];
-  let c1t4 = [];
-  let c2t1 = [];
-  let c2t2 = [];
-  let c2t3 = [];
-  let c2t4 = [];
-  let x1 = Math.floor((Math.random() * parentA[0].length) / 2 + 1);
-  let x2 = Math.floor(Math.random() * (parentA[0].length / 2) + x1 + 1);
-  if (x2 - x1 < 5) {
-    if (parentA[0].length - x2 > 4) {
-      x2 += 4;
-    } else if (x1 > 4) {
-      x1 = -4;
+  const endTime = Math.max(
+    getScheduleEndTime(parentA),
+    getScheduleEndTime(parentB)
+  );
+
+  // select the cross over points in terms of time
+  const x1 = Math.random() * (endTime - 25 * 3 - 25) + 25;
+  const x2 = Math.random() * (endTime - 25 - (x1 + 25)) + x1 + 25;
+
+  console.log("x1", x1, "; x2", x2);
+
+  let childA = makeEmptySchedule();
+  let childB = makeEmptySchedule();
+
+  // cross over the table run schedules
+  const tableScheduleA = parentA[0];
+  const tableScheduleB = parentB[0];
+
+  // iterate through each table; this assumes that the start times for each run are consistent across all schedules
+  for (let i = 0; i < tableScheduleA.length; i++) {
+    // iterate through each table run at the table
+    for (let j = 0; j < tableScheduleA[i].length; j++) {
+      const tableRunA = tableScheduleA[i][j];
+      const tableRunB = tableScheduleB[i][j];
+      if (tableRunA.start < x1) {
+        childA[0][i].push(tableRunA);
+        childB[0][i].push(tableRunB);
+      } else if (tableRunA.start < x2) {
+        childA[0][i].push(tableRunB);
+        childB[0][i].push(tableRunA);
+      } else {
+        childA[0][i].push(tableRunA);
+        childB[0][i].push(tableRunB);
+      }
     }
   }
 
-  for (let i = 0; i < x1; i++) {
-    c1t1.push({ name: parentA[0][i].name, run: parentA[0][i].run }); // crossing over child 1 table 1
-    c1t2.push({ name: parentA[1][i].name, run: parentA[1][i].run }); // crossing over child 1 table 2
-    c1t3.push({ name: parentA[2][i].name, run: parentA[2][i].run }); // crossing over child 1 table 3
-    c1t4.push({ name: parentA[3][i].name, run: parentA[3][i].run }); // crossing over child 1 table 4
+  // cross over the judging room schedules
+  const judgingScheduleA = parentA[1];
+  const judgingScheduleB = parentB[1];
 
-    c2t1.push({ name: parentB[0][i].name, run: parentB[0][i].run }); // crossing over child 2 table 1
-    c2t2.push({ name: parentB[1][i].name, run: parentB[1][i].run }); // crossing over child 2 table 2
-    c2t3.push({ name: parentB[2][i].name, run: parentB[2][i].run }); // crossing over child 2 table 3
-    c2t4.push({ name: parentB[3][i].name, run: parentB[3][i].run }); // crossing over child 2 table 4
+  // iterate through each judging room; this assumes that the start times for each session are consistent across all schedules
+  for (let i = 0; i < judgingScheduleA.length; i++) {
+    // iterate through each session in the judging room
+    for (let j = 0; j < judgingScheduleA[i].length; j++) {
+      const sessionA = judgingScheduleA[i][j];
+      const sessionB = judgingScheduleB[i][j];
+      if (sessionA.startT < x1) {
+        childA[1][i].push(sessionA);
+        childB[1][i].push(sessionB);
+      } else if (sessionA.startT < x2) {
+        childA[1][i].push(sessionB);
+        childB[1][i].push(sessionA);
+      } else {
+        childA[1][i].push(sessionA);
+        childB[1][i].push(sessionB);
+      }
+    }
   }
-  for (let i = x1; i < x2; i++) {
-    c1t1.push({ name: parentB[0][i].name, run: parentB[0][i].run });
-    c1t2.push({ name: parentB[1][i].name, run: parentB[1][i].run });
-    c1t3.push({ name: parentB[2][i].name, run: parentB[2][i].run });
-    c1t4.push({ name: parentB[3][i].name, run: parentB[3][i].run });
 
-    c2t1.push({ name: parentA[0][i].name, run: parentA[0][i].run });
-    c2t2.push({ name: parentA[1][i].name, run: parentA[1][i].run });
-    c2t3.push({ name: parentA[2][i].name, run: parentA[2][i].run });
-    c2t4.push({ name: parentA[3][i].name, run: parentA[3][i].run });
-  }
-  for (let i = x2; i < parentA[0].length; i++) {
-    c1t1.push({ name: parentA[0][i].name, run: parentA[0][i].run });
-    c1t2.push({ name: parentA[1][i].name, run: parentA[1][i].run });
-    c1t3.push({ name: parentA[2][i].name, run: parentA[2][i].run });
-    c1t4.push({ name: parentA[3][i].name, run: parentA[3][i].run });
+  console.log("Parent A");
+  logJudgingRoomsSchedule(parentA);
+  console.log("Parent B");
+  logJudgingRoomsSchedule(parentB);
+  console.log("Child A");
+  logJudgingRoomsSchedule(childA);
+  console.log("Child B");
+  logJudgingRoomsSchedule(childB);
 
-    c2t1.push({ name: parentB[0][i].name, run: parentB[0][i].run });
-    c2t2.push({ name: parentB[1][i].name, run: parentB[1][i].run });
-    c2t3.push({ name: parentB[2][i].name, run: parentB[2][i].run });
-    c2t4.push({ name: parentB[3][i].name, run: parentB[3][i].run });
-  }
+  console.log("Parent A");
+  logTableRunsSchedule(parentA);
+  console.log("Parent B");
+  logTableRunsSchedule(parentB);
+  console.log("Child A");
+  logTableRunsSchedule(childA);
+  console.log("Child B");
+  logTableRunsSchedule(childB);
+
+  return [childA, childB];
 
   let child1 = [c1t1, c1t2, c1t3, c1t4];
   let child2 = [c2t1, c2t2, c2t3, c2t4];
@@ -473,4 +500,20 @@ function getScheduleEndTime(schedule) {
     return max;
   }, 0);
   return endTime;
+}
+
+function makeEmptySchedule() {
+  // first element is for table runs, second element is for judging rooms
+  const schedule = [[], []];
+
+  // create an empty table run schedule for each table
+  for (let i = 0; i < 4; i++) {
+    schedule[0].push([]);
+  }
+
+  // create an empty judging room schedule for each judging room
+  for (let i = 0; i < 8; i++) {
+    schedule[1].push([]);
+  }
+  return schedule;
 }
