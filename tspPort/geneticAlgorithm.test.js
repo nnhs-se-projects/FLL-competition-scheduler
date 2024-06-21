@@ -1,10 +1,10 @@
-const { Genome } = require("./genome.cjs");
+const { Genome, Gene } = require("./genome.cjs");
 const { swapRandTwo, mutate, crossover } = require("./geneticAlgorithm.cjs");
-const { countOccurrenceInArray } = require("./util.cjs");
+const { countOccurrences } = require("./util.cjs");
 
 test("check createCopy", () => {
   const genome = new Genome();
-  genome.populateWithRandomGenes(10);
+  genome.populateWithRandomGenes();
   const copy = genome.createCopy();
   expect(genome.genes).toEqual(copy.genes);
   expect(genome.genes).not.toBe(copy.genes);
@@ -12,25 +12,29 @@ test("check createCopy", () => {
 
 test("check swapRandTwo", () => {
   const genome = new Genome();
-  genome.populateWithRandomGenes(10);
-  for (let i = 0; i < genome.genes.length; i++) {
-    genome.genes[i] = i;
+  genome.populateWithRandomGenes();
+  for (let i = 0; i < genome.getRange(); i++) {
+    genome.replaceGenesInRange(i, i + 1, [new Gene(i)]);
   }
 
   let randCount = 0;
 
   for (let i = 0; i < 1000; i++) {
     const genome2 = genome.createCopy();
-    swapRandTwo(genome.genes);
-    let index1 = 0;
-    let index2 = 0;
+    swapRandTwo(genome);
+    let index1 = -1;
+    let index2 = -1;
 
-    for (let j = 0; j < genome.genes.length; j++) {
-      if (genome.genes[j] !== genome2.genes[j]) {
-        if (index1 === 0) {
+    for (let j = 0; j < genome.getRange(); j++) {
+      if (
+        !genome
+          .getGenesInRange(j, j + 1)[0]
+          .equals(genome2.getGenesInRange(j, j + 1)[0])
+      ) {
+        if (index1 === -1) {
           index1 = j;
           randCount++;
-        } else if (index2 === 0) {
+        } else if (index2 === -1) {
           index2 = j;
         } else {
           expect(true).toBe(false);
@@ -38,8 +42,18 @@ test("check swapRandTwo", () => {
       }
     }
 
-    expect(genome2.genes[index1]).toBe(genome.genes[index2]);
-    expect(genome2.genes[index2]).toBe(genome.genes[index1]);
+    if (index1 !== -1 && index2 !== -1) {
+      expect(
+        genome2
+          .getGenesInRange(index1, index1 + 1)[0]
+          .equals(genome.getGenesInRange(index2, index2 + 1)[0])
+      ).toBe(true);
+      expect(
+        genome2
+          .getGenesInRange(index2, index2 + 1)[0]
+          .equals(genome.getGenesInRange(index1, index1 + 1)[0])
+      ).toBe(true);
+    }
   }
 
   expect(randCount).toBeGreaterThanOrEqual(800);
@@ -48,22 +62,28 @@ test("check swapRandTwo", () => {
 test("check populateWithRandomGenes", () => {
   let duplicateCount = 0;
   let prevGenome = new Genome();
-  prevGenome.populateWithRandomGenes(10);
+  prevGenome.populateWithRandomGenes();
 
   for (let i = 0; i < 1000; i++) {
     const genome = new Genome();
-    genome.populateWithRandomGenes(10);
+    genome.populateWithRandomGenes();
 
     genome.genes.forEach((gene) => {
-      expect(
-        countOccurrenceInArray(genome.genes, gene, 0, genome.genes.length)
-      ).toBe(1);
+      expect(countOccurrences(genome, gene, 0, genome.getRange())).toBe(1);
     });
 
-    if (
-      prevGenome.genes.length === genome.genes.length &&
-      prevGenome.genes.every((value, index) => value === genome.genes[index])
-    ) {
+    let duplicate = true;
+    for (let j = 0; j < genome.getRange(); j++) {
+      if (
+        !genome
+          .getGenesInRange(j, j + 1)[0]
+          .equals(prevGenome.getGenesInRange(j, j + 1)[0])
+      ) {
+        duplicate = false;
+      }
+    }
+
+    if (duplicate) {
       duplicateCount++;
     }
     prevGenome = genome;
@@ -74,7 +94,10 @@ test("check populateWithRandomGenes", () => {
 
 test("check updateScore", () => {
   const genome = new Genome();
-  genome.genes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  genome.genes = [];
+  for (const value of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+    genome.genes.push(new Gene(value));
+  }
 
   genome.updateScore();
   expect(genome.score).toBe(18);
@@ -82,7 +105,10 @@ test("check updateScore", () => {
   genome.updateScore();
   expect(genome.score).toBe(18);
 
-  genome.genes = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
+  genome.genes = [];
+  for (const value of [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]) {
+    genome.genes.push(new Gene(value));
+  }
 
   genome.updateScore();
   expect(genome.score).toBe(36);
@@ -93,7 +119,7 @@ test("check updateScore", () => {
 
 test("check mutation", () => {
   const genome = new Genome();
-  genome.populateWithRandomGenes(10);
+  genome.populateWithRandomGenes();
   let previousScore = genome.score;
   let mutateCount = 0;
 
@@ -116,9 +142,9 @@ test("check crossover", () => {
 
   do {
     parentA = new Genome();
-    parentA.populateWithRandomGenes(10);
+    parentA.populateWithRandomGenes();
     parentB = new Genome();
-    parentB.populateWithRandomGenes(10);
+    parentB.populateWithRandomGenes();
   } while (
     parentA.genes.every((value, index) => value === parentB.genes[index])
   );
@@ -155,23 +181,13 @@ test("check crossover", () => {
       expect(
         parentA.genes.every(
           (value, index) =>
-            countOccurrenceInArray(
-              child.genes,
-              value,
-              0,
-              child.genes.length
-            ) === 1
+            countOccurrences(child.genes, value, 0, child.genes.length) === 1
         )
       ).toBe(true);
       expect(
         parentB.genes.every(
           (value, index) =>
-            countOccurrenceInArray(
-              child.genes,
-              value,
-              0,
-              child.genes.length
-            ) === 1
+            countOccurrences(child.genes, value, 0, child.genes.length) === 1
         )
       ).toBe(true);
     }

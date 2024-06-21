@@ -1,4 +1,5 @@
-const { randRange, countOccurrenceInArray } = require("./util.cjs");
+const { Genome, Gene } = require("./genome.cjs");
+const { randRange, countOccurrences } = require("./util.cjs");
 
 test("check range of randRange", () => {
   for (let i = 0; i < 1000; i++) {
@@ -26,31 +27,40 @@ test("check frequency of randRange", () => {
   }
 });
 
-test("check countOccurrenceInArray function", () => {
-  let testArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+test("check countOccurrences function", () => {
+  const testGenome = new Genome();
+  for (let i = 0; i < 10; i++) {
+    testGenome.genes.push(new Gene(i));
+  }
 
   // test if value never occurs in array
-  expect(countOccurrenceInArray(testArray, 10, 0, 10)).toBe(0);
+  expect(countOccurrences(testGenome, new Gene(10), 0, 10)).toBe(0);
 
   // test if value occurs once at start of array / range
-  expect(countOccurrenceInArray(testArray, 0, 0, 10)).toBe(1);
+  expect(countOccurrences(testGenome, new Gene(0), 0, 10)).toBe(1);
 
   // test if value occurs once at end of array / range
-  expect(countOccurrenceInArray(testArray, 9, 0, 10)).toBe(1);
+  expect(countOccurrences(testGenome, new Gene(9), 0, 10)).toBe(1);
 
-  testArray = [0, 1, 2, 0, 4, 4, 9, 7, 4, 9];
+  testGenome.genes = [];
+  for (const value of [0, 1, 2, 0, 4, 4, 9, 7, 4, 9]) {
+    testGenome.genes.push(new Gene(value));
+  }
 
   // test if value occurs 2 times (including at start)
-  expect(countOccurrenceInArray(testArray, 0, 0, 10)).toBe(2);
+  expect(countOccurrences(testGenome, new Gene(0), 0, 10)).toBe(2);
 
   // test if value occurs 2 times (including at end)
-  expect(countOccurrenceInArray(testArray, 9, 0, 10)).toBe(2);
+  expect(countOccurrences(testGenome, new Gene(9), 0, 10)).toBe(2);
 
   // test if value occurs 3 times (including twice in a row)
-  expect(countOccurrenceInArray(testArray, 4, 0, 10)).toBe(3);
+  expect(countOccurrences(testGenome, new Gene(4), 0, 10)).toBe(3);
 
-  testArray = [9, 1, 2, 0, 9, 4, 9, 7, 4, 9];
+  testGenome.genes = [];
+  for (const value of [9, 1, 2, 0, 9, 4, 9, 7, 4, 9]) {
+    testGenome.genes.push(new Gene(value));
+  }
 
   // test if value occurs within subset of array
-  expect(countOccurrenceInArray(testArray, 9, 4, 7)).toBe(2);
+  expect(countOccurrences(testGenome, new Gene(9), 4, 7)).toBe(2);
 });

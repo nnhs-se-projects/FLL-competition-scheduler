@@ -12,7 +12,7 @@ let newPoolIndex = 0;
 // create an initial random population of genome
 for (let i = 0; i < POP_SIZE; i++) {
   oldPool[i] = new Genome();
-  oldPool[i].populateWithRandomGenes(25);
+  oldPool[i].populateWithRandomGenes();
 }
 
 // display the best initial genome

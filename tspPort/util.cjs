@@ -18,14 +18,15 @@ function randRange(m, n) {
  * between the start (inclusive) and end (exclusive) indices
  *
  */
-function countOccurrenceInArray(arr, value, start, end) {
+function countOccurrences(genome, geneToCount, start, end) {
   let count = 0;
-  for (let i = start; i < end; i++) {
-    if (arr[i] === value) {
+  const genes = genome.getGenesInRange(start, end);
+  for (const gene of genes) {
+    if (gene.equals(geneToCount)) {
       count++;
     }
   }
   return count;
 }
 
-module.exports = { randRange, countOccurrenceInArray };
+module.exports = { randRange, countOccurrences };
