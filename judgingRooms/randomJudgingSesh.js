@@ -94,12 +94,14 @@ function randomJS() {
     for (let i = 0; i < robotRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsR[randomNum];
+      team.type = "robot";
       robotRooms[i].push(team);
       teamsR.splice(randomNum, 1);
     }
     for (let i = 0; i < projectRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsP[randomNum];
+      team.type = "project";
       projectRooms[i].push(team);
       count++;
       teamsP.splice(randomNum, 1);
