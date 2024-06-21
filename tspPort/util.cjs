@@ -18,7 +18,7 @@ function randRange(m, n) {
  * between the start (inclusive) and end (exclusive) indices
  *
  */
-function count(arr, value, start, end) {
+function countOccurrenceInArray(arr, value, start, end) {
   let count = 0;
   for (let i = start; i < end; i++) {
     if (arr[i] === value) {
@@ -28,4 +28,4 @@ function count(arr, value, start, end) {
   return count;
 }
 
-module.exports = { randRange, count };
+module.exports = { randRange, countOccurrenceInArray };
