@@ -23,15 +23,15 @@ function crossover(parentA, parentB, x1, x2) {
   const child = parentA.createCopy();
 
   for (let i = 0; i < x1; i++) {
-    child.genes[i] = parentA.genes[i];
+    child.genes[i] = parentA.genes[i].copy();
   }
 
   for (let i = x1; i < x2; i++) {
-    child.genes[i] = parentB.genes[i];
+    child.genes[i] = parentB.genes[i].copy();
   }
 
   for (let i = x2; i < parentA.genes.length; i++) {
-    child.genes[i] = parentA.genes[i];
+    child.genes[i] = parentA.genes[i].copy();
   }
 
   replaceDuplicates(parentA, parentB, child, x1, x2);
@@ -43,22 +43,22 @@ function replaceDuplicates(parentA, parentB, child, x1, x2) {
   const uniqueGenes = [];
 
   for (let i = x1; i < x2; i++) {
-    if (countOccurrences(parentB.genes, parentA.genes[i], x1, x2) === 0) {
+    if (countOccurrences(parentB, parentA.genes[i], x1, x2) === 0) {
       uniqueGenes.push(parentA.genes[i]);
     }
   }
 
   let uniqueIndex = 0;
   for (let i = 0; i < x1; i++) {
-    if (countOccurrences(child.genes, child.genes[i], x1, x2) > 0) {
-      child.genes[i] = uniqueGenes[uniqueIndex];
+    if (countOccurrences(child, child.genes[i], x1, x2) > 0) {
+      child.genes[i] = uniqueGenes[uniqueIndex].copy();
       uniqueIndex++;
     }
   }
 
   for (let i = x2; i < child.genes.length; i++) {
-    if (countOccurrences(child.genes, child.genes[i], x1, x2) > 0) {
-      child.genes[i] = uniqueGenes[uniqueIndex];
+    if (countOccurrences(child, child.genes[i], x1, x2) > 0) {
+      child.genes[i] = uniqueGenes[uniqueIndex].copy();
       uniqueIndex++;
     }
   }

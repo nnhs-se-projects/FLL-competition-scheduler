@@ -6,16 +6,25 @@ test("check createCopy", () => {
   const genome = new Genome();
   genome.populateWithRandomGenes();
   const copy = genome.createCopy();
-  expect(genome.genes).toEqual(copy.genes);
+
+  // test that the variables don't reference the same genome object
+  expect(genome).not.toBe(copy);
+
+  // test that the objects don't reference the same genes array
   expect(genome.genes).not.toBe(copy.genes);
+
+  genome.genes.forEach((gene, index) => {
+    // test that the gene objects in the genes arrays aren't the same object
+    expect(gene).not.toBe(copy.genes[index]);
+
+    // test the the value of the genes are the same
+    expect(gene.value).toBe(copy.genes[index].value);
+  });
 });
 
 test("check swapRandTwo", () => {
   const genome = new Genome();
   genome.populateWithRandomGenes();
-  for (let i = 0; i < genome.getRange(); i++) {
-    genome.replaceGenesInRange(i, i + 1, [new Gene(i)]);
-  }
 
   let randCount = 0;
 
@@ -95,9 +104,9 @@ test("check populateWithRandomGenes", () => {
 test("check updateScore", () => {
   const genome = new Genome();
   genome.genes = [];
-  for (const value of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((value) => {
     genome.genes.push(new Gene(value));
-  }
+  });
 
   genome.updateScore();
   expect(genome.score).toBe(18);
@@ -106,9 +115,9 @@ test("check updateScore", () => {
   expect(genome.score).toBe(18);
 
   genome.genes = [];
-  for (const value of [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]) {
+  [0, 2, 4, 6, 8, 10, 12, 14, 16, 18].forEach((value) => {
     genome.genes.push(new Gene(value));
-  }
+  });
 
   genome.updateScore();
   expect(genome.score).toBe(36);
@@ -146,7 +155,9 @@ test("check crossover", () => {
     parentB = new Genome();
     parentB.populateWithRandomGenes();
   } while (
-    parentA.genes.every((value, index) => value === parentB.genes[index])
+    parentA.genes.every(
+      (value, index) => value.value === parentB.genes[index].value
+    )
   );
 
   let testIndexPairs = [
@@ -160,34 +171,38 @@ test("check crossover", () => {
 
     expect(child.genes.length).toBe(parentA.genes.length);
     expect(
-      parentA.genes.every((value, index) => value === child.genes[index])
+      parentA.genes.every(
+        (value, index) => value.value === child.genes[index].value
+      )
     ).toBe(true);
   }
 
-  testIndexPairs = [[0, 9]];
+  testIndexPairs = [[0, 10]];
   for (const indexPair of testIndexPairs) {
     const child = crossover(parentA, parentB, indexPair[0], indexPair[1]);
 
     expect(child.genes.length).toBe(parentA.genes.length);
     expect(
-      parentB.genes.every((value, index) => value === child.genes[index])
+      parentB.genes.every(
+        (value, index) => value.value === child.genes[index].value
+      )
     ).toBe(true);
   }
 
-  for (let x1 = 0; x1 < parentA.genes.length - 2; x1++) {
-    for (let x2 = x1; x2 < parentA.genes.length; x2++) {
+  for (let x1 = 0; x1 < parentA.getRange(); x1++) {
+    for (let x2 = x1; x2 < parentA.getRange(); x2++) {
       const child = crossover(parentA, parentB, x1, x2);
       expect(child.genes.length).toBe(parentA.genes.length);
       expect(
         parentA.genes.every(
           (value, index) =>
-            countOccurrences(child.genes, value, 0, child.genes.length) === 1
+            countOccurrences(child, value, 0, child.getRange()) === 1
         )
       ).toBe(true);
       expect(
         parentB.genes.every(
           (value, index) =>
-            countOccurrences(child.genes, value, 0, child.genes.length) === 1
+            countOccurrences(child, value, 0, child.getRange()) === 1
         )
       ).toBe(true);
     }

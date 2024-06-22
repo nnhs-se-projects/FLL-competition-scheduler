@@ -1,6 +1,6 @@
 const { swapRandTwo } = require("./geneticAlgorithm.cjs");
 
-const NUM_GENES = 10;
+const NUM_GENES = 25;
 
 class Genome {
   constructor() {
@@ -23,8 +23,8 @@ class Genome {
 
   createCopy() {
     const copy = new Genome();
-    for (const gene of this.genes) {
-      copy.genes.push(gene.copy());
+    for (const val of this.genes) {
+      copy.genes.push(val.copy());
     }
     copy.updateScore();
     return copy;

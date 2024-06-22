@@ -43,9 +43,9 @@ test("check countOccurrences function", () => {
   expect(countOccurrences(testGenome, new Gene(9), 0, 10)).toBe(1);
 
   testGenome.genes = [];
-  for (const value of [0, 1, 2, 0, 4, 4, 9, 7, 4, 9]) {
+  [0, 1, 2, 0, 4, 4, 9, 7, 4, 9].forEach((value) => {
     testGenome.genes.push(new Gene(value));
-  }
+  });
 
   // test if value occurs 2 times (including at start)
   expect(countOccurrences(testGenome, new Gene(0), 0, 10)).toBe(2);
@@ -57,9 +57,9 @@ test("check countOccurrences function", () => {
   expect(countOccurrences(testGenome, new Gene(4), 0, 10)).toBe(3);
 
   testGenome.genes = [];
-  for (const value of [9, 1, 2, 0, 9, 4, 9, 7, 4, 9]) {
+  [9, 1, 2, 0, 9, 4, 9, 7, 4, 9].forEach((value) => {
     testGenome.genes.push(new Gene(value));
-  }
+  });
 
   // test if value occurs within subset of array
   expect(countOccurrences(testGenome, new Gene(9), 4, 7)).toBe(2);
