@@ -1,6 +1,6 @@
 const { swapRandTwo } = require("./geneticAlgorithm.cjs");
 
-const NUM_GENES = 25;
+const NUM_GENES = 10;
 
 class Genome {
   constructor() {

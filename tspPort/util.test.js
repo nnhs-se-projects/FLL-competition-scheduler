@@ -20,11 +20,9 @@ test("check frequency of randRange", () => {
   for (let i = 0; i < ITERATIONS; i++) {
     frequencies[randRange(MIN, MAX) - MIN]++;
   }
-  for (let i = 0; i < RANGE; i++) {
-    expect(Math.abs(ITERATIONS / RANGE - frequencies[i])).toBeLessThan(
-      TOLERANCE
-    );
-  }
+  frequencies.forEach((value) => {
+    expect(Math.abs(ITERATIONS / RANGE - value)).toBeLessThan(TOLERANCE);
+  });
 });
 
 test("check countOccurrences function", () => {
