@@ -63,11 +63,11 @@ function performGeneticAlgorithm() {
   const parentB = oldPool[randRange(0, POP_SIZE / 2)];
 
   // STEP 2: CROSS-OVER
-  // determine two corss-over points
-  const x1 = randRange(0, parentA.genes.length - 2);
-  const x2 = randRange(x1, parentA.genes.length);
+  // determine two cross-over points
+  const x1 = randRange(0, parentA.getRange() - 2);
+  const x2 = randRange(x1, parentA.getRange());
 
-  // determine the children by frist corssing parentA with parentB
+  // determine the children by first crossing parentA with parentB
   // and then crossing parentB with parentA
   const childA = crossover(parentA, parentB, x1, x2);
   const childB = crossover(parentB, parentA, x1, x2);

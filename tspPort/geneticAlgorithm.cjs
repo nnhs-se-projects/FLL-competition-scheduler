@@ -13,9 +13,9 @@ function swapRandTwo(genome) {
   const a = randRange(0, genome.getRange());
   const b = randRange(0, genome.getRange());
 
-  const temp = genome.getGenesInRange(a, a + 1);
-  genome.replaceGenesInRange(a, a + 1, genome.getGenesInRange(b, b + 1));
-  genome.replaceGenesInRange(b, b + 1, temp);
+  const temp = genome.getGeneAtIndex(a);
+  genome.replaceGeneAtIndex(a, genome.getGeneAtIndex(b));
+  genome.replaceGeneAtIndex(b, temp);
 }
 
 /*
@@ -62,18 +62,13 @@ function mutate(genome) {
  */
 function crossover(parentA, parentB, x1, x2) {
   const child = parentA.createCopy();
-
-  for (let i = 0; i < x1; i++) {
-    child.genes[i] = parentA.genes[i].copy();
-  }
-
-  for (let i = x1; i < x2; i++) {
-    child.genes[i] = parentB.genes[i].copy();
-  }
-
-  for (let i = x2; i < parentA.genes.length; i++) {
-    child.genes[i] = parentA.genes[i].copy();
-  }
+  child.replaceGenesInRange(0, x1, parentA.getGenesInRange(0, x1));
+  child.replaceGenesInRange(x1, x2, parentB.getGenesInRange(x1, x2));
+  child.replaceGenesInRange(
+    x2,
+    child.getRange(),
+    parentA.getGenesInRange(x2, child.getRange())
+  );
 
   replaceDuplicates(parentA, parentB, child, x1, x2);
 
@@ -115,22 +110,22 @@ function replaceDuplicates(parentA, parentB, child, x1, x2) {
   const uniqueGenes = [];
 
   for (let i = x1; i < x2; i++) {
-    if (countOccurrences(parentB, parentA.genes[i], x1, x2) === 0) {
-      uniqueGenes.push(parentA.genes[i]);
+    if (countOccurrences(parentB, parentA.getGeneAtIndex(i), x1, x2) === 0) {
+      uniqueGenes.push(parentA.getGeneAtIndex(i));
     }
   }
 
   let uniqueIndex = 0;
   for (let i = 0; i < x1; i++) {
-    if (countOccurrences(child, child.genes[i], x1, x2) > 0) {
-      child.genes[i] = uniqueGenes[uniqueIndex].copy();
+    if (countOccurrences(child, child.getGeneAtIndex(i), x1, x2) > 0) {
+      child.replaceGeneAtIndex(i, uniqueGenes[uniqueIndex].copy());
       uniqueIndex++;
     }
   }
 
-  for (let i = x2; i < child.genes.length; i++) {
-    if (countOccurrences(child, child.genes[i], x1, x2) > 0) {
-      child.genes[i] = uniqueGenes[uniqueIndex].copy();
+  for (let i = x2; i < child.getRange(); i++) {
+    if (countOccurrences(child, child.getGeneAtIndex(i), x1, x2) > 0) {
+      child.replaceGeneAtIndex(i, uniqueGenes[uniqueIndex].copy());
       uniqueIndex++;
     }
   }

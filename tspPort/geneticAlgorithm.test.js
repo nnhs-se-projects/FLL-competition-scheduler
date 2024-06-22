@@ -35,11 +35,7 @@ test("check swapRandTwo", () => {
     let index2 = -1;
 
     for (let j = 0; j < genome.getRange(); j++) {
-      if (
-        !genome
-          .getGenesInRange(j, j + 1)[0]
-          .equals(genome2.getGenesInRange(j, j + 1)[0])
-      ) {
+      if (!genome.getGeneAtIndex(j).equals(genome2.getGeneAtIndex(j))) {
         if (index1 === -1) {
           index1 = j;
           randCount++;
@@ -53,14 +49,10 @@ test("check swapRandTwo", () => {
 
     if (index1 !== -1 && index2 !== -1) {
       expect(
-        genome2
-          .getGenesInRange(index1, index1 + 1)[0]
-          .equals(genome.getGenesInRange(index2, index2 + 1)[0])
+        genome2.getGeneAtIndex(index1).equals(genome.getGeneAtIndex(index2))
       ).toBe(true);
       expect(
-        genome2
-          .getGenesInRange(index2, index2 + 1)[0]
-          .equals(genome.getGenesInRange(index1, index1 + 1)[0])
+        genome2.getGeneAtIndex(index2).equals(genome.getGeneAtIndex(index1))
       ).toBe(true);
     }
   }
@@ -83,11 +75,7 @@ test("check populateWithRandomGenes", () => {
 
     let duplicate = true;
     for (let j = 0; j < genome.getRange(); j++) {
-      if (
-        !genome
-          .getGenesInRange(j, j + 1)[0]
-          .equals(prevGenome.getGenesInRange(j, j + 1)[0])
-      ) {
+      if (!genome.getGeneAtIndex(j).equals(prevGenome.getGeneAtIndex(j))) {
         duplicate = false;
       }
     }

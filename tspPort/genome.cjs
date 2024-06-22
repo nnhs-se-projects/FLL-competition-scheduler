@@ -38,8 +38,17 @@ class Genome {
     return this.genes.slice(start, end);
   }
 
+  getGeneAtIndex(index) {
+    return this.genes[index];
+  }
+
   replaceGenesInRange(start, end, genes) {
     this.genes.splice(start, end - start, ...genes);
+    this.updateScore();
+  }
+
+  replaceGeneAtIndex(index, gene) {
+    this.genes[index] = gene;
     this.updateScore();
   }
 
