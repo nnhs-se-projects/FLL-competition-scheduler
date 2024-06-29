@@ -21,33 +21,9 @@ class FLLSchedule {
     const tableSchedule = schedule[0];
     const judgingSchedule = schedule[1];
 
-    let lastStartTime = 0;
-    for (let i = 0; i < tableSchedule.length; i++) {
-      lastStartTime = Math.max(
-        lastStartTime,
-        tableSchedule[i].reduce((max, current) => {
-          max = Math.max(max, current.start);
-          return max;
-        }, 0)
-      );
-    }
-    for (let i = 0; i < judgingSchedule.length; i++) {
-      lastStartTime = Math.max(
-        lastStartTime,
-        judgingSchedule[i].reduce((max, current) => {
-          max = Math.max(max, current.startT);
-          return max;
-        }, 0)
-      );
-    }
-
-    for (let i = 0; i <= lastStartTime; i += 5) {
-      this.genes.push([]);
-    }
-
     for (let i = 0; i < tableSchedule.length; i++) {
       for (let j = 0; j < tableSchedule[i].length; j++) {
-        this.genes[tableSchedule[i][j].start / 5].push(
+        this.genes.push(
           new Event(
             tableSchedule[i][j].id,
             tableSchedule[i][j].name,
@@ -63,7 +39,7 @@ class FLLSchedule {
 
     for (let i = 0; i < judgingSchedule.length; i++) {
       for (let j = 0; j < judgingSchedule[i].length; j++) {
-        this.genes[judgingSchedule[i][j].startT / 5].push(
+        this.genes.push(
           new Event(
             judgingSchedule[i][j].id,
             judgingSchedule[i][j].name,
@@ -79,17 +55,15 @@ class FLLSchedule {
       }
     }
 
+    this.genes.sort((a, b) => a.startTime - b.startTime);
+
     this.updateScore();
   }
 
   createCopy() {
     const copy = new FLLSchedule();
     for (const val of this.genes) {
-      const events = [];
-      for (const event of val) {
-        events.push(event.copy());
-      }
-      copy.genes.push(events);
+      copy.genes.push(val.copy());
     }
     copy.updateScore();
     return copy;
@@ -241,11 +215,9 @@ class FLLSchedule {
       tableSchedule.push([]);
     }
 
-    for (const events of this.genes) {
-      for (const event of events) {
-        if (event.type === TABLE_RUN_TYPE) {
-          tableSchedule[event.locationID].push(event);
-        }
+    for (const event of this.genes) {
+      if (event.type === TABLE_RUN_TYPE) {
+        tableSchedule[event.locationID].push(event);
       }
     }
 
@@ -258,14 +230,12 @@ class FLLSchedule {
       judgingSchedule.push([]);
     }
 
-    for (const events of this.genes) {
-      for (const event of events) {
-        if (
-          event.type === ROBOT_JUDGING_TYPE ||
-          event.type === PROJECT_JUDGING_TYPE
-        ) {
-          judgingSchedule[event.locationID].push(event);
-        }
+    for (const event of this.genes) {
+      if (
+        event.type === ROBOT_JUDGING_TYPE ||
+        event.type === PROJECT_JUDGING_TYPE
+      ) {
+        judgingSchedule[event.locationID].push(event);
       }
     }
 
@@ -278,10 +248,8 @@ class FLLSchedule {
       teamsSchedule.push([]);
     }
 
-    for (const events of this.genes) {
-      for (const event of events) {
-        teamsSchedule[event.teamID].push(event);
-      }
+    for (const event of this.genes) {
+      teamsSchedule[event.teamID].push(event);
     }
 
     return teamsSchedule;
