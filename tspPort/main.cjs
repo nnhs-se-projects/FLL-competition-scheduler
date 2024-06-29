@@ -1,4 +1,4 @@
-const { randRange } = require("./util.cjs");
+const { randRange } = require("./util.js");
 const { crossover, mutate } = require("./geneticAlgorithm.cjs");
 const { FLLSchedule } = require("./fllSchedule.cjs");
 

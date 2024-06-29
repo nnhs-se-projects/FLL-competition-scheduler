@@ -1,4 +1,4 @@
-const { createFullSchedule } = require("../fullRandomSchedule");
+import { createFullSchedule } from "../fullRandomSchedule";
 
 const NUM_TEAMS = 32;
 const NUM_ROBOT_TABLES = 4;
@@ -296,4 +296,4 @@ class Event {
   }
 }
 
-module.exports = { FLLSchedule, Event };
+export { FLLSchedule, Event };

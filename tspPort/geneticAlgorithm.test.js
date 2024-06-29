@@ -1,6 +1,6 @@
-const { Genome, Gene } = require("./genome.cjs");
-const { swapRandTwo, mutate, crossover } = require("./geneticAlgorithm.cjs");
-const { countOccurrences } = require("./util.cjs");
+import { Genome, Gene } from "./genome.js";
+import { swapRandTwo, mutate, crossover } from "./geneticAlgorithm.js";
+import { countOccurrences } from "./util.js";
 
 test("check createCopy", () => {
   const genome = new Genome();

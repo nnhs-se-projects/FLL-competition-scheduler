@@ -1,5 +1,5 @@
-const { Genome, Gene } = require("./genome.cjs");
-const { randRange, countOccurrences } = require("./util.cjs");
+import { Genome, Gene } from "./genome.js";
+import { randRange, countOccurrences } from "./util.js";
 
 test("check range of randRange", () => {
   for (let i = 0; i < 1000; i++) {

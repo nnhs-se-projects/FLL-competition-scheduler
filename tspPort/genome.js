@@ -1,4 +1,4 @@
-const { swapRandTwo } = require("./geneticAlgorithm.cjs");
+import { swapRandTwo } from "./geneticAlgorithm.js";
 
 const NUM_GENES = 10;
 
@@ -77,4 +77,4 @@ class Gene {
   }
 }
 
-module.exports = { Genome, Gene };
+export { Genome, Gene };

@@ -1,4 +1,4 @@
-const { randRange, countOccurrences } = require("./util.cjs");
+import { randRange, countOccurrences } from "./util.js";
 
 // FIXME: generalize from index-based to asking the genome the range,
 // which may not be the length (e.g., in a schedule it may be the duration of time)
@@ -131,4 +131,4 @@ function replaceDuplicates(parentA, parentB, child, x1, x2) {
   }
 }
 
-module.exports = { swapRandTwo, mutate, crossover };
+export { swapRandTwo, mutate, crossover };

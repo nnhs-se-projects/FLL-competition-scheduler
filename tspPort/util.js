@@ -29,4 +29,4 @@ function countOccurrences(genome, geneToCount, start, end) {
   return count;
 }
 
-module.exports = { randRange, countOccurrences };
+export { randRange, countOccurrences };
