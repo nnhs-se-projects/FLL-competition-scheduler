@@ -17,7 +17,7 @@ for (let i = 0; i < POP_SIZE; i++) {
 }
 
 // display the best initial genome
-oldPool.sort((a, b) => a.score - b.score);
+oldPool.sort((a, b) => b.score - a.score);
 console.log(
   "Initial best genome:" + oldPool[0].genes + " score: " + oldPool[0].score
 );
@@ -46,7 +46,7 @@ for (let i = 0; i < TOTAL_GENERATIONS; i++) {
   newPool = temp;
 
   // sort the old pool
-  oldPool.sort((a, b) => a.score - b.score);
+  oldPool.sort((a, b) => b.score - a.score);
 }
 
 console.log(oldPool[0].genes + " score: " + oldPool[0].score);
