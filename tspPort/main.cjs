@@ -1,6 +1,6 @@
-const { Genome } = require("./genome.cjs");
 const { randRange } = require("./util.cjs");
 const { crossover, mutate } = require("./geneticAlgorithm.cjs");
+const { FLLSchedule } = require("./fllSchedule.cjs");
 
 const POP_SIZE = 1000;
 const TOTAL_GENERATIONS = 100;
@@ -11,7 +11,7 @@ let newPoolIndex = 0;
 
 // create an initial random population of genome
 for (let i = 0; i < POP_SIZE; i++) {
-  oldPool[i] = new Genome();
+  oldPool[i] = new FLLSchedule();
   oldPool[i].populateWithRandomGenes();
 }
 
