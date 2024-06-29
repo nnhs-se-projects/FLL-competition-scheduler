@@ -1,8 +1,8 @@
-const { randRange } = require("./util.js");
-const { crossover, mutate } = require("./geneticAlgorithm.cjs");
-const { FLLSchedule } = require("./fllSchedule.cjs");
+import { randRange } from "./util.js";
+import { crossover, mutate } from "./geneticAlgorithm.js";
+import { FLLSchedule } from "./fllSchedule.js";
 
-const POP_SIZE = 1000;
+const POP_SIZE = 100;
 const TOTAL_GENERATIONS = 100;
 
 let oldPool = new Array(POP_SIZE);
@@ -13,6 +13,7 @@ let newPoolIndex = 0;
 for (let i = 0; i < POP_SIZE; i++) {
   oldPool[i] = new FLLSchedule();
   oldPool[i].populateWithRandomGenes();
+  console.log(i);
 }
 
 // display the best initial genome
@@ -75,6 +76,9 @@ function performGeneticAlgorithm() {
   // STEP 3: MUTATE the children
   mutate(childA);
   mutate(childB);
+
+  childA.updateScore();
+  childB.updateScore();
 
   // finally add the children to the new pool
   newPool[newPoolIndex++] = childA;

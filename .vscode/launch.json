@@ -44,8 +44,8 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug fullRandomScheduleTest.js",
-      "program": "${workspaceFolder}/fullRandomScheduleTest.js"
+      "name": "Debug main.js",
+      "program": "${workspaceFolder}/tspPort/main.js"
     },
     {
       "name": "Debug Tests",
@@ -59,8 +59,7 @@
         "--runInBand"
       ],
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "port": 9229
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }

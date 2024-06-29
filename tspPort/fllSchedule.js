@@ -1,4 +1,4 @@
-import { createFullSchedule } from "../fullRandomSchedule";
+import { createFullSchedule } from "../fullRandomSchedule.js";
 
 const NUM_TEAMS = 32;
 const NUM_ROBOT_TABLES = 4;
@@ -7,6 +7,7 @@ const TABLE_RUN_TYPE = "tableRun";
 const PROJECT_JUDGING_TYPE = "projectJudging";
 const ROBOT_JUDGING_TYPE = "robotJudging";
 const DEBUG = true;
+const JUDGING_ROOM_BREAK_MINUTES = 10;
 
 class FLLSchedule {
   constructor() {
@@ -43,10 +44,10 @@ class FLLSchedule {
             judgingSchedule[i][j].id,
             judgingSchedule[i][j].name,
             judgingSchedule[i][j].startT,
-            judgingSchedule[i].duration,
+            judgingSchedule[i][j].duration,
             i,
             "judging room " + i,
-            judgingSchedule[i].type === "robot"
+            judgingSchedule[i][j].type === "robot"
               ? ROBOT_JUDGING_TYPE
               : PROJECT_JUDGING_TYPE
           )
@@ -82,12 +83,10 @@ class FLLSchedule {
 
   replaceGenesInRange(start, end, genes) {
     this.genes.splice(start, end - start, ...genes);
-    this.updateScore();
   }
 
   replaceGeneAtIndex(index, gene) {
     this.genes[index] = gene;
-    this.updateScore();
   }
 
   updateScore() {
@@ -106,8 +105,10 @@ class FLLSchedule {
             tableSchedule[i][j].startTime + tableSchedule[i][j].duration >
             tableSchedule[i][j + 1].startTime
           ) {
-            console.log("Table " + i + " has overlapping table runs");
-            return 0.0;
+            // console.log(this.genes);
+            // console.log("Table " + i + " has overlapping table runs");
+            this.score = 0.0;
+            return;
           }
         }
       }
@@ -118,13 +119,17 @@ class FLLSchedule {
         // iterate through each team in the judging room
         for (let j = 0; j < judgingSchedule[i].length - 1; j++) {
           if (
-            judgingSchedule[i][j].startTime + judgingSchedule[i][j].duration >
+            judgingSchedule[i][j].startTime +
+              judgingSchedule[i][j].duration +
+              JUDGING_ROOM_BREAK_MINUTES >
             judgingSchedule[i][j + 1].startTime
           ) {
-            console.log(
-              "Judging room " + i + " has overlapping judging sessions"
-            );
-            return 0.0;
+            // console.log(this.genes);
+            // console.log(
+            //   "Judging room " + i + " has overlapping judging sessions"
+            // );
+            this.score = 0.0;
+            return;
           }
         }
       }
@@ -138,27 +143,33 @@ class FLLSchedule {
       for (const event of teamsSchedule[i]) {
         if (event.type === TABLE_RUN_TYPE) {
           tableRunCount++;
-        } else if (event.type === "projectJudging") {
+        } else if (event.type === PROJECT_JUDGING_TYPE) {
           projectJudgingCount++;
         } else {
           robotJudgingCount++;
         }
       }
       if (tableRunCount !== 3) {
-        console.log("Team " + i + " is not scheduled for 3 table runs");
-        return 0.0;
+        // console.log(this.genes);
+        // console.log("Team " + i + " is not scheduled for 3 table runs");
+        this.score = 0.0;
+        return;
       }
       if (projectJudgingCount !== 1) {
-        console.log(
-          "Team " + i + " is not scheduled for a project judging sessions"
-        );
-        return 0.0;
+        // console.log(this.genes);
+        // console.log(
+        //   "Team " + i + " is not scheduled for a project judging sessions"
+        // );
+        this.score = 0.0;
+        return;
       }
       if (robotJudgingCount !== 1) {
-        console.log(
-          "Team " + i + " is not scheduled for a robot judging sessions"
-        );
-        return 0.0;
+        // console.log(this.genes);
+        // console.log(
+        //   "Team " + i + " is not scheduled for a robot judging sessions"
+        // );
+        this.score = 0.0;
+        return;
       }
     }
 
@@ -171,8 +182,10 @@ class FLLSchedule {
           teamSchedule[j].startTime + teamSchedule[j].duration >
           teamSchedule[j + 1].startTime
         ) {
-          console.log("Team " + i + " has overlapping events");
-          return 0.0;
+          // console.log(this.genes);
+          // console.log("Team " + i + " has overlapping events");
+          this.score = 0.0;
+          return;
         }
       }
     }
@@ -193,7 +206,7 @@ class FLLSchedule {
       }
     }
 
-    return score / NUM_TEAMS;
+    this.score = score / NUM_TEAMS;
   }
 
   buildTableSchedule() {
@@ -218,7 +231,10 @@ class FLLSchedule {
     }
 
     for (const event of this.genes) {
-      if (event.type === "robotJudging" || event.type === "projectJudging") {
+      if (
+        event.type === ROBOT_JUDGING_TYPE ||
+        event.type === PROJECT_JUDGING_TYPE
+      ) {
         judgingSchedule[event.locationID].push(event);
       }
     }
@@ -228,7 +244,7 @@ class FLLSchedule {
 
   buildTeamsSchedule() {
     const teamsSchedule = [];
-    for (let i = 0; i < NUM_TEAMS; i++) {
+    for (let i = 0; i <= NUM_TEAMS; i++) {
       teamsSchedule.push([]);
     }
 
