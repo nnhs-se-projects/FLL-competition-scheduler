@@ -34,6 +34,7 @@ class FLLSchedule {
     this.genes = [];
     this.score = 0;
     this.mutationProbability = 0.1;
+    this.numberOfPotentialMutations = 5;
   }
 
   populateWithRandomGenes() {
@@ -288,6 +289,36 @@ class FLLSchedule {
     }
 
     this.score = score / NUM_TEAMS;
+  }
+
+  printSchedule() {
+    const tableSchedule = this.buildTableSchedule();
+    const judgingSchedule = this.buildJudgingSchedule();
+    const teamsSchedule = this.buildTeamsSchedule();
+
+    console.log("Table Schedule:");
+    for (let i = 0; i < tableSchedule.length; i++) {
+      console.log("Table " + i + ":");
+      for (let j = 0; j < tableSchedule[i].length; j++) {
+        console.log(tableSchedule[i][j]);
+      }
+    }
+
+    console.log("Judging Schedule:");
+    for (let i = 0; i < judgingSchedule.length; i++) {
+      console.log("Judging Room " + i + ":");
+      for (let j = 0; j < judgingSchedule[i].length; j++) {
+        console.log(judgingSchedule[i][j]);
+      }
+    }
+
+    console.log("Teams Schedule:");
+    for (let i = 1; i <= NUM_TEAMS; i++) {
+      console.log("Team " + i + ":");
+      for (let j = 0; j < teamsSchedule[i].length; j++) {
+        console.log(teamsSchedule[i][j]);
+      }
+    }
   }
 
   buildTableSchedule() {
