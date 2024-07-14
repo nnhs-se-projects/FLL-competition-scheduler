@@ -7,6 +7,7 @@ class Genome {
     this.genes = [];
     this.score = 0;
     this.mutationProbability = 0.1;
+    this.numberOfPotentialMutations = 5;
   }
 
   populateWithRandomGenes() {

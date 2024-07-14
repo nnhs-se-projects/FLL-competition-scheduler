@@ -25,10 +25,13 @@ function swapRandTwo(genome) {
  * genome: the genome to mutate
  */
 function mutate(genome) {
-  if (Math.random() < genome.mutationProbability) {
-    swapRandTwo(genome);
-    genome.updateScore();
+  for (let i = 0; i < genome.numberOfPotentialMutations; i++) {
+    if (Math.random() < genome.mutationProbability) {
+      swapRandTwo(genome);
+    }
   }
+
+  genome.updateScore();
 }
 
 /*
