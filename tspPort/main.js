@@ -2,7 +2,7 @@ import { randRange } from "./util.js";
 import { crossover, mutate } from "./geneticAlgorithm.js";
 import { FLLSchedule } from "./fllSchedule.js";
 
-const POP_SIZE = 100;
+const POP_SIZE = 1000;
 const TOTAL_GENERATIONS = 100;
 
 let oldPool = new Array(POP_SIZE);
@@ -58,9 +58,7 @@ for (let i = 0; i < TOTAL_GENERATIONS; i++) {
 }
 
 console.log("score: " + oldPool[0].score);
-for (const gene of oldPool[0].genes) {
-  console.log(gene);
-}
+oldPool[0].printSchedule();
 
 function printTopOfPool(pool, label, count) {
   console.log(label);
