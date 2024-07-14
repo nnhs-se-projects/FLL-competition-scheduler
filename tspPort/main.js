@@ -18,9 +18,7 @@ for (let i = 0; i < POP_SIZE; i++) {
 
 // display the best initial genome
 oldPool.sort((a, b) => b.score - a.score);
-console.log(
-  "Initial best genome:" + oldPool[0].genes + " score: " + oldPool[0].score
-);
+console.log("Initial best genome score: " + oldPool[0].score);
 
 // iterate for the specified number of generations
 for (let i = 0; i < TOTAL_GENERATIONS; i++) {
@@ -32,12 +30,22 @@ for (let i = 0; i < TOTAL_GENERATIONS; i++) {
   /*
    * repeatedly perform the genetic algorithm to populate the new pool
    *
-   *  each invocation of performGeneticAlgorithm generates two child tours;
-   *      therefore, invoke the method POP_SIZE / 2 times to create a new
+   * we will keep the top 20% of the pool
+   * since each invocation of performGeneticAlgorithm generates two child tours,
+   *      invoke the method (POP_SIZE - POP_SIZE /5) / 2 times to create a new
    *      pool of size POP_SIZE
    */
-  for (let j = 0; j < POP_SIZE / 2; j++) {
+  for (let j = 0; j < (POP_SIZE - POP_SIZE / 5) / 2; j++) {
     performGeneticAlgorithm();
+  }
+
+  /*
+   * copy the top 20% of the old pool to the new pool
+   * this is a strategy to ensure that the best schedules
+   * are retained from one generation to the next
+   */
+  for (let j = 0; j < POP_SIZE / 5; j++) {
+    newPool[newPoolIndex++] = oldPool[j];
   }
 
   // swap the old and new pools
@@ -49,12 +57,15 @@ for (let i = 0; i < TOTAL_GENERATIONS; i++) {
   oldPool.sort((a, b) => b.score - a.score);
 }
 
-console.log(oldPool[0].genes + " score: " + oldPool[0].score);
+console.log("score: " + oldPool[0].score);
+for (const gene of oldPool[0].genes) {
+  console.log(gene);
+}
 
 function printTopOfPool(pool, label, count) {
   console.log(label);
   for (let i = 0; i < count; i++) {
-    console.log(i + ": " + pool[i].genes + " score: " + pool[i].score);
+    console.log(i + ": score: " + pool[i].score);
   }
 }
 
