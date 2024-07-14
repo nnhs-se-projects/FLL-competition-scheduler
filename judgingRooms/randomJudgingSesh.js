@@ -116,17 +116,27 @@ function randomJS() {
   for (let i = 0; i < robotRooms.length; i++) {
     for (let j = 0; j < robotRooms[i].length; j++) {
       robotRooms[i][j].startT = offsetT * i + ROOM_TIME_INCREMENT * j;
-      if (robotRooms[i][j].startT >= 135) {
+      if (robotRooms[i][j].startT > 125) {
         // lunch start is 150, 135 is 150-15(the duration of the session)
-        robotRooms[i][j].startT += lunchBreak;
+        let offset = 5;
+        if (i === 0) {
+          offset = 6;
+        }
+        robotRooms[i][j].startT =
+          150 + 45 + offsetT * i + ROOM_TIME_INCREMENT * (j - offset);
       }
     }
   }
   for (let i = 0; i < projectRooms.length; i++) {
     for (let j = 0; j < projectRooms[i].length; j++) {
       projectRooms[i][j].startT = offsetT * i + ROOM_TIME_INCREMENT * j;
-      if (projectRooms[i][j].startT >= 135) {
-        projectRooms[i][j].startT += lunchBreak;
+      if (projectRooms[i][j].startT > 125) {
+        let offset = 5;
+        if (i === 0) {
+          offset = 6;
+        }
+        projectRooms[i][j].startT =
+          150 + 45 + offsetT * i + ROOM_TIME_INCREMENT * (j - offset);
       }
     }
   }

@@ -58,13 +58,13 @@ function fullRandom() {
       let startTime = 0;
       if (i === 0 || i === 1) {
         startTime = j * 10;
-        if (startTime > 140) {
-          startTime = startTime + 50;
+        if (startTime >= 150) {
+          startTime = startTime + 45;
         }
       } else {
         startTime = 5 + j * 10;
-        if (startTime > 140) {
-          startTime = startTime + 50;
+        if (startTime >= 145) {
+          startTime = startTime + 55;
         }
       }
       // sets start time of the team
@@ -98,15 +98,17 @@ function fullRandom() {
         }
       }
       let fail = false;
-      // checks if the team would have an overlap if it was placed at the table
+      // checks if the team would have an overlap if it was placed at the table (minimum 10 minutes between events)
       if (
-        Math.abs(startTime - judgingTime[0]) < 20 ||
-        Math.abs(startTime - judgingTime[1]) < 20
+        (startTime < judgingTime[0] && startTime + 20 > judgingTime[0]) ||
+        (startTime < judgingTime[1] && startTime + 20 > judgingTime[1]) ||
+        (judgingTime[0] <= startTime && judgingTime[0] + 25 > startTime) ||
+        (judgingTime[1] <= startTime && judgingTime[1] + 25 > startTime)
       ) {
         fail = true;
       }
       for (let k = 0; k < tableTimes.length; k++) {
-        if (Math.abs(startTime - tableTimes[k]) < 15) {
+        if (Math.abs(startTime - tableTimes[k]) < 20) {
           fail = true;
         }
       }
