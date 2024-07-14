@@ -8,6 +8,26 @@ const PROJECT_JUDGING_TYPE = "projectJudging";
 const ROBOT_JUDGING_TYPE = "robotJudging";
 const DEBUG = true;
 const JUDGING_ROOM_BREAK_MINUTES = 10;
+const LUNCH_START_TIME = 150;
+const LUNCH_DURATION = 45;
+
+const TABLE_RUN_TIMING_CONFIG = [
+  { start: 0, duration: 10 },
+  { start: 0, duration: 10 },
+  { start: 5, duration: 10 },
+  { start: 5, duration: 10 },
+];
+
+const JUDGING_ROOM_TIMING_CONFIG = [
+  { start: 0, duration: 25 },
+  { start: 5, duration: 25 },
+  { start: 10, duration: 25 },
+  { start: 15, duration: 25 },
+  { start: 0, duration: 25 },
+  { start: 5, duration: 25 },
+  { start: 10, duration: 25 },
+  { start: 15, duration: 25 },
+];
 
 class FLLSchedule {
   constructor() {
@@ -90,6 +110,61 @@ class FLLSchedule {
   }
 
   updateScore() {
+    const currentTableScheduleTimes = [];
+    const currentJudgingScheduleTimes = [];
+    for (let i = 0; i < TABLE_RUN_TIMING_CONFIG.length; i++) {
+      currentTableScheduleTimes.push(TABLE_RUN_TIMING_CONFIG[i].start);
+    }
+    for (let i = 0; i < JUDGING_ROOM_TIMING_CONFIG.length; i++) {
+      currentJudgingScheduleTimes.push(JUDGING_ROOM_TIMING_CONFIG[i].start);
+    }
+
+    for (let i = 0; i < this.genes.length; i++) {
+      if (this.genes[i].type === TABLE_RUN_TYPE) {
+        const tableIndex = this.genes[i].locationID;
+
+        // account for lunch break while honoring the time offsets between tables
+        if (
+          currentTableScheduleTimes[tableIndex] +
+            TABLE_RUN_TIMING_CONFIG[tableIndex].duration >
+            LUNCH_START_TIME &&
+          currentTableScheduleTimes[tableIndex] <
+            LUNCH_START_TIME + LUNCH_DURATION
+        ) {
+          currentTableScheduleTimes[tableIndex] =
+            LUNCH_START_TIME +
+            LUNCH_DURATION +
+            TABLE_RUN_TIMING_CONFIG[tableIndex].start;
+        }
+
+        this.genes[i].startTime = currentTableScheduleTimes[tableIndex];
+        currentTableScheduleTimes[tableIndex] +=
+          TABLE_RUN_TIMING_CONFIG[tableIndex].duration;
+      } else {
+        const judgingRoomIndex = this.genes[i].locationID;
+
+        // account for lunch break while honoring the time offsets between judging rooms
+        if (
+          currentJudgingScheduleTimes[judgingRoomIndex] +
+            JUDGING_ROOM_TIMING_CONFIG[judgingRoomIndex].duration >
+            LUNCH_START_TIME &&
+          currentJudgingScheduleTimes[judgingRoomIndex] <
+            LUNCH_START_TIME + LUNCH_DURATION
+        ) {
+          currentJudgingScheduleTimes[judgingRoomIndex] =
+            LUNCH_START_TIME +
+            LUNCH_DURATION +
+            JUDGING_ROOM_TIMING_CONFIG[judgingRoomIndex].start;
+        }
+
+        this.genes[i].startTime = currentJudgingScheduleTimes[judgingRoomIndex];
+        currentJudgingScheduleTimes[judgingRoomIndex] +=
+          JUDGING_ROOM_TIMING_CONFIG[judgingRoomIndex].duration;
+      }
+    }
+
+    this.genes.sort((a, b) => a.startTime - b.startTime);
+
     const tableSchedule = this.buildTableSchedule();
     const judgingSchedule = this.buildJudgingSchedule();
     const teamsSchedule = this.buildTeamsSchedule();
@@ -178,8 +253,14 @@ class FLLSchedule {
       const teamSchedule = teamsSchedule[i];
       teamSchedule.sort((a, b) => a.startTime - b.startTime);
       for (let j = 0; j < teamSchedule.length - 1; j++) {
+        // due to deliberation time, teams will have at least 10 minutes after a judging session
+        // however, we need to ensure that teams have at least 10 minutes after a table run
+        let extraTime = 0;
+        if (teamSchedule[j].type === TABLE_RUN_TYPE) {
+          extraTime = 10;
+        }
         if (
-          teamSchedule[j].startTime + teamSchedule[j].duration >
+          teamSchedule[j].startTime + teamSchedule[j].duration + extraTime >
           teamSchedule[j + 1].startTime
         ) {
           // console.log(this.genes);
