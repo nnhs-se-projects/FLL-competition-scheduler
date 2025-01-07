@@ -6,6 +6,7 @@
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker",
     "l13rary.l13-diff",
-    "orta.vscode-jest"
+    "orta.vscode-jest",
+    "formulahendry.code-runner"
   ]
 }
