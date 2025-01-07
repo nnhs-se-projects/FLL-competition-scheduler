@@ -12,10 +12,14 @@ function randomJS() {
   let teamsP = [];
   let judgingSeshs = 2;
   let numTeams = 32;
+  let offsetT = 5;
+  let lunchBreak = 45;
+  const ROOM_TIME_INCREMENT = 25; // 15 minute actual duration + 10 minute break
   for (let i = 1; i < numTeams + 1; i++) {
-    let str = "team" + i;
-    teamsR.push(str);
-    teamsP.push(str);
+    let str1 = { id: i, name: "team" + i, startT: 0, duration: 15 };
+    teamsR.push(str1);
+    let str2 = { id: i, name: "team" + i, startT: 0, duration: 15 };
+    teamsP.push(str2);
   }
 
   function getRandomNum() {
@@ -37,17 +41,17 @@ function randomJS() {
   function checkDuplicates(timeSlot) {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (projectRooms[i][timeSlot] === robotRooms[j][timeSlot]) {
+        if (projectRooms[i][timeSlot].name === robotRooms[j][timeSlot].name) {
           let rand = Math.floor(Math.random() * (timeSlot + 1));
           const teamSwap = robotRooms[j][timeSlot];
           //need to check index for conflicts
           for (let r = 0; r < robotRooms.length; r++) {
-            if (robotRooms[r][rand] === teamSwap) {
+            if (robotRooms[r][rand].name === teamSwap.name) {
               rand = Math.floor(Math.random() * (timeSlot + 1));
             }
           }
           for (let r = 0; r < projectRooms.length; r++) {
-            if (projectRooms[r][rand] === teamSwap) {
+            if (projectRooms[r][rand].name === teamSwap.name) {
               rand = Math.floor(Math.random() * (timeSlot + 1));
             }
           }
@@ -61,9 +65,14 @@ function randomJS() {
     let pr = -1;
     for (let i = 0; i < robotRooms.length; i++) {
       for (let j = 0; j < timeSlot; j++) {
+        //CHECK IF THIS ACTUALLY WORKS
         for (let room = 0; room < projectRooms.length; room++) {
-          if (projectRooms[room].includes(robotRooms[i][j])) {
-            pr = projectRooms[room].indexOf(robotRooms[i][j]);
+          if (
+            projectRooms[room].some((e) => e.name === robotRooms[i][j].name)
+          ) {
+            pr = projectRooms[room].findIndex(
+              (e) => e.name == robotRooms[i][j].name
+            );
           }
         }
         if (pr != -1 && Math.abs(pr - j) === 1) {
@@ -85,12 +94,14 @@ function randomJS() {
     for (let i = 0; i < robotRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsR[randomNum];
+      team.type = "robot";
       robotRooms[i].push(team);
       teamsR.splice(randomNum, 1);
     }
     for (let i = 0; i < projectRooms.length; i++) {
       let randomNum = getRandomNum();
       let team = teamsP[randomNum];
+      team.type = "project";
       projectRooms[i].push(team);
       count++;
       teamsP.splice(randomNum, 1);
@@ -102,24 +113,54 @@ function randomJS() {
     }
   }
 
-  // for (let i = 0; i < robotRooms.length; i++) {
-  //   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
-  // }
-  // for (let i = 0; i < projectRooms.length; i++) {
-  //   console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
-  // }
+  for (let i = 0; i < robotRooms.length; i++) {
+    for (let j = 0; j < robotRooms[i].length; j++) {
+      robotRooms[i][j].startT = offsetT * i + ROOM_TIME_INCREMENT * j;
+      if (robotRooms[i][j].startT > 125) {
+        // lunch start is 150, 135 is 150-15(the duration of the session)
+        let offset = 5;
+        if (i === 0) {
+          offset = 6;
+        }
+        robotRooms[i][j].startT =
+          150 + 45 + offsetT * i + ROOM_TIME_INCREMENT * (j - offset);
+      }
+    }
+  }
+  for (let i = 0; i < projectRooms.length; i++) {
+    for (let j = 0; j < projectRooms[i].length; j++) {
+      projectRooms[i][j].startT = offsetT * i + ROOM_TIME_INCREMENT * j;
+      if (projectRooms[i][j].startT > 125) {
+        let offset = 5;
+        if (i === 0) {
+          offset = 6;
+        }
+        projectRooms[i][j].startT =
+          150 + 45 + offsetT * i + ROOM_TIME_INCREMENT * (j - offset);
+      }
+    }
+  }
 
   let rooms = robotRooms.concat(projectRooms);
   return rooms;
 }
 
-//console.log(randomJS());
+// console.log(randomJS());
 
-// for (let i = 0; i < robotRooms.length; i++) {
-//   console.log("Robot Room " + (i + 1) + ": " + robotRooms[i]);
+// let js = randomJS();
+// console.log("random JS:");
+// console.log(js);
+
+// console.log("random JS formatted: ");
+// for (let i = 0; i < 4; i++) {
+//   console.log(
+//     `Robot Room ${i + 1}: ${js[i].map((team) => team.name).join(", ")}`
+//   );
 // }
-// for (let i = 0; i < projectRooms.length; i++) {
-//   console.log("Project Room " + (i + 1) + ": " + projectRooms[i]);
+// for (let i = 0; i < 4; i++) {
+//   console.log(
+//     `Project Room ${i + 1}: ${js[i + 4].map((team) => team.name).join(", ")}`
+//   );
 // }
 
 export { randomJS };

@@ -132,3 +132,4 @@ For fullSchedule.js there is an array with index 0 being an array of tables and 
 - When we run our table schedule, we would occasionally get an issue where the children are identical to each other within the genetic algorithm. This problem does not occur often, but it is something to be aware of if it comes up. We were not able to find out why that was occurring.
 
 **2024 Contributors - Kelsey Wessel, Angela Ping, Sophia Xi, Alyssa Pandya**
+

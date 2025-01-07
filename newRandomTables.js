@@ -1,5 +1,5 @@
 import { test } from "./test.js";
-import { gradeTables } from "./tableGrading.js";
+import { tableTest } from "./tableTest.js";
 function randomTable() {
   let tables = [];
   let table1 = [];
@@ -11,12 +11,19 @@ function randomTable() {
   let countLoops2 = 0;
   for (let j = 0; j < 3; j++) {
     let teams = [];
+    // creates an array of 32 teams
     for (let i = 1; i < 33; i++) {
-      let str = { name: "team" + i, run: j + 1 };
+      let str = {
+        name: "team" + i,
+        run: j + 1,
+        start: 0,
+        duration: 10,
+      };
       teams.push(str);
     }
     let length = teams.length;
     let count = 1;
+    // adds teams to tables
     for (let i = 0; i < length - 4; i++) {
       if (countLoops2 > 200) {
         return null;
@@ -28,6 +35,11 @@ function randomTable() {
         table1.push(team);
         count++;
       } else if (count === 2) {
+        /**
+         * checks if the times would overlap
+         * does not ensure teams still won't overlap as it only checks the same index it is at.
+         * Times could still overlap with the neighboring indices
+         */
         if (team.name != table1[table1.length - 1].name) {
           table2.push(team);
           count++;
@@ -63,6 +75,7 @@ function randomTable() {
       teams.splice(index, 1);
     }
     function checkDuplicate() {
+      // swaps two teams if there was a conflict.
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
           if (teams[i].name === teams[j].name && i != j) {
@@ -128,31 +141,70 @@ function randomTable() {
       }
     }
   }
-
+  // adds times to each team
+  for (let i = 0; i < table1.length; i++) {
+    let int = i * 10;
+    if (int > 140) {
+      int = int + 50;
+    }
+    table1[i].start = int;
+  }
+  for (let i = 0; i < table2.length; i++) {
+    let int = i * 10;
+    if (int > 140) {
+      int = int + 50;
+    }
+    table2[i].start = int;
+  }
+  for (let i = 0; i < table3.length; i++) {
+    let int = i * 10 + 5;
+    if (int > 140) {
+      int = int + 50;
+    }
+    table3[i].start = int;
+  }
+  for (let i = 0; i < table4.length; i++) {
+    let int = i * 10 + 5;
+    if (int > 140) {
+      int = int + 50;
+    }
+    table4[i].start = int;
+  }
+  // this one is necessary because of an unsolved error
   tables.push(table1, table2, table3, table4);
   if (table4[23] == undefined) {
     return null;
   }
+  // I don't think this test is necessary
   let test1 = test(tables);
   if (test1.includes("Failures")) {
     console.log("failed in randomTable");
+    tables = randomTable();
   }
   return tables;
 }
 
-// let oldPool = [];
-// for (let i = 0; i < 100; i++) {
-//   oldPool.push(randomTable());
-// }
-// let grade = gradeTables(oldPool, 100);
-// console.log(grade);
-
-// for (let i = 0; i < 3; i++) {
-//   console.log("run: " + i);
-//   let result = randomTable();
-//   if (result == null) {
-//     console.log("null");
-//   } else console.log(result);
-// }
-
+let tables = randomTable();
+let result1 = tableTest([tables], 1);
+while (result1 == 0) {
+  tables = randomTable();
+  result1 = tableTest([tables], 1);
+}
+console.log(tables);
+// logs the tables in a more readable format
+let str1 = "table 1: ";
+let str2 = "table 2: ";
+let str3 = "table 3: ";
+let str4 = "table 4: ";
+for (let i = 0; i < tables[0].length; i++) {
+  var add = tables[0][i].name + ", ";
+  str1 = str1.concat(add);
+  str2 = str2.concat(tables[1][i].name + ", ");
+  str3 = str3.concat(tables[2][i].name + ", ");
+  str4 = str4.concat(tables[3][i].name + ", ");
+}
+console.log(str1);
+console.log(str2);
+console.log(str3);
+console.log(str4);
 export { randomTable };
