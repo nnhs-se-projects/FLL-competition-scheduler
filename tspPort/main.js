@@ -19,6 +19,7 @@ for (let i = 0; i < POP_SIZE; i++) {
 // display the best initial genome
 oldPool.sort((a, b) => b.score - a.score);
 console.log("Initial best genome score: " + oldPool[0].score);
+oldPool[0].printSchedule();
 
 // iterate for the specified number of generations
 for (let i = 0; i < TOTAL_GENERATIONS; i++) {
