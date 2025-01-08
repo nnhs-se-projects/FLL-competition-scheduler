@@ -10,7 +10,7 @@ Every year the FLL competition comes around, those in charge of schedules have t
 
 ## What it does
 
-At the moment, our project generates two different valid schedules; one of the schedules is for each team's table runs and the other is for each team's judging sessions. Right now these schedules are independent of each other since the merging of the two has not been completed, but that is the next task to be completed.
+At the moment, our project generates a valid schedule randomly. The genetic algorithm attempts to produce a better schedule than the randomly generated ones, but doesn't improve it much. More investigation is needed to determine if this can be improved with tuning.
 
 ## How it works
 
@@ -35,46 +35,31 @@ For the duration of our time working on the project, Visual Studio Code was the 
 
 ## Configuring Project to be Runnable
 
-The most updated version is not in main **ALL FILES SHOULD BE RUN FROM THE MERGE BRANCH** for the most updated version. The project should be easily runnable if all of the previous installations are there, especially node. Once the project is checked out from Github, and everything is installed it should be runnable.
-
+The most updated version is in main. The project should be easily runnable if all of the previous installations are there, especially node. Once the project is checked out from Github, and everything is installed it should be runnable.
 
 ### Debugging
 
-In the .vscode file, you will find the launch.json file. In order to debug a file, you need to add a new launch configuration. The format should be the same as the examples found in the file such as the ‘Debug crossover.js’. All that should be changed to debug a different file should be a different name and changing the program to a different file name.
+In the .vscode file, you will find the launch.json file. In order to debug a file, you need to add a new launch configuration. The format should be the same as the examples found in the file such as the ‘Debug main.js’. All that should be changed to debug a different file should be a different name and changing the program to a different file name.
 
 You will need to debug by changing the configuration in the debug panel. The default will generally be Node Server.
 
 ## How to Run Project & Expected Result
 
-### Tables
+### Tests
 
-One of the runnable files for table runs is random schedules. The most up-to-date for table runs is newRandomTables.js which will output a random, likely invalid table. Any time newRandomTables is used in another function, a test must also be used in order to regenerate a table until it is valid. I would recommend using tableTest.js in order to check whether the randomly generated table is valid. There will likely be a commented-out section of code at the bottom of the newRandomTables.js file which you can uncomment to see an example of a valid table run schedule.
+Tests can be run via the VS Code Run and Debug tab by selecting the "Debug tests" options. There are also other test files that can be run manually. These may or may not be up to date with the current state of the code.
 
-Next, there is crossover.js which contains the genetic algorithm. The genetic algorithm should currently output, an array of grades for each generation then at the end, a best score (max currently being around 48) and the table that achieved said score.
+### Schedule Creation
 
-Those two are really the only two files in relation to table runs that will give an output.
+The createFullSchedule function will always return a valid random schedule. It continues to generate a random schedule until one is valid.
 
-### Judging Rooms
+### Scoring
 
-Judging rooms also has a random schedule generator and a genetic algorithm. In randomJudgingSesh.js located within the judgingRooms folder, there is a commented-out section of code at the bottom. Uncommenting this will print out an array of arrays with the first 4 being robot rooms and the next 4 arrays being project rooms. At the bottom, it will then output a clearer version that contains the teams in each room.
+The quality of the schedule is assessed by the score function. An invalid schedule receives a score of 0.
 
-Similar to random tables, random judging rooms should use a test before being used in any other code. I think that the best option is to use jrGrading.js and if it returns 0 then the schedule is not valid.
+### Genetic Algorithm
 
-For the judging room genetic algorithm, jrGeneticAlg.js should be run. The code will output the old pool once and then the scores, then the new pool and its scores for however many generations there are. Finally, it will output the best score that was achieved and the schedule that achieved said score.
-
-One thing you might notice is that the new pool continuously gets halved each generation with judging rooms. This is not the case for the genetic algorithm for tables and I would keep this in mind when you combine the two algorithms for a full valid schedule.
-
-### Merged Schedule
-
-This is kind of considered a failed story but you might find something useful in our framework. Essentially what occurs is that mergedSchedule.js will take two separately valid random tables and judging sessions then it will put it into an intermediate structure. The output should look like 32 sets of 5 key value pairs. For keys there should be sesh1, sesh2, run1, run2, run3. For values it should just be times more specifically the time at which a specific team will appear at a judging room or table. The result isn’t meant to be outputted put instead tested by mergeStructureTest.js
-
-The file mergeStructureTest.js takes the output of mergedSchedule.js and tests if the two random schedules that were originally generated would return a valid schedule. If a schedule is valid the code will return said schedule. However, this occurs on a time scale that would probably require the entire period to even return one schedule and hence why it is considered as having failed.
-
-### Full Random Schedule
-
-This file, fullRandomSchedule.js is only found in the **merge** branch.
-
-This function should return either null or a full schedule with both judging rooms and tables not having a conflict. If it returns null that means it either was stuck or it didn't have a possible solution and therefore has not completed a schedule. However, it should more likely return a full and working schedule. This result however, has NOT been properly tested so I would recommend **creating a test for a full schedule**. This will benefit you in checking the result of the random schedule and the result of your genetic algorithm.
+The tspPort folder contains a port of the APCSA Traveling Student lab to Javascript. The code has been generalized to support Javascript objects at genomes. The Gene and Genome classes are only used in the unit tests. The FLLSchedule and Event classes are used when the genetic algorithm is applied to an FLL schedule.
 
 ## Architecture
 
@@ -132,4 +117,3 @@ For fullSchedule.js there is an array with index 0 being an array of tables and 
 - When we run our table schedule, we would occasionally get an issue where the children are identical to each other within the genetic algorithm. This problem does not occur often, but it is something to be aware of if it comes up. We were not able to find out why that was occurring.
 
 **2024 Contributors - Kelsey Wessel, Angela Ping, Sophia Xi, Alyssa Pandya**
-
