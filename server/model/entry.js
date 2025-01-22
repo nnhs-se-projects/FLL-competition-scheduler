@@ -1,9 +1,7 @@
 /**
  * schema for a journal entry
  */
-
 const mongoose = require("mongoose");
-
 const schema = new mongoose.Schema({
   date: {
     type: Date,
@@ -22,7 +20,5 @@ const schema = new mongoose.Schema({
     required: true,
   },
 });
-
 const Entry = mongoose.model("Entry", schema);
-
 module.exports = Entry;
