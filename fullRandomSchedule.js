@@ -4,14 +4,175 @@ import { jrGrading } from "./judgingRooms/JRGrading.js";
 
 const DEBUG = true;
 
+// Add new constants
+const POPULATION_SIZE = 50;
+const MAX_GENERATIONS = 100;
+const MUTATION_RATE = 0.1;
+
 function createFullSchedule() {
-  let schedule;
-  let valid = false;
-  while (!valid) {
-    schedule = fullRandom();
-    valid = schedule !== null && scoreSchedule(schedule) > 0.0;
+  let bestSchedule = null;
+  let bestScore = 0;
+
+  // Generate initial population
+  let population = [];
+  for (let i = 0; i < POPULATION_SIZE; i++) {
+    const schedule = fullRandom();
+    if (schedule !== null) {
+      const score = scoreSchedule(schedule);
+      if (score > 0) {
+        population.push({
+          schedule: schedule,
+          score: score,
+        });
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestSchedule = schedule;
+        }
+      }
+    }
   }
-  return schedule;
+
+  // Run genetic algorithm generations
+  for (let gen = 0; gen < MAX_GENERATIONS; gen++) {
+    // Sort by score
+    population.sort((a, b) => b.score - a.score);
+
+    // If we have a good enough schedule, return it
+    if (bestScore > 0.8) {
+      break;
+    }
+
+    // Create next generation
+    const nextGen = [];
+
+    // Keep top 10% of population
+    const eliteCount = Math.floor(POPULATION_SIZE * 0.1);
+    nextGen.push(...population.slice(0, eliteCount));
+
+    // Fill rest with children of best performers
+    while (nextGen.length < POPULATION_SIZE) {
+      const parent1 = selectParent(population);
+      const parent2 = selectParent(population);
+      const child = crossover(parent1.schedule, parent2.schedule);
+
+      if (Math.random() < MUTATION_RATE) {
+        mutate(child);
+      }
+
+      const childScore = scoreSchedule(child);
+      if (childScore > 0) {
+        nextGen.push({
+          schedule: child,
+          score: childScore,
+        });
+
+        if (childScore > bestScore) {
+          bestScore = childScore;
+          bestSchedule = child;
+        }
+      }
+    }
+
+    population = nextGen;
+  }
+
+  return bestSchedule;
+}
+
+function selectParent(population) {
+  // Tournament selection
+  const tournamentSize = 5;
+  let best = null;
+
+  for (let i = 0; i < tournamentSize; i++) {
+    const candidate = population[Math.floor(Math.random() * population.length)];
+    if (!best || candidate.score > best.score) {
+      best = candidate;
+    }
+  }
+
+  return best;
+}
+
+function crossover(schedule1, schedule2) {
+  // Create new schedule combining parts of both parents
+  const [tables1, judging1] = schedule1;
+  const [tables2, judging2] = schedule2;
+
+  // Randomly select tables from either parent
+  const newTables = tables1.map((table, i) =>
+    Math.random() < 0.5 ? [...table] : [...tables2[i]]
+  );
+
+  // Randomly select judging rooms from either parent
+  const newJudging = judging1.map((room, i) =>
+    Math.random() < 0.5 ? [...room] : [...judging2[i]]
+  );
+
+  return [newTables, newJudging];
+}
+
+function mutate(schedule) {
+  const [tables, judging] = schedule;
+
+  // Randomly swap some table runs
+  tables.forEach((table) => {
+    if (table.length >= 2 && Math.random() < MUTATION_RATE) {
+      const idx1 = Math.floor(Math.random() * table.length);
+      const idx2 = Math.floor(Math.random() * table.length);
+      [table[idx1], table[idx2]] = [table[idx2], table[idx1]];
+    }
+  });
+
+  // Randomly adjust some start times
+  tables.forEach((table) => {
+    table.forEach((run) => {
+      if (Math.random() < MUTATION_RATE) {
+        run.start = Math.floor(Math.random() * 240); // 4 hour competition
+      }
+    });
+  });
+}
+
+function scheduleToJSON(schedule) {
+  const result = {};
+  const [tables, judgingRooms] = schedule;
+
+  // Initialize team entries
+  for (let i = 1; i <= 32; i++) {
+    result[`Team ${i}`] = {
+      tableRuns: [],
+      judgingSessions: [],
+    };
+  }
+
+  // Add table runs
+  tables.forEach((table, tableIndex) => {
+    table.forEach((run) => {
+      result[`Team ${run.id}`].tableRuns.push({
+        table: tableIndex,
+        startTime: run.start,
+        duration: run.duration,
+        endTime: run.start + run.duration,
+        run: run.run,
+      });
+    });
+  });
+
+  // Add judging sessions
+  judgingRooms.forEach((room, roomIndex) => {
+    room.forEach((session) => {
+      result[`Team ${session.id}`].judgingSessions.push({
+        room: roomIndex,
+        startTime: session.startT,
+        duration: session.duration,
+        endTime: session.startT + session.duration,
+      });
+    });
+  });
+
+  return result;
 }
 
 function fullRandom() {
@@ -385,4 +546,5 @@ export {
   logJudgingRoomsSchedule,
   logTableRunsSchedule,
   printSchedule,
+  scheduleToJSON,
 };
