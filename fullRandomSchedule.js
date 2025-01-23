@@ -360,6 +360,23 @@ function buildTeamsSchedule(schedule) {
   return teamsSchedule;
 }
 
+function printSchedule(schedule) {
+  const teamsSchedule = buildTeamsSchedule(schedule);
+
+  const scheduleJSON = {};
+
+  for (let i = 1; i <= 32; i++) {
+    scheduleJSON[`Team ${i}`] = teamsSchedule[i].map((event) => ({
+      eventType: event.event, // "tableRun" or "judgingSession"
+      startTime: event.startTime,
+      duration: event.duration,
+      endTime: event.startTime + event.duration,
+    }));
+  }
+
+  console.log(JSON.stringify(scheduleJSON, null, 2));
+}
+
 export {
   createFullSchedule,
   scoreSchedule,
@@ -367,4 +384,5 @@ export {
   logTeamSchedules,
   logJudgingRoomsSchedule,
   logTableRunsSchedule,
+  printSchedule,
 };

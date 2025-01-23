@@ -34,8 +34,7 @@ app.use(
   })
 );
 
-// set the template engine to EJS, which generates HTML with embedded
-//  JavaScript
+// set the template engine to EJS, which generates HTML with embedded javascript
 app.set("view engine", "ejs");
 
 // load assets
@@ -52,18 +51,17 @@ app.use((req, res, next) => {
     res.redirect("/auth/");
     return;
   }
-
   next();
 });
 
-// create the HTTP server
+// create the http server
 const server = http.createServer(app);
 
 // to keep this file manageable, we will move the routes to a separate file
-//  the exported router object is an example of middleware
+// the exported router object is an example of middleware
 app.use("/", require("./server/routes/router"));
 
-// start the server on port 8080
+// start the server, listening on port 8080
 server.listen(8080, () => {
-  console.log("Server started on http://localhost:8080");
+  console.log("server listening on port 8080 ... http://localhost:8080");
 });
