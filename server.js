@@ -47,7 +47,7 @@ app.use("/js", express.static("assets/js"));
 app.use((req, res, next) => {
   // if the student is not already logged in, redirect all requests to the
   //  authentication page
-  // req.session.email = "amxie@stu.naperville203.org"
+  // req.session.email = "amxie@stu.naperville203.org";
 
   if (req.session.email === undefined && !req.path.startsWith("/auth")) {
     res.redirect("/auth/");

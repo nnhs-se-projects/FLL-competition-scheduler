@@ -10,7 +10,7 @@ async function handleCredentialResponse(res) {
     // send the googleUser's id_token which has all the data we want to the server with a POST request
     method: "POST",
     body: JSON.stringify({
-      token: res.credential,
+      credential: res.credential,
     }),
     headers: {
       "Content-Type": "application/json",
