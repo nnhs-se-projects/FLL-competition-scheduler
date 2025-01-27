@@ -21,7 +21,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: ".env" });
 
 // connect to the database
-const connectDB = require("./server/database/connection");
+const connectDB = require("./server/database/connection.cjs");
 connectDB();
 
 // import the express-session module, which is used to manage sessions
@@ -61,12 +61,12 @@ const server = http.createServer(app);
 
 // to keep this file manageable, we will move the routes to a separate file
 // the exported router object is an example of middleware
-app.use("/", require("./server/routes/router"));
+app.use("/", require("./server/routes/router.cjs"));
 
 // Add this line after your other routes
-app.use("/api/schedule", require("./server/routes/schedule"));
+app.use("/api/schedule", require("./server/routes/schedule.cjs"));
 
 // start the server, listening on port 8080
-server.listen(8070, () => {
+server.listen(8080, () => {
   console.log("server listening on port 8080 ... http://localhost:8080");
 });
