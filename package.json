@@ -34,4 +34,5 @@
     "socket.io": "^4.7.5"
   },
   "type": "module"
+  }
 }
