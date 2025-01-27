@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express.Router();
-const Entry = require("../model/entry");
+const Entry = require("../model/entry.cjs");
 
 // easy way to assign static data (e.g., array of strings) to a variable
 const habitsOfMind = require("../model/habitsOfMind.json");
@@ -102,6 +102,6 @@ route.post("/deleteEntry/:id", async (req, res) => {
 });
 
 // delegate all authentication to the auth.js router
-route.use("/auth", require("./auth"));
+route.use("/auth", require("./auth.cjs"));
 
 module.exports = route;
