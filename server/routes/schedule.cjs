@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Schedule = require("../model/schedule");
+const Schedule = require("../model/schedule.cjs");
 
 // Get all schedules
 router.get("/", async (req, res) => {
