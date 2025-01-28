@@ -1,0 +1,27 @@
+{
+  "eventDate": "2024-04-15T00:00:00.000Z",
+  "timeSlots": [
+    {
+      "startTime": "09:00",
+      "endTime": "09:15",
+      "teamNumber": "12345",
+      "teamName": "Robotics Warriors",
+      "tableNumber": 1,
+      "roundNumber": 1
+    },
+    {
+      "startTime": "09:00",
+      "endTime": "09:15",
+      "teamNumber": "12346",
+      "teamName": "Tech Titans",
+      "tableNumber": 2,
+      "roundNumber": 1
+    }
+  ],
+  "metadata": {
+    "totalTeams": 10,
+    "tablesAvailable": 4,
+    "roundsPerTeam": 3,
+    "timePerRound": 15
+  }
+}
