@@ -1,312 +1,201 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-
-// Adjust to your actual schedule module paths
+import { useRouter } from "next/navigation";
 import { createFullSchedule, buildTeamsSchedule } from "./fullRandomSchedule";
+import { useEffect, useState } from "react";
 
 type ScheduleEvent = {
-  eventType: string;
+  event: string;
   startTime: number;
   duration: number;
   endTime: number;
 };
 
-type ScheduleData = Record<string, ScheduleEvent[]>;
-
-/**
- * This component:
- *  - Flattens the schedule into a single array of events (with team name).
- *  - Finds earliest (minTime) and latest (maxTime) across all events.
- *  - Renders a vertical axis (top to bottom) for times from minTime..maxTime.
- *  - Groups events by their integer startTime, placing them side-by-side horizontally.
- *  - Each event block’s width is proportional to (endTime - startTime).
- */
-function VerticalTimeSchedule({
-  scheduleData,
-}: {
-  scheduleData: ScheduleData;
-}) {
-  // 1) Flatten: { "Team 1": [ev1, ev2], "Team 2": [...] } => an array of { teamName, startTime, endTime, ... }
-  const allEvents = Object.entries(scheduleData).flatMap(([teamName, events]) =>
-    events.map((evt) => ({
-      teamName,
-      ...evt,
-    }))
-  );
-
-  // 2) Find min and max times (integer) across all events
-  let minTime = Infinity;
-  let maxTime = -Infinity;
-  for (const evt of allEvents) {
-    if (evt.startTime < minTime) minTime = evt.startTime;
-    if (evt.endTime > maxTime) maxTime = evt.endTime;
-  }
-
-  // 3) Scale factors for layout
-  const scaleY = 40; // 40 px for each "time unit" vertically
-  const scaleX = 40; // 40 px for each "time unit" horizontally
-
-  // 4) Build a map of startTime -> array of events that begin at that time
-  //    so we can place them side-by-side horizontally if they share the same startTime
-  const startMap: Record<number, typeof allEvents> = {};
-  for (const evt of allEvents) {
-    const sTime = Math.floor(evt.startTime); // or just evt.startTime if always an integer
-    if (!startMap[sTime]) startMap[sTime] = [];
-    startMap[sTime].push(evt);
-  }
-
-  // 5) We'll create an array of all integer time "ticks" from minTime..maxTime
-  const timeTicks: number[] = [];
-  for (let t = minTime; t <= maxTime; t++) {
-    timeTicks.push(t);
-  }
-
-  return (
-    <div className="mt-12">
-      <h2 className="text-2xl font-bold mb-4 text-center">
-        Vertical Block Schedule
-      </h2>
-
-      <div className="relative border rounded p-4 overflow-x-auto bg-white dark:bg-gray-700">
-        {/* 
-            LEFT AXIS of times: We'll place them absolutely 
-            (like a "ruler" from minTime to maxTime). 
-        */}
-        <div className="absolute left-0 top-0 h-full flex flex-col items-end pr-2 text-xs text-gray-700 dark:text-gray-200">
-          {timeTicks.map((t) => (
-            <div
-              key={t}
-              style={{
-                position: "absolute",
-                top: (t - minTime) * scaleY,
-                // Each "tick" can get 1em of vertical space or just a small line
-              }}
-            >
-              {t}:00
-            </div>
-          ))}
-        </div>
-
-        {/* 
-            MAIN "TRACK" AREA: We'll shift everything to the right 
-            so it doesn't overlap the time axis on the left.
-        */}
-        <div
-          className="ml-12 relative"
-          style={{ minHeight: (maxTime - minTime) * scaleY + 60 }}
-        >
-          {/* 
-              Draw horizontal lines for each time tick if desired 
-              (purely visual).
-           */}
-          {timeTicks.map((t) => (
-            <div
-              key={t}
-              className="absolute left-0 w-full border-t border-gray-300 dark:border-gray-500"
-              style={{
-                top: (t - minTime) * scaleY,
-              }}
-            />
-          ))}
-
-          {/* 
-              For each distinct startTime, place its events side-by-side. 
-              We'll keep track of the "cumulative" left offset so each event 
-              doesn’t overlap the next.
-          */}
-          {Object.entries(startMap).map(([startStr, eventsAtTime]) => {
-            const sTime = Number(startStr);
-
-            // Sort them by e.g. endTime - so shorter ones come first, or any logic
-            // We'll just keep them in the order they appear
-            let currentLeft = 0;
-
-            return (
-              <div
-                key={startStr}
-                style={{
-                  position: "absolute",
-                  top: (sTime - minTime) * scaleY,
-                  height: scaleY,
-                  // ^ This row is scaleY px tall
-                  //   (you can also do a bigger row if you want more vertical space).
-                  width: "100%",
-                }}
-              >
-                {eventsAtTime.map((evt, i) => {
-                  const w = (evt.endTime - evt.startTime) * scaleX;
-
-                  // We'll place the block at currentLeft, then increment currentLeft
-                  // by w + some gap so the next block sits to its right
-                  const left = currentLeft;
-                  currentLeft += w + 8; // 8px gap
-
-                  return (
-                    <div
-                      key={i}
-                      className="absolute rounded bg-blue-500 text-white px-2 py-1 text-xs flex flex-col justify-center"
-                      style={{
-                        left,
-                        width: w,
-                        // fill the "row" vertically
-                        top: 0,
-                        bottom: 0,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <span className="font-semibold">
-                        {evt.teamName} – {evt.eventType}
-                      </span>
-                      <span>
-                        {evt.startTime}–{evt.endTime}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
+type TeamSchedule = {
+  [key: string]: ScheduleEvent[];
+};
 
 export default function Home() {
-  const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null);
+  const router = useRouter();
+  const [schedule, setSchedule] = useState<TeamSchedule | null>(null);
 
   useEffect(() => {
     // 1) Generate raw schedule
     const schedule = createFullSchedule();
+    console.log("Raw Schedule:", schedule);
 
     // 2) Build per-team schedule (table runs & judging sessions)
     const teamsSchedule = buildTeamsSchedule(schedule);
+    console.log("Teams Schedule:", teamsSchedule);
 
-    // 3) Convert to JSON object with { "Team X": [ {eventType, startTime, ...}, ... ], ... }
-    const jsonObj: ScheduleData = {};
+    // 3) Convert to JSON object
+    const jsonObj: TeamSchedule = {};
     for (let i = 1; i <= 32; i++) {
       jsonObj[`Team ${i}`] = teamsSchedule[i].map((event) => ({
-        eventType: event.event,
+        event: event.event,
         startTime: event.startTime,
         duration: event.duration,
         endTime: event.startTime + event.duration,
       }));
     }
-    setScheduleData(jsonObj);
+    console.log("Final Schedule JSON:", JSON.stringify(jsonObj, null, 2));
+    setSchedule(jsonObj);
   }, []);
 
+  const handleLogout = () => {
+    document.cookie = "auth=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    router.replace("/login");
+  };
+
+  // Find min and max times across all events
+  const timeRange = schedule
+    ? Object.values(schedule)
+        .flat()
+        .reduce(
+          (acc, event) => ({
+            min: Math.min(acc.min, event.startTime),
+            max: Math.max(acc.max, event.endTime),
+          }),
+          { min: 24, max: 0 }
+        )
+    : { min: 8, max: 17 }; // Default 8 AM to 5 PM
+
+  // Generate time slots
+  const timeSlots = Array.from(
+    { length: timeRange.max - timeRange.min },
+    (_, i) => timeRange.min + i
+  );
+
   return (
-    <div className="min-h-screen p-8 pb-20 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <header className="flex items-center justify-center mb-8">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-      </header>
+    <div className="min-h-screen p-8 bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100">
+      <div className="max-w-7xl mx-auto">
+        {/* Header with title and logout */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+            FLL Competition Schedule
+          </h1>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all hover:scale-105 shadow-lg"
+          >
+            Logout
+          </button>
+        </div>
 
-      <main className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4 text-center">
-          Generated Schedule
-        </h1>
+        {/* Schedule Container */}
+        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl overflow-auto border border-gray-700 max-h-[800px]">
+          <div className="inline-grid grid-cols-[80px_1fr]">
+            {/* Fixed left column */}
+            <div className="bg-gray-800/90 flex flex-col sticky left-0 z-50">
+              {/* Time label */}
+              <div className="p-2 text-center text-sm font-medium text-gray-400 border-b border-gray-700 h-10 sticky top-0 bg-gray-800/90 z-50">
+                Time
+              </div>
+              {/* Time slots */}
+              <div className="flex-1">
+                {timeSlots.map((time) => (
+                  <div
+                    key={time}
+                    className="h-8 flex items-center justify-end pr-2 border-b border-gray-700 text-xs font-medium text-gray-400"
+                  >
+                    {time}:00
+                  </div>
+                ))}
+              </div>
+            </div>
 
-        {/* 1) Original Table (Optional) */}
-        {scheduleData ? (
-          <div className="overflow-x-auto shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs uppercase bg-gray-200 dark:bg-gray-800">
-                <tr>
-                  <th className="px-6 py-3">Team</th>
-                  <th className="px-6 py-3">Event #</th>
-                  <th className="px-6 py-3">Event Type</th>
-                  <th className="px-6 py-3">Start Time</th>
-                  <th className="px-6 py-3">Duration</th>
-                  <th className="px-6 py-3">End Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(scheduleData).map(([teamName, events]) =>
-                  events.map((event, index) => (
-                    <tr
-                      key={`${teamName}-${index}`}
-                      className="bg-white border-b dark:bg-gray-700 dark:border-gray-600"
-                    >
-                      <td className="px-6 py-4 font-medium whitespace-nowrap">
-                        {teamName}
-                      </td>
-                      <td className="px-6 py-4">{index + 1}</td>
-                      <td className="px-6 py-4 capitalize">
-                        {event.eventType}
-                      </td>
-                      <td className="px-6 py-4">{event.startTime}</td>
-                      <td className="px-6 py-4">{event.duration}</td>
-                      <td className="px-6 py-4">{event.endTime}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+            {/* Main schedule area */}
+            <div className="overflow-visible">
+              <div style={{ width: "calc(120px * 32)" }}>
+                {/* Sticky team headers */}
+                <div className="sticky top-0 bg-gray-800/90 border-b border-gray-700 z-10 shadow-lg">
+                  <div className="grid grid-cols-[repeat(32,120px)]">
+                    {Array.from({ length: 32 }, (_, i) => i + 1).map(
+                      (teamNum) => (
+                        <div
+                          key={teamNum}
+                          className="p-2 text-center text-xs font-medium text-gray-400 whitespace-nowrap border-r border-gray-700/50 h-10"
+                        >
+                          Team {teamNum}
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {/* Events grid */}
+                <div
+                  className="relative"
+                  style={{ height: `${timeSlots.length * 2}rem` }}
+                >
+                  {/* Grid lines */}
+                  <div className="absolute inset-0 grid grid-cols-[repeat(32,120px)]">
+                    {Array.from({ length: 32 }, (_, i) => (
+                      <div
+                        key={i}
+                        className="border-r border-gray-700/50 h-full"
+                      />
+                    ))}
+                  </div>
+
+                  {schedule &&
+                    Object.entries(schedule).map(([teamName, events]) =>
+                      events.map((event) => {
+                        const teamNumber = parseInt(teamName.split(" ")[1]);
+                        const column = teamNumber - 1;
+
+                        return (
+                          <div
+                            key={`${teamName}-${event.event}-${event.startTime}`}
+                            style={{
+                              position: "absolute",
+                              top: `${
+                                (event.startTime - timeRange.min) * 2
+                              }rem`,
+                              height: `${event.duration * 2}rem`,
+                              left: `${column * 120}px`,
+                              width: "116px",
+                            }}
+                            className={`${
+                              event.event === "tableRun"
+                                ? "bg-gradient-to-br from-blue-500 to-blue-600"
+                                : "bg-gradient-to-br from-emerald-500 to-emerald-600"
+                            } text-white text-xs p-1.5 shadow-lg hover:scale-[1.02] hover:z-20 transition-all duration-200 backdrop-blur-sm border border-white/10 overflow-hidden group mx-0.5`}
+                          >
+                            <div className="font-medium truncate group-hover:text-white text-white/90">
+                              {event.event === "tableRun"
+                                ? "Robot Game"
+                                : "Judging"}
+                            </div>
+                            <div className="text-[10px] truncate group-hover:text-white text-white/70">
+                              {event.startTime}:00 - {event.endTime}:00
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                </div>
+              </div>
+            </div>
           </div>
-        ) : (
-          <p className="text-center">Loading schedule...</p>
+        </div>
+
+        {!schedule && (
+          <div className="text-center mt-8 text-xl text-gray-400">
+            Generating schedule...
+          </div>
         )}
 
-        {/* 2) Vertical Time Axis with Horizontal Blocks */}
-        {scheduleData && <VerticalTimeSchedule scheduleData={scheduleData} />}
-      </main>
-
-      <footer className="mt-12 flex flex-wrap justify-center gap-6">
-        <a
-          className="flex items-center gap-2 hover:underline"
-          href="https://nextjs.org/learn"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-            aria-hidden="true"
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline"
-          href="https://vercel.com/templates?framework=next.js"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-            aria-hidden="true"
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline"
-          href="https://nextjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-            aria-hidden="true"
-          />
-          Next.js
-        </a>
-      </footer>
+        <style jsx global>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
+      </div>
     </div>
   );
 }
