@@ -1,6 +1,6 @@
 // THIS FUNCTION IS UNTESTED
-import { randomJS } from "./judgingRooms/randomJudgingSesh.js";
-import { jrGrading } from "./judgingRooms/JRGrading.js";
+const { randomJS } = require("./judgingRooms/randomJudgingSesh.js");
+const { jrGrading } = require("./judgingRooms/JRGrading.js");
 
 const DEBUG = true;
 
@@ -377,7 +377,7 @@ function printSchedule(schedule) {
   console.log(JSON.stringify(scheduleJSON, null, 2));
 }
 
-export {
+module.exports = {
   createFullSchedule,
   scoreSchedule,
   buildTeamsSchedule,

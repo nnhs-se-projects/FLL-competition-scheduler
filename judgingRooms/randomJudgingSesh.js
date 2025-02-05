@@ -163,5 +163,4 @@ function randomJS() {
 //   );
 // }
 
-export { randomJS };
-//export { checkDuplicates };
+module.exports = { randomJS };

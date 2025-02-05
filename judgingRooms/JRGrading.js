@@ -58,4 +58,4 @@ function jrGrading(child) {
 
 //grade each parent in the array
 
-export { jrGrading };
+module.exports = { jrGrading };
