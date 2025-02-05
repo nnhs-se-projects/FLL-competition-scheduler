@@ -1,6 +1,7 @@
 const express = require("express");
 const route = express.Router();
 const Entry = require("../model/entry");
+const { FLLSchedule } = require("../../tspPort/fllSchedule");
 
 // easy way to assign static data (e.g., array of strings) to a variable
 const habitsOfMind = require("../model/habitsOfMind.json");
@@ -31,6 +32,13 @@ route.get("/", async (req, res) => {
 
 route.get("/createEntry", (req, res) => {
   res.render("createEntry", { habits: habitsOfMind });
+});
+
+route.get("/example", (req, res) => {
+  const schedule = new FLLSchedule();
+  schedule.populateWithRandomGenes();
+  schedule.printSchedule();
+  res.send(JSON.stringify(schedule));
 });
 
 route.post("/createEntry", async (req, res) => {
