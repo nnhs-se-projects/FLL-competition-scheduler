@@ -15,6 +15,15 @@ route.get("/", async (req, res) => {
   console.log("path: ", req.path);
 
   const entries = await Entry.find();
+  const schedule = new FLLSchedule();
+  schedule.populateWithRandomGenes();
+
+  // Format the schedule data for display
+  const formattedSchedule = {
+    tableRuns: schedule.buildTableSchedule(),
+    judgingSchedule: schedule.buildJudgingSchedule(),
+    teamsSchedule: schedule.buildTeamsSchedule(),
+  };
 
   // convert MongoDB objects to objects formatted for the EJS template
   const formattedEntries = entries.map((entry) => {
@@ -26,8 +35,11 @@ route.get("/", async (req, res) => {
     };
   });
 
-  // the res parameter references the HTTP response object
-  res.render("index", { entries: formattedEntries });
+  // pass both entries and schedule to the template
+  res.render("index", {
+    entries: formattedEntries,
+    schedule: formattedSchedule,
+  });
 });
 
 route.get("/createEntry", (req, res) => {

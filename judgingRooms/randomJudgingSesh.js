@@ -7,7 +7,7 @@
 // import { replaceDuplicates } from "./JRcrossover";
 
 function randomJS() {
-  //NOTE: make numTeams a param later then need to change jrGrading method
+  //  NOTE: make numTeams a param later then need to change jrGrading method
   let teamsR = [];
   let teamsP = [];
   let judgingSeshs = 2;
