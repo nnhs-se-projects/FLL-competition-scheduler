@@ -9,6 +9,37 @@
     <h1>FLL Competition Scheduler</h1>
   </div>
 
+  <!-- Visual Schedule Grid -->
+  <div class="schedule-container">
+    <h2>Visual Schedule</h2>
+    <div id="schedule-grid-container"></div>
+  </div>
+
+  <!-- Pass schedule data to frontend -->
+  <script>
+    window.scheduleData = <%- JSON.stringify(schedule ? [...(schedule.tableRuns || []).flatMap((table, tableIndex) =>
+      table.map(event => ({
+        teamID: event.teamID,
+        teamName: event.teamName,
+        startTime: event.startTime,
+        duration: event.duration,
+        locationID: tableIndex,
+        locationName: `Table ${tableIndex + 1}`,
+        type: 'tableRun'
+      })),
+    ), ...(schedule.judgingSchedule || []).flatMap((room, roomIndex) =>
+      room.map(event => ({
+        teamID: event.teamID,
+        teamName: event.teamName,
+        startTime: event.startTime,
+        duration: event.duration,
+        locationID: roomIndex,
+        locationName: `Room ${roomIndex + 1}`,
+        type: event.type
+      }))
+    )] : []) %>;
+  </script>
+
   <!-- Table Runs Schedule -->
   <div class="schedule-container">
     <h2>Robot Game Schedule</h2>
