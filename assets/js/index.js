@@ -110,10 +110,10 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="event-content">
             <div class="event-title">${
               event.type === "tableRun"
-                ? "Robot Game"
+                ? "Table Run"
                 : event.type === "robotJudging"
-                ? "Robot Design"
-                : "Project"
+                ? "Design Judging"
+                : "Project Judging"
             }</div>
             <div class="event-time">${formatTime(startMinutes)} - ${formatTime(
           startMinutes + event.duration
