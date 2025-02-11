@@ -1,0 +1,44 @@
+<!-- include header -->
+<%- include('include/_header') %>
+<!-- /include header -->
+
+<main>
+  <img
+    src="/img/SE-GitHub-image.png"
+    alt="Huskie Code Logo"
+    width="100"
+    height="100"
+  />
+  <h1>Edit Habit of Mind Entry</h1>
+
+  <div>
+    <label
+      >Date
+      <input
+        type="date"
+        class="date"
+        value="<%= entry.date.toISOString().slice(0, 10) %>"
+    /></label>
+    <fieldset>
+      <legend>Habit of Mind:</legend>
+      <% for(let habit of habits) { %>
+      <label>
+        <input type="radio" class="habits" name="habits" value="<%= habit %>"
+        <%= entry.habit === habit ? 'checked' : '' %> /><%= habit %>
+      </label>
+      <% } %>
+    </fieldset>
+    <label>
+      Journal Entry <textarea class="content"><%= entry.content %></textarea>
+    </label>
+    <input type="submit" class="submit" value="Save Changes" />
+  </div>
+
+  <button class="delete">Delete Entry</button>
+</main>
+
+<script src="/js/editEntry.js"></script>
+
+<!-- include footer -->
+<%- include('include/_footer') %>
+<!-- /include footer -->
