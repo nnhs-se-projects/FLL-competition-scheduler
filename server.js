@@ -21,7 +21,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: ".env" });
 
 // connect to the database
-const connectDB = require("./server/database/connection.cjs");
+const connectDB = require("./server/database/connection");
 connectDB();
 
 // import the express-session module, which is used to manage sessions
@@ -34,7 +34,8 @@ app.use(
   })
 );
 
-// set the template engine to EJS, which generates HTML with embedded javascript
+// set the template engine to EJS, which generates HTML with embedded
+//  JavaScript
 app.set("view engine", "ejs");
 
 // load assets
@@ -47,26 +48,22 @@ app.use("/js", express.static("assets/js"));
 app.use((req, res, next) => {
   // if the student is not already logged in, redirect all requests to the
   //  authentication page
-  // req.session.email = "amxie@stu.naperville203.org";
-
   if (req.session.email === undefined && !req.path.startsWith("/auth")) {
     res.redirect("/auth/");
     return;
   }
+
   next();
 });
 
-// create the http server
+// create the HTTP server
 const server = http.createServer(app);
 
 // to keep this file manageable, we will move the routes to a separate file
-// the exported router object is an example of middleware
-app.use("/", require("./server/routes/router.cjs"));
+//  the exported router object is an example of middleware
+app.use("/", require("./server/routes/router"));
 
-// Add this line after your other routes
-app.use("/api/schedule", require("./server/routes/schedule.cjs"));
-
-// start the server, listening on port 8080
+// start the server on port 8080
 server.listen(8080, () => {
-  console.log("server listening on port 8080 ... http://localhost:8080");
+  console.log("Server started on http://localhost:8080");
 });

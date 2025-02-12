@@ -2,32 +2,148 @@
 <%- include('include/_header') %>
 <!-- /include header -->
 
-<!-- Main site -->
+<!-- Main Site -->
 <main>
   <div class="indexTopBar">
     <img src="img/SE-GitHub-image.png" alt="Huskie Code Logo" />
-    <h1>Habit of Mind Journal</h1>
-    <a href="/createEntry" role="button">Create Entry</a>
+    <h1>FLL Competition Scheduler</h1>
   </div>
 
-  <div class="entries">
-    <% for(let entry of entries) { %>
-    <div class="entry">
-      <div><%= entry.date %></div>
-      <div class="entryHabit"><%= entry.habit %></div>
-      <div class="entryContent"><%= entry.content %></div>
-      <div>
-        <a href="/editEntry/<%= entry.id %>" role="button" class="secondary">
-          Edit
-        </a>
-      </div>
-    </div>
-    <% } %>
+  <!-- Visual Schedule Grid -->
+  <div class="schedule-container">
+    <h2>Visual Schedule</h2>
+    <div id="schedule-grid-container"></div>
+  </div>
+
+  <!-- Pass schedule data to frontend -->
+  <script>
+    window.scheduleData = <%- JSON.stringify(schedule ? [...(schedule.tableRuns || []).flatMap((table, tableIndex) =>
+      table.map(event => ({
+        teamID: event.teamID,
+        teamName: event.teamName,
+        startTime: event.startTime,
+        duration: event.duration,
+        locationID: tableIndex,
+        locationName: `Table ${tableIndex + 1}`,
+        type: 'tableRun'
+      })),
+    ), ...(schedule.judgingSchedule || []).flatMap((room, roomIndex) =>
+      room.map(event => ({
+        teamID: event.teamID,
+        teamName: event.teamName,
+        startTime: event.startTime,
+        duration: event.duration,
+        locationID: roomIndex,
+        locationName: `Room ${roomIndex + 1}`,
+        type: event.type
+      }))
+    )] : []) %>;
+  </script>
+
+  <!-- Table Runs Schedule -->
+  <div class="schedule-container">
+    <h2>Robot Game Schedule</h2>
+    <% if (schedule && schedule.tableRuns) { %> <%
+    schedule.tableRuns.forEach((table, tableIndex) => { %>
+    <h3>Table <%= tableIndex + 1 %></h3>
+    <table role="grid">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Team</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% table.sort((a, b) => a.startTime - b.startTime).forEach(event => { %>
+        <tr>
+          <td>
+            <%= Math.floor(event.startTime/60) %>:<%=
+            String(event.startTime%60).padStart(2, '0') %>
+          </td>
+          <td><%= event.teamName %></td>
+          <td><%= event.duration %> min</td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% }); %> <% } %>
+  </div>
+
+  <!-- Judging Schedule -->
+  <div class="schedule-container">
+    <h2>Judging Schedule</h2>
+    <% if (schedule && schedule.judgingSchedule) { %> <%
+    schedule.judgingSchedule.forEach((room, roomIndex) => { %>
+    <h3>Judging Room <%= roomIndex + 1 %></h3>
+    <table role="grid">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Team</th>
+          <th>Type</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% room.sort((a, b) => a.startTime - b.startTime).forEach(event => { %>
+        <tr>
+          <td>
+            <%= Math.floor(event.startTime/60) %>:<%=
+            String(event.startTime%60).padStart(2, '0') %>
+          </td>
+          <td><%= event.teamName %></td>
+          <td>
+            <%= event.type === 'robotJudging' ? 'Robot Design' : 'Project' %>
+          </td>
+          <td><%= event.duration %> min</td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% }); %> <% } %>
+  </div>
+
+  <!-- Team Schedule -->
+  <div class="schedule-container">
+    <h2>Team Schedules</h2>
+    <% if (schedule && schedule.teamsSchedule) { %> <%
+    schedule.teamsSchedule.forEach((team, teamIndex) => { %> <% if (team.length
+    > 0) { %>
+    <h3>Team <%= teamIndex %></h3>
+    <table role="grid">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Event</th>
+          <th>Location</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% team.sort((a, b) => a.startTime - b.startTime).forEach(event => { %>
+        <tr>
+          <td>
+            <%= Math.floor(event.startTime/60) %>:<%=
+            String(event.startTime%60).padStart(2, '0') %>
+          </td>
+          <td>
+            <% if (event.type === 'tableRun') { %> Robot Game <% } else if
+            (event.type === 'robotJudging') { %> Robot Design Judging <% } else
+            { %> Project Judging <% } %>
+          </td>
+          <td><%= event.locationName %></td>
+          <td><%= event.duration %> min</td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %> <% }); %> <% } %>
   </div>
 </main>
-<!-- /Main site -->
 
 <script src="/js/index.js"></script>
+
 <!-- include footer -->
 <%- include('include/_footer') %>
 <!-- /include footer -->
