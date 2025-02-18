@@ -10,11 +10,12 @@ Every year the FLL competition comes around, those in charge of schedules have t
 
 ## What it does
 
-At the moment, our project generates a valid schedule randomly. The genetic algorithm attempts to produce a better schedule than the randomly generated ones, but doesn't improve it much. More investigation is needed to determine if this can be improved with tuning.
+At the moment, our project generates a valid schedule randomly that is displayed on our website. We are able to display 4 different schedules on the website that includes a visual block schedule, a schedule storted by teams, judging rooms, and time. The genetic algorithm attempts to produce a better schedule than the randomly generated ones, but doesn't improve it much. More investigation is needed to determine if this can be improved with tuning.
 
 ## How it works
 
 Our project is split up into two different sections; team runs and judging sessions that work independently of each other. Both team runs and judging sessions have a genetic algorithm (explained below) that generate valid schedules based on the criteria.
+We then store the data from our schedule in json, which is used to display different schedules on the website.
 
 ## Platform Requirements
 
@@ -44,6 +45,9 @@ In the .vscode file, you will find the launch.json file. In order to debug a fil
 You will need to debug by changing the configuration in the debug panel. The default will generally be Node Server.
 
 ## How to Run Project & Expected Result
+
+### Server
+Run the server and you will be directed to the website. After you go through the google authentication, you will see the different schedules generated from the genetic algorithm.
 
 ### Tests
 
@@ -77,3 +81,5 @@ This section needs to be updated to reflect the data schema used in the context 
 - When we run our table schedule, we would occasionally get an issue where the children are identical to each other within the genetic algorithm. This problem does not occur often, but it is something to be aware of if it comes up. We were not able to find out why that was occurring.
 
 **2024 Contributors - Kelsey Wessel, Angela Ping, Sophia Xi, Alyssa Pandya**
+
+**2025 Contributors - Kyle Wang, Aiden Xie, Tommy Isaac, Arnav Sharma**
