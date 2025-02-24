@@ -1,0 +1,29 @@
+<!-- include header -->
+<%- include('include/_header') %>
+<!-- /include header -->
+
+<!-- Main Site -->
+<%- include('partials/_nav') %>
+
+<main class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Summary Cards -->
+    <%- include('partials/_summary_cards') %>
+
+    <!-- Teams Content -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% schedule.teamsSchedule.forEach((team, teamIndex) => { %> <% if
+        (team.length > 0) { %>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="text-lg font-medium mb-4">Team <%= teamIndex %></h3>
+          <%- include('partials/_team_schedule', { team }) %>
+        </div>
+        <% } %> <% }); %>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- include footer -->
+<%- include('include/_footer') %>

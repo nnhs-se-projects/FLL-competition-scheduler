@@ -11,20 +11,58 @@ const habitsOfMind = require("../model/habitsOfMind.json");
 //  the callback function is executed
 route.get("/", (req, res) => {
   if (req.session.email) {
-    // If logged in, show the schedule page
     const schedule = new FLLSchedule();
     schedule.populateWithRandomGenes();
-    res.render("index", {
+    res.render("overview", {
       schedule: {
         tableRuns: schedule.buildTableSchedule(),
         judgingSchedule: schedule.buildJudgingSchedule(),
         teamsSchedule: schedule.buildTeamsSchedule(),
       },
+      path: "/",
     });
   } else {
-    // If not logged in, show the landing page
     res.render("landing");
   }
+});
+
+route.get("/tables", (req, res) => {
+  const schedule = new FLLSchedule();
+  schedule.populateWithRandomGenes();
+  res.render("tables", {
+    schedule: {
+      tableRuns: schedule.buildTableSchedule(),
+      judgingSchedule: schedule.buildJudgingSchedule(),
+      teamsSchedule: schedule.buildTeamsSchedule(),
+    },
+    path: "/tables",
+  });
+});
+
+route.get("/judging", (req, res) => {
+  const schedule = new FLLSchedule();
+  schedule.populateWithRandomGenes();
+  res.render("judging", {
+    schedule: {
+      tableRuns: schedule.buildTableSchedule(),
+      judgingSchedule: schedule.buildJudgingSchedule(),
+      teamsSchedule: schedule.buildTeamsSchedule(),
+    },
+    path: "/judging",
+  });
+});
+
+route.get("/teams", (req, res) => {
+  const schedule = new FLLSchedule();
+  schedule.populateWithRandomGenes();
+  res.render("teams", {
+    schedule: {
+      tableRuns: schedule.buildTableSchedule(),
+      judgingSchedule: schedule.buildJudgingSchedule(),
+      teamsSchedule: schedule.buildTeamsSchedule(),
+    },
+    path: "/teams",
+  });
 });
 
 route.get("/createEntry", (req, res) => {
