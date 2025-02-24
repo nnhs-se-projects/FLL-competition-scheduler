@@ -9,37 +9,22 @@ const habitsOfMind = require("../model/habitsOfMind.json");
 // pass a path (e.g., "/") and a callback function to the get method
 //  when the client makes an HTTP GET request to the specified path,
 //  the callback function is executed
-route.get("/", async (req, res) => {
-  // the req parameter references the HTTP request object, which has
-  //  a number of properties
-  console.log("path: ", req.path);
-
-  const entries = await Entry.find();
-  const schedule = new FLLSchedule();
-  schedule.populateWithRandomGenes();
-
-  // Format the schedule data for display
-  const formattedSchedule = {
-    tableRuns: schedule.buildTableSchedule(),
-    judgingSchedule: schedule.buildJudgingSchedule(),
-    teamsSchedule: schedule.buildTeamsSchedule(),
-  };
-
-  // convert MongoDB objects to objects formatted for the EJS template
-  const formattedEntries = entries.map((entry) => {
-    return {
-      id: entry._id,
-      date: entry.date.toLocaleDateString(),
-      habit: entry.habit,
-      content: entry.content.slice(0, 20) + "...",
-    };
-  });
-
-  // pass both entries and schedule to the template
-  res.render("index", {
-    entries: formattedEntries,
-    schedule: formattedSchedule,
-  });
+route.get("/", (req, res) => {
+  if (req.session.email) {
+    // If logged in, show the schedule page
+    const schedule = new FLLSchedule();
+    schedule.populateWithRandomGenes();
+    res.render("index", {
+      schedule: {
+        tableRuns: schedule.buildTableSchedule(),
+        judgingSchedule: schedule.buildJudgingSchedule(),
+        teamsSchedule: schedule.buildTeamsSchedule(),
+      },
+    });
+  } else {
+    // If not logged in, show the landing page
+    res.render("landing");
+  }
 });
 
 route.get("/createEntry", (req, res) => {

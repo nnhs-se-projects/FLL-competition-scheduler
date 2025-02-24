@@ -32,4 +32,9 @@ route.post("/", async (req, res) => {
   res.status(201).end();
 });
 
+route.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/auth");
+});
+
 module.exports = route;

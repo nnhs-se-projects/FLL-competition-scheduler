@@ -46,9 +46,14 @@ app.use("/js", express.static("assets/js"));
 // app.use takes a function that is added to the chain of a request.
 //  When we call next(), it goes to the next function in the chain.
 app.use((req, res, next) => {
-  // if the student is not already logged in, redirect all requests to the
-  //  authentication page
-  if (req.session.email === undefined && !req.path.startsWith("/auth")) {
+  // Allow access to landing page and auth routes without login
+  if (req.path === "/" || req.path.startsWith("/auth")) {
+    next();
+    return;
+  }
+
+  // Redirect to auth for all other routes if not logged in
+  if (req.session.email === undefined) {
     res.redirect("/auth/");
     return;
   }
