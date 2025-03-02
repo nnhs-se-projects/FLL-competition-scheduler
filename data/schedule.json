@@ -1,0 +1,2977 @@
+{
+  "tableRuns": [
+    [
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 0,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 10,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 20,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 30,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 40,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 50,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 60,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 70,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 80,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 90,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 100,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 110,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 120,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 130,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 140,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 195,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 205,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 215,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 225,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 235,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 245,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 255,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 265,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 275,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 285,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 295,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 305,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 315,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 325,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 335,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 345,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 355,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 0,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 10,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 20,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 30,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 40,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 50,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 60,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 70,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 80,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 90,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 100,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 110,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 120,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 130,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 140,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 195,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 205,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 215,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 225,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 235,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 245,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 255,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 265,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 275,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 285,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 295,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 305,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 315,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 325,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 335,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 345,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 355,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 5,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 15,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 25,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 35,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 45,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 55,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 65,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 75,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 85,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 95,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 105,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 115,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 125,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 135,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 200,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 210,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 220,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 230,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 240,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 250,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 260,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 270,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 280,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 290,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 300,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 310,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 320,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 330,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 340,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 350,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 360,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 370,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    []
+  ],
+  "judgingSchedule": [
+    [
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 0,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 25,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 50,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 75,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 100,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 125,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 195,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 220,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      }
+    ],
+    [
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 5,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 30,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 55,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 80,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 105,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 200,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 225,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 250,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      }
+    ],
+    [
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 10,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 35,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 60,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 85,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 110,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 205,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 230,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 255,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      }
+    ],
+    [
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 15,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 40,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 65,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 90,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 115,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 210,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 235,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 260,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      }
+    ],
+    [
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 0,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 25,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 50,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 75,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 100,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 125,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 195,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 220,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      }
+    ],
+    [
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 5,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 30,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 55,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 80,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 105,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 200,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 225,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 250,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      }
+    ],
+    [
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 10,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 35,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 60,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 85,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 110,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 205,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 230,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 255,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      }
+    ],
+    [
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 15,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 40,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 65,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 90,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 115,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 210,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 235,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 260,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      }
+    ]
+  ],
+  "teamsSchedule": [
+    [],
+    [
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 0,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 0,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 0,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 0,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 1,
+        "teamName": "Team 1",
+        "startTime": 5,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 5,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 5,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 10,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 10,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 2,
+        "teamName": "Team 2",
+        "startTime": 15,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 10,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 10,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 20,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 20,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 3,
+        "teamName": "Team 3",
+        "startTime": 25,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 15,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 15,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 30,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 30,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 4,
+        "teamName": "Team 4",
+        "startTime": 35,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 25,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 25,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 40,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 40,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 5,
+        "teamName": "Team 5",
+        "startTime": 45,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 30,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 30,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 50,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 50,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 6,
+        "teamName": "Team 6",
+        "startTime": 55,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 35,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 35,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 60,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 60,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 7,
+        "teamName": "Team 7",
+        "startTime": 65,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 40,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 40,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 70,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 70,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 8,
+        "teamName": "Team 8",
+        "startTime": 75,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 50,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 50,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 80,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 80,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 9,
+        "teamName": "Team 9",
+        "startTime": 85,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 55,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 55,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 90,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 90,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 10,
+        "teamName": "Team 10",
+        "startTime": 95,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 60,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 60,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 100,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 100,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 11,
+        "teamName": "Team 11",
+        "startTime": 105,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 65,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 65,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 110,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 110,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 12,
+        "teamName": "Team 12",
+        "startTime": 115,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 75,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 75,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 120,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 120,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 13,
+        "teamName": "Team 13",
+        "startTime": 125,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 80,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 80,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 130,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 130,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 14,
+        "teamName": "Team 14",
+        "startTime": 135,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 85,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 85,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 140,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 140,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 15,
+        "teamName": "Team 15",
+        "startTime": 200,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 90,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 90,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 195,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 195,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 16,
+        "teamName": "Team 16",
+        "startTime": 210,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 100,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 100,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 205,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 205,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 17,
+        "teamName": "Team 17",
+        "startTime": 220,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 105,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 105,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 215,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 215,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 18,
+        "teamName": "Team 18",
+        "startTime": 230,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 110,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 110,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 225,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 225,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 19,
+        "teamName": "Team 19",
+        "startTime": 240,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 115,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 115,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 235,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 235,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 20,
+        "teamName": "Team 20",
+        "startTime": 250,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 125,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 125,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 245,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 245,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 21,
+        "teamName": "Team 21",
+        "startTime": 260,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 200,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 200,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 255,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 255,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 22,
+        "teamName": "Team 22",
+        "startTime": 270,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 205,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 205,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 265,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 265,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 23,
+        "teamName": "Team 23",
+        "startTime": 280,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 210,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 210,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 275,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 275,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 24,
+        "teamName": "Team 24",
+        "startTime": 290,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 195,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 195,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 285,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 285,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 25,
+        "teamName": "Team 25",
+        "startTime": 300,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 225,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 225,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 295,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 295,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 26,
+        "teamName": "Team 26",
+        "startTime": 310,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 230,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 230,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 305,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 305,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 27,
+        "teamName": "Team 27",
+        "startTime": 320,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 235,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 235,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 315,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 315,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 28,
+        "teamName": "Team 28",
+        "startTime": 330,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 220,
+        "duration": 15,
+        "locationID": 0,
+        "locationName": "Judging Room 1",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 220,
+        "duration": 15,
+        "locationID": 4,
+        "locationName": "Judging Room 5",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 325,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 325,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 29,
+        "teamName": "Team 29",
+        "startTime": 340,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 250,
+        "duration": 15,
+        "locationID": 1,
+        "locationName": "Judging Room 2",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 250,
+        "duration": 15,
+        "locationID": 5,
+        "locationName": "Judging Room 6",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 335,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 335,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 30,
+        "teamName": "Team 30",
+        "startTime": 350,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 255,
+        "duration": 15,
+        "locationID": 2,
+        "locationName": "Judging Room 3",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 255,
+        "duration": 15,
+        "locationID": 6,
+        "locationName": "Judging Room 7",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 345,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 345,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 31,
+        "teamName": "Team 31",
+        "startTime": 360,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ],
+    [
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 260,
+        "duration": 15,
+        "locationID": 3,
+        "locationName": "Judging Room 4",
+        "type": "robotJudging"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 260,
+        "duration": 15,
+        "locationID": 7,
+        "locationName": "Judging Room 8",
+        "type": "projectJudging"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 355,
+        "duration": 10,
+        "locationID": 0,
+        "locationName": "Table 1",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 355,
+        "duration": 10,
+        "locationID": 1,
+        "locationName": "Table 2",
+        "type": "tableRun"
+      },
+      {
+        "teamID": 32,
+        "teamName": "Team 32",
+        "startTime": 370,
+        "duration": 10,
+        "locationID": 2,
+        "locationName": "Table 3",
+        "type": "tableRun"
+      }
+    ]
+  ],
+  "startTime": "12:00"
+}

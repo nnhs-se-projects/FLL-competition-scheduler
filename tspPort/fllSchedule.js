@@ -30,28 +30,79 @@ const JUDGING_ROOM_TIMING_CONFIG = [
 ];
 
 class FLLSchedule {
-  constructor() {
+  constructor(numTeams = 32, numTables = 4, numJudgingRooms = 8) {
+    this.numTeams = numTeams;
+    this.numTables = numTables;
+    this.numJudgingRooms = numJudgingRooms;
+    this.teamNames = [];
+    this.startTime = "08:00"; // Default start time
+
+    // Initialize with default team names if none provided
+    for (let i = 0; i < numTeams; i++) {
+      this.teamNames.push(`Team ${i + 1}`);
+    }
+
     this.genes = [];
     this.score = 0;
     this.mutationProbability = 0.1;
     this.numberOfPotentialMutations = 5;
   }
 
-  populateWithRandomGenes() {
-    const schedule = createFullSchedule();
+  setTeamNames(teamNames) {
+    this.teamNames = teamNames;
+  }
+
+  setStartTime(startTime) {
+    this.startTime = startTime;
+  }
+
+  generateSchedule() {
+    // Create a new schedule with the configured parameters
+    this.populateWithRandomGenes(
+      this.teamNames,
+      this.numTeams,
+      this.numTables,
+      this.numJudgingRooms
+    );
+
+    // Format the schedule data for the frontend
+    return {
+      tableRuns: this.buildTableSchedule(),
+      judgingSchedule: this.buildJudgingSchedule(),
+      teamsSchedule: this.buildTeamsSchedule(),
+      startTime: this.startTime,
+    };
+  }
+
+  populateWithRandomGenes(
+    teamNames = [],
+    numTeams = 32,
+    numTables = 4,
+    numJudgingRooms = 8
+  ) {
+    // Update constants based on configuration
+    const schedule = createFullSchedule(
+      teamNames,
+      numTeams,
+      numTables,
+      numJudgingRooms
+    );
     const tableSchedule = schedule[0];
     const judgingSchedule = schedule[1];
 
     for (let i = 0; i < tableSchedule.length; i++) {
       for (let j = 0; j < tableSchedule[i].length; j++) {
+        const teamId = tableSchedule[i][j].id;
+        const teamName = teamNames[teamId - 1] || `Team ${teamId}`;
+
         this.genes.push(
           new Event(
-            tableSchedule[i][j].id,
-            tableSchedule[i][j].name,
+            teamId,
+            teamName,
             tableSchedule[i][j].start,
             tableSchedule[i][j].duration,
             i,
-            "table " + i,
+            `Table ${i + 1}`,
             TABLE_RUN_TYPE
           )
         );
@@ -60,14 +111,17 @@ class FLLSchedule {
 
     for (let i = 0; i < judgingSchedule.length; i++) {
       for (let j = 0; j < judgingSchedule[i].length; j++) {
+        const teamId = judgingSchedule[i][j].id;
+        const teamName = teamNames[teamId - 1] || `Team ${teamId}`;
+
         this.genes.push(
           new Event(
-            judgingSchedule[i][j].id,
-            judgingSchedule[i][j].name,
+            teamId,
+            teamName,
             judgingSchedule[i][j].startT,
             judgingSchedule[i][j].duration,
             i,
-            "judging room " + i,
+            `Judging Room ${i + 1}`,
             judgingSchedule[i][j].type === "robot"
               ? ROBOT_JUDGING_TYPE
               : PROJECT_JUDGING_TYPE
@@ -77,12 +131,15 @@ class FLLSchedule {
     }
 
     this.genes.sort((a, b) => a.startTime - b.startTime);
-
     this.updateScore();
   }
 
   createCopy() {
-    const copy = new FLLSchedule();
+    const copy = new FLLSchedule(
+      this.numTeams,
+      this.numTables,
+      this.numJudgingRooms
+    );
     for (const val of this.genes) {
       copy.genes.push(val.copy());
     }

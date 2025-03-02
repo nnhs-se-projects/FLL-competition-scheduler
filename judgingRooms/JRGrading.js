@@ -7,12 +7,13 @@
 // add up all the team scores and divide by num of teams to get avg score => this is the final score of the child
 // return final score
 
-let newPool = [];
-let oldPool = [];
+// These variables are not used, so we can remove them
+// const newPool = [];
+// const oldPool = [];
 
 function jrGrading(child) {
-  let teamGrades = [];
-  let numTeams = 32;
+  const teamGrades = [];
+  const numTeams = 32;
   let totalScore = 0.0;
 
   for (let i = 1; i < numTeams + 1; i++) {
@@ -21,30 +22,30 @@ function jrGrading(child) {
 
     for (let room = 0; room < child.length / 2; room++) {
       if (child[room].some((e) => e.name === "team" + i)) {
-        rr = child[room].findIndex((e) => e.name == "team" + i);
+        rr = child[room].findIndex((e) => e.name === "team" + i);
       }
     }
     for (let room = child.length / 2; room < child.length; room++) {
       if (child[room].some((e) => e.name === "team" + i)) {
-        pr = child[room].findIndex((e) => e.name == "team" + i);
+        pr = child[room].findIndex((e) => e.name === "team" + i);
       }
     }
 
-    let num = child[0].length / 2;
+    const num = child[0].length / 2;
 
-    //check if spacing is less than num/2 or greater than 3num/2 then teamScore = 0
+    // check if spacing is less than num/2 or greater than 3num/2 then teamScore = 0
     if (Math.abs(rr - pr) < num / 2 || Math.abs(rr - pr) > (3 * num) / 2) {
       totalScore = 0;
       return totalScore;
     }
 
-    let teamScore = Math.abs(rr - pr) / parseFloat(num);
+    const teamScore = Math.abs(rr - pr) / parseFloat(num);
 
     teamGrades.push(teamScore);
   }
 
-  //console.log("Team Grades: ");
-  //console.log(teamGrades);
+  // console.log("Team Grades: ");
+  // console.log(teamGrades);
 
   for (let i = 0; i < teamGrades.length; i++) {
     totalScore += teamGrades[i];
@@ -54,8 +55,8 @@ function jrGrading(child) {
   return totalScore;
 }
 
-//create pool of 100 parents
+// create pool of 100 parents
 
-//grade each parent in the array
+// grade each parent in the array
 
 module.exports = { jrGrading };

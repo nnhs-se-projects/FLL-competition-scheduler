@@ -12,15 +12,25 @@
 
     <!-- Teams Content -->
     <div class="bg-white rounded-lg shadow p-6">
+      <% if (typeof schedule !== 'undefined' && schedule &&
+      schedule.teamsSchedule) { %>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <% schedule.teamsSchedule.forEach((team, teamIndex) => { %> <% if
-        (team.length > 0) { %>
+        <% schedule.teamsSchedule.forEach((team, teamIndex) => { %> <% if (team
+        && team.length > 0) { %>
         <div class="bg-gray-50 rounded-lg p-4">
           <h3 class="text-lg font-medium mb-4">Team <%= teamIndex %></h3>
           <%- include('partials/_team_schedule', { team }) %>
         </div>
         <% } %> <% }); %>
       </div>
+      <% } else { %>
+      <div class="p-4 text-center">
+        <p>
+          No team schedule available. Please generate a schedule from the
+          Configuration page.
+        </p>
+      </div>
+      <% } %>
     </div>
   </div>
 </main>

@@ -9,6 +9,15 @@ const http = require("http");
 // import the express module, which exports the express function
 const express = require("express");
 
+// import the fs module, which provides an API for interacting with the file system
+const fs = require("fs");
+
+// import the path module, which provides an API for interacting with file paths
+const path = require("path");
+
+// import the helpers module
+const { formatTime } = require("./server/helpers");
+
 // invoke the express function to create an Express application
 const app = express();
 
@@ -23,6 +32,12 @@ dotenv.config({ path: ".env" });
 // connect to the database
 const connectDB = require("./server/database/connection");
 connectDB();
+
+// Ensure data directory exists
+const dataDir = path.join(__dirname, "data");
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
 
 // import the express-session module, which is used to manage sessions
 const session = require("express-session");
@@ -60,6 +75,9 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// Make the helper function available to all templates
+app.locals.formatTime = formatTime;
 
 // create the HTTP server
 const server = http.createServer(app);

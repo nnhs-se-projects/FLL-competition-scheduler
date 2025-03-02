@@ -15,11 +15,82 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
         <div class="bg-gray-50 rounded-lg p-4">
           <h3 class="text-lg font-medium mb-4">Current & Upcoming Events</h3>
-          <div class="space-y-3" id="upcoming-events"></div>
+          <div class="space-y-3" id="upcoming-events">
+            <% if (typeof schedule !== 'undefined' && schedule) { %>
+            <p>Schedule is available.</p>
+
+            <% if (schedule.tableRuns && schedule.tableRuns.length > 0) { %>
+            <div class="bg-white rounded p-3 shadow-sm">
+              <p>
+                There are <%= schedule.tableRuns.length %> table runs scheduled.
+              </p>
+            </div>
+            <% } %> <% if (schedule.judgingSchedule &&
+            schedule.judgingSchedule.length > 0) { %>
+            <div class="bg-white rounded p-3 shadow-sm">
+              <p>
+                There are <%= schedule.judgingSchedule.length %> judging rooms
+                scheduled.
+              </p>
+            </div>
+            <% } %> <% } else { %>
+            <p>
+              No schedule available. Please generate a schedule from the
+              Configuration page.
+            </p>
+            <% } %>
+          </div>
         </div>
         <div class="bg-gray-50 rounded-lg p-4">
           <h3 class="text-lg font-medium mb-4">Schedule Statistics</h3>
-          <div id="schedule-stats"></div>
+          <div id="schedule-stats">
+            <% if (typeof schedule !== 'undefined' && schedule) { %>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-white p-3 rounded shadow-sm">
+                <p class="text-sm text-gray-500">Total Teams</p>
+                <p class="text-xl font-bold">
+                  <% function countTeams(schedule) { if (!schedule ||
+                  !schedule.teamsSchedule) return 0; let count = 0; for (let i =
+                  0; i < schedule.teamsSchedule.length; i++) { if
+                  (schedule.teamsSchedule[i] && schedule.teamsSchedule[i].length
+                  > 0) { count++; } } return count; } %> <%=
+                  countTeams(schedule) %>
+                </p>
+              </div>
+              <div class="bg-white p-3 rounded shadow-sm">
+                <p class="text-sm text-gray-500">Judging Rooms</p>
+                <p class="text-xl font-bold">
+                  <%= schedule.judgingSchedule ? schedule.judgingSchedule.length
+                  : 0 %>
+                </p>
+              </div>
+              <div class="bg-white p-3 rounded shadow-sm">
+                <p class="text-sm text-gray-500">Tables</p>
+                <p class="text-xl font-bold">
+                  <%= schedule.tableRuns ? schedule.tableRuns.length : 0 %>
+                </p>
+              </div>
+              <div class="bg-white p-3 rounded shadow-sm">
+                <p class="text-sm text-gray-500">Total Events</p>
+                <p class="text-xl font-bold">
+                  <% function countEvents(schedule) { let count = 0; if
+                  (schedule.tableRuns) { for (let i = 0; i <
+                  schedule.tableRuns.length; i++) { count +=
+                  schedule.tableRuns[i].length; } } if
+                  (schedule.judgingSchedule) { for (let j = 0; j <
+                  schedule.judgingSchedule.length; j++) { count +=
+                  schedule.judgingSchedule[j].length; } } return count; } %> <%=
+                  countEvents(schedule) %>
+                </p>
+              </div>
+            </div>
+            <% } else { %>
+            <p>
+              No schedule available. Please generate a schedule from the
+              Configuration page.
+            </p>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>

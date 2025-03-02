@@ -12,6 +12,8 @@
 
     <!-- Tables Content -->
     <div class="bg-white rounded-lg shadow p-6">
+      <% if (typeof schedule !== 'undefined' && schedule && schedule.tableRuns)
+      { %>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <% schedule.tableRuns.forEach((table, tableIndex) => { %>
         <div class="bg-gray-50 rounded-lg p-4">
@@ -20,6 +22,14 @@
         </div>
         <% }); %>
       </div>
+      <% } else { %>
+      <div class="p-4 text-center">
+        <p>
+          No table schedule available. Please generate a schedule from the
+          Configuration page.
+        </p>
+      </div>
+      <% } %>
     </div>
   </div>
 </main>

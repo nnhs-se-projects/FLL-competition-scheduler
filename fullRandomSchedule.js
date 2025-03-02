@@ -4,29 +4,126 @@ const { jrGrading } = require("./judgingRooms/JRGrading.js");
 
 const DEBUG = true;
 
-function createFullSchedule() {
+function createFullSchedule(
+  teamNames = [],
+  numTeams = 32,
+  numTables = 4,
+  numJudgingRooms = 8
+) {
+  console.log(
+    `Starting schedule generation with ${numTeams} teams, ${numTables} tables, and ${numJudgingRooms} judging rooms`
+  );
+
+  // Ensure we have enough team names
+  const normalizedTeamNames = [];
+  for (let i = 0; i < numTeams; i++) {
+    normalizedTeamNames[i] = teamNames[i] || `Team ${i + 1}`;
+  }
+
   let schedule;
   let valid = false;
-  while (!valid) {
-    schedule = fullRandom();
-    valid = schedule !== null && scoreSchedule(schedule) > 0.0;
+  let attempts = 0;
+  const MAX_ATTEMPTS = 100; // Prevent infinite loops
+
+  console.log("Attempting to generate an optimal schedule...");
+
+  while (!valid && attempts < MAX_ATTEMPTS) {
+    attempts++;
+    if (attempts % 10 === 0) {
+      console.log(`Attempt ${attempts}/${MAX_ATTEMPTS}...`);
+    }
+
+    try {
+      schedule = fullRandom(
+        normalizedTeamNames,
+        numTeams,
+        numTables,
+        numJudgingRooms
+      );
+
+      if (schedule === null) {
+        console.log(
+          `Attempt ${attempts}: Failed to create schedule (null result)`
+        );
+        continue;
+      }
+
+      const score = scoreSchedule(schedule);
+      console.log(`Attempt ${attempts}: Schedule score = ${score}`);
+      valid = score > 0.0;
+    } catch (error) {
+      console.error(`Error in attempt ${attempts}:`, error.message);
+    }
   }
+
+  // If we couldn't generate a valid schedule, create a simple one
+  if (!valid) {
+    console.warn(
+      "Could not generate optimal schedule after max attempts. Creating basic schedule."
+    );
+    schedule = createBasicSchedule(
+      normalizedTeamNames,
+      numTeams,
+      numTables,
+      numJudgingRooms
+    );
+    console.log("Created basic fallback schedule");
+  } else {
+    console.log(`Successfully generated schedule after ${attempts} attempts`);
+  }
+
   return schedule;
 }
 
-function fullRandom() {
+function fullRandom(
+  teamNames = [],
+  numTeams = 32,
+  numTables = 4,
+  numJudgingRooms = 8
+) {
+  console.log("Starting fullRandom generation...");
+
   // creates valid random judging room
-  let judgingRooms = randomJS();
-  while (jrGrading(judgingRooms) === 0) {
-    judgingRooms = randomJS();
+  console.log("Generating judging rooms...");
+  let judgingRooms;
+  try {
+    judgingRooms = randomJS(teamNames, numTeams, numJudgingRooms);
+    console.log(`Created ${judgingRooms.length} judging rooms`);
+
+    const jrScore = jrGrading(judgingRooms);
+    console.log(`Judging rooms score: ${jrScore}`);
+
+    let jrAttempts = 1;
+    const MAX_JR_ATTEMPTS = 20;
+
+    while (jrGrading(judgingRooms) === 0 && jrAttempts < MAX_JR_ATTEMPTS) {
+      console.log(
+        `Judging room attempt ${jrAttempts}: Invalid configuration, regenerating...`
+      );
+      judgingRooms = randomJS(teamNames, numTeams, numJudgingRooms);
+      jrAttempts++;
+    }
+
+    if (jrAttempts >= MAX_JR_ATTEMPTS) {
+      console.log("Failed to generate valid judging rooms after max attempts");
+      return null;
+    }
+
+    console.log(`Valid judging rooms created after ${jrAttempts} attempts`);
+  } catch (error) {
+    console.error("Error generating judging rooms:", error.message);
+    return null;
   }
-  // creates array of 32 teams each present 3 times
-  let tablePool = [];
+
+  // creates array of teams each present 3 times
+  console.log("Creating table pool...");
+  const tablePool = [];
   for (let i = 0; i < 3; i++) {
-    for (let j = 1; j < 33; j++) {
-      let team = {
+    for (let j = 1; j <= numTeams; j++) {
+      const teamName = teamNames[j - 1] || `team${j}`;
+      const team = {
         id: j,
-        name: "team" + j,
+        name: teamName,
         run: i,
         duration: 10,
         start: 0,
@@ -34,24 +131,37 @@ function fullRandom() {
       tablePool.push(team);
     }
   }
-  // initializes 4 tables, and an array for tested teams.
-  let t1 = [];
-  let t2 = [];
-  let t3 = [];
-  let t4 = [];
-  let tables = [t1, t2, t3, t4];
-  let tested = [];
-  for (let i = 0; i < 4; i++) {
+  console.log(`Created table pool with ${tablePool.length} entries`);
+
+  // initializes tables, and an array for tested teams.
+  const tables = [];
+  for (let i = 0; i < numTables; i++) {
+    tables.push([]);
+  }
+  console.log(`Initialized ${numTables} tables`);
+
+  const tested = [];
+  console.log("Starting table assignment...");
+
+  for (let i = 0; i < numTables; i++) {
+    console.log(`Assigning teams to table ${i + 1}...`);
     let count = 0;
     for (let j = 0; j < 24; j++) {
       // exit conditions
       if (count > 300) {
+        console.log(`Exceeded maximum attempts (${count}) for table ${i + 1}`);
         return null;
       }
       if (tablePool.length === 0) {
+        console.log(`Table pool is empty for table ${i + 1}`);
         return null;
       }
+
       count++;
+      if (count % 50 === 0) {
+        console.log(`Table ${i + 1}, attempt ${count}...`);
+      }
+
       // gets random number
       let randomNum = Math.floor(Math.random() * tablePool.length);
       // establishes start time of the team
@@ -73,25 +183,13 @@ function fullRandom() {
       let tableTimes = [];
       // gets any other times the team is already present at the tables
       // ranges 0-2
-      for (let k = 0; k < t1.length; k++) {
-        if (t1[k].name === tablePool[randomNum].name)
-          tableTimes.push(t1[k].start);
-      }
-      for (let k = 0; k < t2.length; k++) {
-        if (t2[k].name === tablePool[randomNum].name)
-          tableTimes.push(t2[k].start);
-      }
-      for (let k = 0; k < t3.length; k++) {
-        if (t3[k].name === tablePool[randomNum].name)
-          tableTimes.push(t3[k].start);
-      }
-      for (let k = 0; k < t4.length; k++) {
-        if (t4[k].name === tablePool[randomNum].name)
-          tableTimes.push(t4[k].start);
+      for (let k = 0; k < tables[i].length; k++) {
+        if (tables[i][k].name === tablePool[randomNum].name)
+          tableTimes.push(tables[i][k].start);
       }
       // gets the times the team is at the judging rooms
-      for (let k = 0; k < 8; k++) {
-        for (let l = 0; l < 8; l++) {
+      for (let k = 0; k < numJudgingRooms; k++) {
+        for (let l = 0; l < numJudgingRooms; l++) {
           if (judgingRooms[k][l].name === tablePool[randomNum].name) {
             judgingTime.push(judgingRooms[k][l].startT);
           }
@@ -125,7 +223,7 @@ function fullRandom() {
       } else {
         // adds the team to the table if it would not overlap
         if (i === 0) {
-          t1.push(tablePool[randomNum]);
+          tables[i].push(tablePool[randomNum]);
           let length = tested.length;
           for (let x = 0; x < length; x++) {
             // add tested teams back to the table pool
@@ -136,7 +234,7 @@ function fullRandom() {
           // removes the team from the table pool
           tablePool.splice(randomNum, 1);
         } else if (i === 1) {
-          t2.push(tablePool[randomNum]);
+          tables[i].push(tablePool[randomNum]);
           let length = tested.length;
           for (let x = 0; x < length; x++) {
             tablePool.push(tested[x]);
@@ -144,15 +242,7 @@ function fullRandom() {
           tested.splice(0, tested.length);
           tablePool.splice(randomNum, 1);
         } else if (i === 2) {
-          t3.push(tablePool[randomNum]);
-          let length = tested.length;
-          for (let x = 0; x < length; x++) {
-            tablePool.push(tested[x]);
-          }
-          tested.splice(0, tested.length);
-          tablePool.splice(randomNum, 1);
-        } else {
-          t4.push(tablePool[randomNum]);
+          tables[i].push(tablePool[randomNum]);
           let length = tested.length;
           for (let x = 0; x < length; x++) {
             tablePool.push(tested[x]);
@@ -162,7 +252,10 @@ function fullRandom() {
         }
       }
     }
+    console.log(`Completed assignments for table ${i + 1}`);
   }
+
+  console.log("Table assignment complete");
   let fullSchedule = [tables, judgingRooms];
   return fullSchedule;
 }
@@ -375,6 +468,80 @@ function printSchedule(schedule) {
   }
 
   console.log(JSON.stringify(scheduleJSON, null, 2));
+}
+
+// Update the createBasicSchedule function to use configuration parameters
+function createBasicSchedule(
+  teamNames,
+  numTeams = 32,
+  numTables = 4,
+  numJudgingRooms = 8
+) {
+  console.log("Creating basic fallback schedule...");
+
+  const tables = [];
+  const judgingRooms = [];
+
+  // Initialize tables
+  for (let i = 0; i < numTables; i++) {
+    tables.push([]);
+  }
+  console.log(`Initialized ${numTables} tables`);
+
+  // Initialize judging rooms
+  for (let i = 0; i < numJudgingRooms; i++) {
+    judgingRooms.push([]);
+  }
+  console.log(`Initialized ${numJudgingRooms} judging rooms`);
+
+  // Create a simple schedule for each team
+  console.log(`Assigning ${numTeams} teams to schedule...`);
+  for (let i = 0; i < numTeams; i++) {
+    const teamId = i + 1;
+    const teamName = teamNames[i];
+
+    // Add to tables (3 runs per team)
+    for (let run = 0; run < 3; run++) {
+      const tableIndex = run % numTables;
+      const startTime = i * 10 + run * 100; // Simple time spacing
+
+      tables[tableIndex].push({
+        id: teamId,
+        name: teamName,
+        run: run,
+        duration: 10,
+        start: startTime,
+      });
+    }
+
+    // Add to judging rooms (2 sessions per team)
+    const robotRoomCount = Math.floor(numJudgingRooms / 2);
+    const projectRoomCount = numJudgingRooms - robotRoomCount;
+
+    const robotRoom = i % robotRoomCount;
+    const projectRoom = robotRoomCount + (i % projectRoomCount);
+
+    // Robot judging
+    judgingRooms[robotRoom].push({
+      id: teamId,
+      name: teamName,
+      startT: i * 25,
+      duration: 15,
+      type: "robot",
+    });
+
+    // Project judging
+    judgingRooms[projectRoom].push({
+      id: teamId,
+      name: teamName,
+      startT: i * 25 + 100, // Offset from robot judging
+      duration: 15,
+      type: "project",
+    });
+  }
+
+  console.log("Basic schedule creation complete");
+  return [tables, judgingRooms];
 }
 
 module.exports = {

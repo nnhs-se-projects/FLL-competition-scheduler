@@ -6,30 +6,54 @@
 
 // import { replaceDuplicates } from "./JRcrossover";
 
-function randomJS() {
-  //  NOTE: make numTeams a param later then need to change jrGrading method
-  let teamsR = [];
-  let teamsP = [];
-  let judgingSeshs = 2;
-  let numTeams = 32;
-  let offsetT = 5;
-  let lunchBreak = 45;
+function randomJS(teamNames = [], numTeams = 32, numJudgingRooms = 8) {
+  console.log(
+    `randomJS: Creating judging schedule for ${numTeams} teams and ${numJudgingRooms} rooms`
+  );
+
+  const teamsR = [];
+  const teamsP = [];
+  // const judgingSeshs = 2; // Not used
+  const offsetT = 5;
+  // const lunchBreak = 45; // Not used
   const ROOM_TIME_INCREMENT = 25; // 15 minute actual duration + 10 minute break
-  for (let i = 1; i < numTeams + 1; i++) {
-    let str1 = { id: i, name: "team" + i, startT: 0, duration: 15 };
+
+  for (let i = 1; i <= numTeams; i++) {
+    const teamName = teamNames[i - 1] || `team${i}`;
+    const str1 = {
+      id: i,
+      name: teamName,
+      startT: 0,
+      duration: 15,
+      type: "robot",
+    };
     teamsR.push(str1);
-    let str2 = { id: i, name: "team" + i, startT: 0, duration: 15 };
+    const str2 = {
+      id: i,
+      name: teamName,
+      startT: 0,
+      duration: 15,
+      type: "project",
+    };
     teamsP.push(str2);
   }
+  console.log(
+    `Created ${teamsR.length} robot judging entries and ${teamsP.length} project judging entries`
+  );
 
   function getRandomNum() {
-    return Math.floor(Math.random() * teamsR.length); // doesnt matter if its teamsR or teamsP because they are the same length
+    return Math.floor(Math.random() * teamsR.length);
   }
 
-  let judgingRoomsRobot = 4;
-  let judgingRoomsProj = 4;
-  let robotRooms = [];
-  let projectRooms = [];
+  // Split judging rooms between robot and project
+  const judgingRoomsRobot = Math.floor(numJudgingRooms / 2);
+  const judgingRoomsProj = numJudgingRooms - judgingRoomsRobot;
+  console.log(
+    `Split judging rooms: ${judgingRoomsRobot} robot rooms and ${judgingRoomsProj} project rooms`
+  );
+
+  const robotRooms = [];
+  const projectRooms = [];
 
   for (let i = 0; i < judgingRoomsRobot; i++) {
     robotRooms.push([]);
@@ -37,112 +61,87 @@ function randomJS() {
   for (let i = 0; i < judgingRoomsProj; i++) {
     projectRooms.push([]);
   }
+  console.log("Initialized judging room arrays");
 
-  function checkDuplicates(timeSlot) {
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        if (projectRooms[i][timeSlot].name === robotRooms[j][timeSlot].name) {
-          let rand = Math.floor(Math.random() * (timeSlot + 1));
-          const teamSwap = robotRooms[j][timeSlot];
-          //need to check index for conflicts
-          for (let r = 0; r < robotRooms.length; r++) {
-            if (robotRooms[r][rand].name === teamSwap.name) {
-              rand = Math.floor(Math.random() * (timeSlot + 1));
-            }
-          }
-          for (let r = 0; r < projectRooms.length; r++) {
-            if (projectRooms[r][rand].name === teamSwap.name) {
-              rand = Math.floor(Math.random() * (timeSlot + 1));
-            }
-          }
-          robotRooms[j][timeSlot] = robotRooms[0][rand];
-          robotRooms[0][rand] = teamSwap;
-        }
-      }
-    }
-  }
-  function checkIndex(timeSlot) {
-    let pr = -1;
-    for (let i = 0; i < robotRooms.length; i++) {
-      for (let j = 0; j < timeSlot; j++) {
-        //CHECK IF THIS ACTUALLY WORKS
-        for (let room = 0; room < projectRooms.length; room++) {
-          if (
-            projectRooms[room].some((e) => e.name === robotRooms[i][j].name)
-          ) {
-            pr = projectRooms[room].findIndex(
-              (e) => e.name == robotRooms[i][j].name
-            );
-          }
-        }
-        if (pr != -1 && Math.abs(pr - j) === 1) {
-          let rand = Math.floor(Math.random() * (timeSlot + 1));
-          while (Math.abs(rand - j) === 1) {
-            rand = Math.floor(Math.random() * (timeSlot + 1));
-          }
-          let teamSwap = robotRooms[i][j];
-          robotRooms[i][j] = robotRooms[0][rand];
-          robotRooms[0][rand] = teamSwap;
-        }
-      }
-    }
-  }
+  // Assign teams to robot judging rooms
+  console.log("Assigning teams to robot judging rooms...");
+  for (let i = 0; i < judgingRoomsRobot; i++) {
+    console.log(`Assigning teams to robot room ${i + 1}...`);
+    const teamsPerRoom = Math.ceil(numTeams / judgingRoomsRobot);
+    console.log(
+      `Planning to assign up to ${teamsPerRoom} teams per robot room`
+    );
 
-  let timeSlot = 0;
-  let count = 0;
-  while (teamsR.length > 0 || teamsP.length > 0) {
-    for (let i = 0; i < robotRooms.length; i++) {
-      let randomNum = getRandomNum();
-      let team = teamsR[randomNum];
-      team.type = "robot";
-      robotRooms[i].push(team);
+    for (let j = 0; j < teamsPerRoom; j++) {
+      if (teamsR.length === 0) {
+        console.log("No more teams available for robot judging");
+        break;
+      }
+
+      const randomNum = getRandomNum();
+      if (randomNum >= teamsR.length) {
+        console.log(
+          `Warning: Invalid random index ${randomNum} for array of length ${teamsR.length}`
+        );
+        continue;
+      }
+
+      teamsR[randomNum].startT = j * ROOM_TIME_INCREMENT + offsetT;
+      teamsR[randomNum].type = "robot";
+
+      robotRooms[i].push(teamsR[randomNum]);
       teamsR.splice(randomNum, 1);
     }
-    for (let i = 0; i < projectRooms.length; i++) {
-      let randomNum = getRandomNum();
-      let team = teamsP[randomNum];
-      team.type = "project";
-      projectRooms[i].push(team);
-      count++;
+    console.log(
+      `Assigned ${robotRooms[i].length} teams to robot room ${i + 1}`
+    );
+  }
+
+  // Assign teams to project judging rooms
+  console.log("Assigning teams to project judging rooms...");
+  for (let i = 0; i < judgingRoomsProj; i++) {
+    console.log(`Assigning teams to project room ${i + 1}...`);
+    const teamsPerRoom = Math.ceil(numTeams / judgingRoomsProj);
+    console.log(
+      `Planning to assign up to ${teamsPerRoom} teams per project room`
+    );
+
+    for (let j = 0; j < teamsPerRoom; j++) {
+      if (teamsP.length === 0) {
+        console.log("No more teams available for project judging");
+        break;
+      }
+
+      const randomNum = getRandomNum();
+      if (randomNum >= teamsP.length) {
+        console.log(
+          `Warning: Invalid random index ${randomNum} for array of length ${teamsP.length}`
+        );
+        continue;
+      }
+
+      teamsP[randomNum].startT = j * ROOM_TIME_INCREMENT + offsetT;
+      teamsP[randomNum].type = "project";
+
+      projectRooms[i].push(teamsP[randomNum]);
       teamsP.splice(randomNum, 1);
     }
-    timeSlot++;
-    checkDuplicates(timeSlot - 1);
-    if (timeSlot > 3) {
-      checkIndex(timeSlot - 1);
-    }
+    console.log(
+      `Assigned ${projectRooms[i].length} teams to project room ${i + 1}`
+    );
   }
 
-  for (let i = 0; i < robotRooms.length; i++) {
-    for (let j = 0; j < robotRooms[i].length; j++) {
-      robotRooms[i][j].startT = offsetT * i + ROOM_TIME_INCREMENT * j;
-      if (robotRooms[i][j].startT > 125) {
-        // lunch start is 150, 135 is 150-15(the duration of the session)
-        let offset = 5;
-        if (i === 0) {
-          offset = 6;
-        }
-        robotRooms[i][j].startT =
-          150 + 45 + offsetT * i + ROOM_TIME_INCREMENT * (j - offset);
-      }
-    }
+  // Combine robot and project rooms
+  const js = [];
+  for (let i = 0; i < judgingRoomsRobot; i++) {
+    js.push(robotRooms[i]);
   }
-  for (let i = 0; i < projectRooms.length; i++) {
-    for (let j = 0; j < projectRooms[i].length; j++) {
-      projectRooms[i][j].startT = offsetT * i + ROOM_TIME_INCREMENT * j;
-      if (projectRooms[i][j].startT > 125) {
-        let offset = 5;
-        if (i === 0) {
-          offset = 6;
-        }
-        projectRooms[i][j].startT =
-          150 + 45 + offsetT * i + ROOM_TIME_INCREMENT * (j - offset);
-      }
-    }
+  for (let i = 0; i < judgingRoomsProj; i++) {
+    js.push(projectRooms[i]);
   }
 
-  let rooms = robotRooms.concat(projectRooms);
-  return rooms;
+  console.log(`Created combined judging schedule with ${js.length} rooms`);
+  return js;
 }
 
 // console.log(randomJS());

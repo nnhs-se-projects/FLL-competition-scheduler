@@ -1,96 +1,100 @@
 <script>
-  // Function to format time
-  function formatTime(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-  }
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if schedule exists before initializing
+    <% if (typeof schedule !== 'undefined' && schedule && schedule.teamsSchedule) { %>
+      // Initialize schedule data from server
+      const scheduleData = {
+        events: <%- JSON.stringify(schedule.teamsSchedule.flatMap((team, teamIndex) =>
+          team.map(event => ({
+            teamId: teamIndex,
+            startTime: event.startTime,
+            duration: event.duration,
+            type: event.type,
+            location: event.locationName
+          }))
+        )) %>,
+        startTime: "<%= schedule.startTime || '08:00' %>"
+      };
 
-  // Initialize schedule data from server
-  const scheduleData = {
-    events: <%- JSON.stringify(schedule.teamsSchedule.flatMap((team, teamIndex) =>
-      team.map(event => ({
-        teamId: teamIndex,
-        startTime: event.startTime,
-        type: event.type,
-        location: event.locationName,
-        duration: event.duration
-      }))
-    ).filter(Boolean)) %>
-  };
+      // Pure JavaScript function to format time
+      function formatTimeForDisplay(minutes) {
+        // Parse the start time
+        const startTimeStr = scheduleData.startTime || "08:00";
+        const [startHours, startMinutes] = startTimeStr.split(':').map(Number);
+        const startTotalMinutes = startHours * 60 + startMinutes;
 
-  // Populate upcoming events
-  function updateUpcomingEvents() {
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        // Add the schedule minutes to the start time
+        const totalMinutes = startTotalMinutes + minutes;
 
-    const upcomingEvents = scheduleData.events
-      .filter(event => event.startTime >= currentMinutes)
-      .sort((a, b) => a.startTime - b.startTime)
-      .slice(0, 5);
+        // Convert back to hours and minutes
+        const hours = Math.floor(totalMinutes / 60) % 24;
+        const mins = totalMinutes % 60;
 
-    const upcomingEventsHtml = upcomingEvents.map(event => `
-      <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
-        <div>
-          <p class="font-medium">Team ${event.teamId}</p>
-          <p class="text-sm text-gray-500">${
-            event.type === 'tableRun' ? 'Robot Game' :
-            event.type === 'robotJudging' ? 'Robot Design' : 'Project'
-          } at ${event.location}</p>
-        </div>
-        <div class="text-right">
-          <p class="text-sm font-medium">${formatTime(event.startTime)}</p>
-        </div>
-      </div>
-    `).join('');
+        // Format with leading zeros
+        const formattedHours = hours.toString().padStart(2, '0');
+        const formattedMinutes = mins.toString().padStart(2, '0');
 
-    document.getElementById('upcoming-events').innerHTML = upcomingEventsHtml ||
-      '<p class="text-gray-500 text-center p-3">No upcoming events</p>';
-  }
+        return `${formattedHours}:${formattedMinutes}`;
+      }
 
-  // Update upcoming events every minute
-  updateUpcomingEvents();
-  setInterval(updateUpcomingEvents, 60000);
+      // Function to update the current event highlight
+      function updateCurrentEvent() {
+        // Get current time
+        const now = new Date();
 
-  // Populate schedule statistics
-  function updateScheduleStats() {
-    const stats = scheduleData.events.reduce((acc, event) => ({
-      totalEvents: acc.totalEvents + 1,
-      robotGames: acc.robotGames + (event.type === 'tableRun' ? 1 : 0),
-      judgingSessions: acc.judgingSessions + (event.type !== 'tableRun' ? 1 : 0),
-      averageEventDuration: acc.averageEventDuration + event.duration
-    }), {
-      totalEvents: 0,
-      robotGames: 0,
-      judgingSessions: 0,
-      averageEventDuration: 0
-    });
+        // Calculate minutes since start time
+        const [startHours, startMinutes] = scheduleData.startTime.split(':').map(Number);
+        const startTotalMinutes = startHours * 60 + startMinutes;
+        const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+        const minutesSinceStart = currentTotalMinutes - startTotalMinutes;
 
-    stats.averageEventDuration = Math.round(stats.averageEventDuration / stats.totalEvents);
+        // Find events happening now
+        const currentEvents = scheduleData.events.filter(event => {
+          const eventStart = event.startTime;
+          const eventEnd = eventStart + event.duration;
+          return minutesSinceStart >= eventStart && minutesSinceStart < eventEnd;
+        });
 
-    document.getElementById('schedule-stats').innerHTML = `
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <p class="text-sm text-gray-500">Total Events</p>
-          <p class="text-2xl font-bold">${stats.totalEvents}</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <p class="text-sm text-gray-500">Robot Games</p>
-          <p class="text-2xl font-bold">${stats.robotGames}</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <p class="text-sm text-gray-500">Judging Sessions</p>
-          <p class="text-2xl font-bold">${stats.judgingSessions}</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <p class="text-sm text-gray-500">Avg Duration</p>
-          <p class="text-2xl font-bold">${stats.averageEventDuration} min</p>
-        </div>
-      </div>
-    `;
-  }
+        // Update UI to highlight current events
+        document.querySelectorAll('.current-event').forEach(el => el.classList.remove('current-event'));
 
-  updateScheduleStats();
+        currentEvents.forEach(event => {
+          const eventElements = document.querySelectorAll(`[data-team-id="${event.teamId}"][data-start-time="${event.startTime}"]`);
+          eventElements.forEach(el => el.classList.add('current-event'));
+        });
+      }
+
+      // Update schedule stats
+      function updateScheduleStats() {
+        const totalTeams = scheduleData.events.reduce((acc, event) => {
+          if (!acc.includes(event.teamId)) {
+            acc.push(event.teamId);
+          }
+          return acc;
+        }, []).length;
+
+        const totalEvents = scheduleData.events.length;
+        const eventTypes = scheduleData.events.reduce((acc, event) => {
+          if (!acc[event.type]) {
+            acc[event.type] = 0;
+          }
+          acc[event.type]++;
+          return acc;
+        }, {});
+
+        console.log(`Schedule Stats: ${totalTeams} teams, ${totalEvents} total events`);
+        console.log('Event Types:', eventTypes);
+      }
+
+      // Initialize
+      updateCurrentEvent();
+      setInterval(updateCurrentEvent, 60000); // Update every minute
+
+      updateScheduleStats();
+    <% } else { %>
+      console.log('No schedule data available');
+    <% } %>
+  });
 </script>
 
 <style>
@@ -99,5 +103,9 @@
   }
   .nav-link.active {
     @apply text-blue-600 bg-blue-50;
+  }
+  .current-event {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid #3b82f6;
   }
 </style>
