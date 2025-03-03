@@ -1,22 +1,32 @@
 /**
- * Sends the credentials from the Google Sign-In popup to the server for authentication
- *
- * @param {Object} res - the response object from the Google Sign-In popup
+ * Client-side JavaScript for authentication
  */
 
-// eslint-disable-next-line no-unused-vars
-async function handleCredentialResponse(res) {
-  await fetch("/auth", {
-    // send the googleUser's id_token which has all the data we want to the server with a POST request
+// This function is called when the Google Sign-In button is clicked
+async function handleCredentialResponse(response) {
+  // Send the credential to the server
+  const res = await fetch("/auth/", {
     method: "POST",
-    body: JSON.stringify({
-      credential: res.credential,
-    }),
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      credential: response.credential,
+    }),
   });
 
-  // redirect to the index page
-  window.location = "/";
+  // Check if the response contains a redirect URL
+  if (res.ok) {
+    try {
+      const data = await res.json();
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        window.location.href = "/overview";
+      }
+    } catch (e) {
+      // If response is not JSON, just redirect to overview
+      window.location.href = "/overview";
+    }
+  }
 }

@@ -36,8 +36,13 @@ function loadSchedule() {
   return null;
 }
 
-// Overview route
-route.get("/", async (req, res) => {
+// Root route now serves landing page
+route.get("/", (req, res) => {
+  res.render("landing", { path: "/" });
+});
+
+// Overview route changed to /overview
+route.get("/overview", async (req, res) => {
   try {
     // Check if there's a schedule in the session
     let schedule = req.session.schedule;
@@ -51,7 +56,7 @@ route.get("/", async (req, res) => {
       }
     }
 
-    res.render("overview", { path: "/", schedule });
+    res.render("overview", { path: "/overview", schedule });
   } catch (error) {
     console.error("Error rendering overview:", error);
     res.status(500).send("Error rendering overview page");
