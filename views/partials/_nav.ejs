@@ -31,15 +31,14 @@
             class="nav-link <%= path === '/teams' ? 'active' : '' %>"
             >Team Schedules</a
           >
+          <a
+            href="/schedule-config"
+            class="nav-link <%= path === '/schedule-config' ? 'active' : '' %>"
+            >Configuration</a
+          >
         </div>
       </div>
       <div class="flex items-center gap-4">
-        <a
-          href="/regenerate-schedule"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Regenerate Schedule
-        </a>
         <a
           href="/auth/logout"
           onclick="signOut()"

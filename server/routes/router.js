@@ -79,10 +79,22 @@ route.get("/teams", (req, res) => {
   });
 });
 
+// New route for schedule configuration
+route.get("/schedule-config", (req, res) => {
+  // Generate schedule if it doesn't exist in session
+  if (!req.session.schedule) {
+    req.session.schedule = generateNewSchedule();
+  }
+  res.render("schedule-config", {
+    schedule: req.session.schedule,
+    path: "/schedule-config",
+  });
+});
+
 // Route to regenerate the schedule
 route.get("/regenerate-schedule", (req, res) => {
   req.session.schedule = generateNewSchedule();
-  res.redirect(req.headers.referer || "/");
+  res.redirect(req.headers.referer || "/schedule-config");
 });
 
 route.get("/createEntry", (req, res) => {
