@@ -29,7 +29,7 @@ route.get("/", (req, res) => {
 
 route.post("/", async (req, res) => {
   req.session.email = await verify(req.body.credential);
-  res.status(201).end();
+  res.status(201).json({ redirectUrl: "/overview" });
 });
 
 route.get("/logout", (req, res) => {
