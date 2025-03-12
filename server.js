@@ -4,10 +4,10 @@
  */
 
 // import the http module, which provides an HTTP server
-const http = require("http");
+import http from "http";
 
 // import the express module, which exports the express function
-const express = require("express");
+import express from "express";
 
 // invoke the express function to create an Express application
 const app = express();
@@ -17,15 +17,15 @@ const app = express();
 app.use(express.json());
 
 // load environment variables from the .env file into process.env
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
 
 // connect to the database
-const connectDB = require("./server/database/connection");
+import connectDB from "./server/database/connection.js";
 connectDB();
 
 // import the express-session module, which is used to manage sessions
-const session = require("express-session");
+import session from "express-session";
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -61,14 +61,17 @@ app.use((req, res, next) => {
   next();
 });
 
+// load routers
+import router from "./server/routes/router.js";
+
 // create the HTTP server
 const server = http.createServer(app);
 
-// to keep this file manageable, we will move the routes to a separate file
-//  the exported router object is an example of middleware
-app.use("/", require("./server/routes/router"));
+// load router
+app.use("/", router);
 
 // start the server on port 8080
-server.listen(8080, () => {
-  console.log("Server started on http://localhost:8080");
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

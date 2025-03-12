@@ -1,5 +1,7 @@
 /**
- * Routes for authentication using the Google Sign-In API
+ * FLL Competition Scheduler - Authentication Routes
+ *
+ * This file handles authentication using Google Sign-In.
  */
 
 // cSpell:ignoreRegExp /[^\s]{40,}/
@@ -7,12 +9,19 @@
 import express from "express";
 const route = express.Router();
 
+// Google OAuth client ID
 const CLIENT_ID =
   "1022838194773-p8g5ac0qr11mfko61qurgnqdb9jitpjf.apps.googleusercontent.com";
 
-// from: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token#node.js
+// Import Google Auth Library
 import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client();
+
+/**
+ * Verify a Google ID token
+ * @param {string} token - The ID token to verify
+ * @returns {Object} The payload from the token
+ */
 async function verify(token) {
   const ticket = await client.verifyIdToken({
     idToken: token,

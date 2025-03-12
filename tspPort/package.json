@@ -1,0 +1,8 @@
+{
+  "name": "tsp-port",
+  "version": "1.0.0",
+  "description": "TSP Port for FLL Competition Scheduler",
+  "main": "main.js",
+  "type": "commonjs",
+  "dependencies": {}
+}

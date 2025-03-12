@@ -1,18 +1,29 @@
+/**
+ * FLL Competition Scheduler - Router
+ *
+ * This file defines all the routes for the web application.
+ */
+
 import express from "express";
 const route = express.Router();
-import Entry from "../model/entry.js";
-// Import the FLLSchedule class from our new CommonJS adapter
+
+// Import models and adapters
+import Entry from "../models/entry.js";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-const { FLLSchedule } = require("../../tspPort/scheduleAdapter.cjs");
+const { FLLSchedule } = require("../scheduleAdapter.cjs");
 
-// easy way to assign static data (e.g., array of strings) to a variable
-const habitsOfMind = require("../model/habitsOfMind.json");
+// Import static data
+const habitsOfMind = require("../models/habitsOfMind.json");
 
 // Import auth router
 import authRouter from "./auth.js";
 
-// Helper function to generate a new schedule
+/**
+ * Helper function to generate a new schedule
+ * @param {Object} options - Configuration options
+ * @returns {Object} The generated schedule
+ */
 function generateNewSchedule(options = {}) {
   const schedule = new FLLSchedule();
 
@@ -37,9 +48,7 @@ function generateNewSchedule(options = {}) {
   };
 }
 
-// pass a path (e.g., "/") and a callback function to the get method
-//  when the client makes an HTTP GET request to the specified path,
-//  the callback function is executed
+// Landing page route
 route.get("/", (req, res) => {
   if (req.session.email) {
     // Generate schedule if it doesn't exist in session
@@ -55,6 +64,7 @@ route.get("/", (req, res) => {
   }
 });
 
+// Overview page route
 route.get("/overview", (req, res) => {
   // Generate schedule if it doesn't exist in session
   if (!req.session.schedule) {
@@ -66,6 +76,7 @@ route.get("/overview", (req, res) => {
   });
 });
 
+// Tables page route
 route.get("/tables", (req, res) => {
   // Generate schedule if it doesn't exist in session
   if (!req.session.schedule) {
@@ -77,6 +88,7 @@ route.get("/tables", (req, res) => {
   });
 });
 
+// Judging page route
 route.get("/judging", (req, res) => {
   // Generate schedule if it doesn't exist in session
   if (!req.session.schedule) {
@@ -88,6 +100,7 @@ route.get("/judging", (req, res) => {
   });
 });
 
+// Teams page route
 route.get("/teams", (req, res) => {
   // Generate schedule if it doesn't exist in session
   if (!req.session.schedule) {
@@ -99,7 +112,7 @@ route.get("/teams", (req, res) => {
   });
 });
 
-// New route for schedule configuration
+// Schedule configuration page route
 route.get("/schedule-config", (req, res) => {
   // Generate schedule if it doesn't exist in session
   if (!req.session.schedule) {
@@ -123,10 +136,7 @@ route.get("/regenerate-schedule", (req, res) => {
   res.redirect(req.headers.referer || "/schedule-config");
 });
 
-route.get("/createEntry", (req, res) => {
-  res.render("createEntry", { habits: habitsOfMind });
-});
-
+// Example route for API access
 route.get("/example", (req, res) => {
   const schedule = new FLLSchedule();
   schedule.populateWithRandomGenes();
@@ -134,29 +144,7 @@ route.get("/example", (req, res) => {
   res.send(JSON.stringify(schedule));
 });
 
-route.post("/createEntry", async (req, res) => {
-  const entry = new Entry({
-    // When the time zone offset is absent, date-only forms are interpreted as
-    //  a UTC time and date-time forms are interpreted as a local time. We want
-    //  the date object to reflect local time; so add a time of midnight.
-    date: new Date(req.body.date + "T00:00:00"),
-    email: req.session.email,
-    habit: req.body.habit,
-    content: req.body.content,
-  });
-  await entry.save();
-
-  res.status(201).end();
-});
-
-route.get("/editEntry/:id", async (req, res) => {
-  const entry = await Entry.findById(req.params.id);
-  console.log(entry);
-  res.send(entry);
-});
-
-// use the auth router for /auth routes
+// Use the auth router for /auth routes
 route.use("/auth", authRouter);
 
-// export the router
 export default route;

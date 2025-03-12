@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLL Competition Scheduler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/print.css" media="print">
+    <script>
+      // Print-specific script
+      function beforePrint() {
+        // Force all content to be visible for printing
+        document.querySelectorAll('.bg-gray-50, .bg-white').forEach(el => {
+          el.style.display = 'block';
+          el.style.backgroundColor = 'white';
+        });
+        
+        // Ensure tables are visible
+        document.querySelectorAll('table').forEach(el => {
+          el.style.display = 'table';
+        });
+        
+        // Fix flex containers
+        document.querySelectorAll('.flex').forEach(el => {
+          el.style.display = 'flex';
+        });
+      }
+      
+      // Add event listeners for printing
+      if (window.matchMedia) {
+        const mediaQueryList = window.matchMedia('print');
+        mediaQueryList.addEventListener('change', event => {
+          if (event.matches) {
+            beforePrint();
+          }
+        });
+      }
+      
+      window.onbeforeprint = beforePrint;
+    </script>
+  </head>
+  <body>

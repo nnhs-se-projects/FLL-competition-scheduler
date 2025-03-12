@@ -1,0 +1,52 @@
+<nav class="bg-white shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-4">
+          <img
+            src="/img/SE-GitHub-image.png"
+            alt="Huskie Code Logo"
+            class="w-10 h-10"
+          />
+          <h1 class="text-xl font-bold text-gray-900">
+            FLL Competition Scheduler
+          </h1>
+        </div>
+        <div class="hidden md:flex space-x-4">
+          <a href="/" class="nav-link <%= path === '/' ? 'active' : '' %>"
+            >Schedule Overview</a
+          >
+          <a
+            href="/tables"
+            class="nav-link <%= path === '/tables' ? 'active' : '' %>"
+            >Robot Game Tables</a
+          >
+          <a
+            href="/judging"
+            class="nav-link <%= path === '/judging' ? 'active' : '' %>"
+            >Judging Rooms</a
+          >
+          <a
+            href="/teams"
+            class="nav-link <%= path === '/teams' ? 'active' : '' %>"
+            >Team Schedules</a
+          >
+          <a
+            href="/schedule-config"
+            class="nav-link <%= path === '/schedule-config' ? 'active' : '' %>"
+            >Configuration</a
+          >
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <a
+          href="/auth/logout"
+          onclick="signOut()"
+          class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>

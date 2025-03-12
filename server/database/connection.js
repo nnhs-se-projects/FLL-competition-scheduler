@@ -2,7 +2,7 @@
  * The exported function establishes a connection to the specified MongoDB database via the Mongoose module.
  */
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
@@ -15,4 +15,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;

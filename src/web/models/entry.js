@@ -1,5 +1,7 @@
 /**
- * schema for a journal entry
+ * FLL Competition Scheduler - Entry Model
+ *
+ * This file defines the schema for journal entries.
  */
 
 import mongoose from "mongoose";
