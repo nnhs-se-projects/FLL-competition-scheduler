@@ -1,52 +1,64 @@
 /**
  * FLL Competition Scheduler - Web Server
  *
- * This is the main entry point for the web application.
+ * This file contains the Express server configuration for the FLL Competition Scheduler.
  */
 
 // Import required modules
-import http from "http";
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import session from "express-session";
+
+// Import database connection
+import connectDB from "./connection.js";
+
+// Import routes
+import router from "./routes/router.js";
+import authRoutes from "./routes/auth.js";
 
 // Load environment variables
 dotenv.config();
 
+// Connect to the database
+connectDB();
+
 // Create Express application
 const app = express();
 
-// Configure middleware
+// Set up middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Set up session
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "fll-competition-scheduler-secret",
+    secret: process.env.SESSION_SECRET || "default_secret",
     resave: false,
     saveUninitialized: false,
   })
 );
 
-// Set view engine
+// Set up view engine
 app.set("view engine", "ejs");
-app.set("views", "./src/web/views");
+
+// Get the directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Set views directory
+app.set("views", path.join(__dirname, "views"));
 
 // Serve static files
-app.use("/css", express.static("./src/web/public/css"));
-app.use("/js", express.static("./src/web/public/js"));
-app.use("/img", express.static("./src/web/public/img"));
-
-// Connect to database
-import connectDB from "./connection.js";
-connectDB();
+app.use("/css", express.static(path.join(__dirname, "public/css")));
+app.use("/js", express.static(path.join(__dirname, "public/js")));
+app.use("/img", express.static(path.join(__dirname, "public/img")));
 
 // Authentication middleware
 app.use((req, res, next) => {
-  // Allow access to landing page, auth routes, and example endpoint without login
-  if (
-    req.path === "/" ||
-    req.path.startsWith("/auth") ||
-    req.path === "/example"
-  ) {
+  // Allow access to landing page and auth routes without login
+  if (req.path === "/" || req.path.startsWith("/auth")) {
     next();
     return;
   }
@@ -60,15 +72,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Import and use routes
-import router from "./routes/router.js";
+// Set up routes
+app.use("/auth", authRoutes);
 app.use("/", router);
 
-// Start server
+// Start the server
 const PORT = process.env.PORT || 8080;
-const server = http.createServer(app);
-
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 

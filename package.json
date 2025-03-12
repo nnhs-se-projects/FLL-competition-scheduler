@@ -8,7 +8,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "jest",
-    "test:integration": "node src/test.js"
+    "test:integration": "node src/tests/integration.test.js"
   },
   "keywords": [
     "FLL",

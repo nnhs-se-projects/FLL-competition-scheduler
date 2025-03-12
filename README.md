@@ -21,7 +21,13 @@ fll-competition-scheduler/
 ├── index.js                 # Main entry point
 ├── package.json             # Project metadata and dependencies
 ├── .env                     # Environment variables (not in git)
+├── .env.example             # Example environment variables
 ├── src/                     # Source code
+│   ├── index.js             # Source entry point
+│   ├── tests/               # Test files
+│   │   ├── integration.test.js  # Integration tests
+│   │   ├── geneticAlgorithm.test.js # Unit tests for genetic algorithm
+│   │   └── scheduler.test.js   # Unit tests for scheduler
 │   ├── scheduler/           # Scheduling algorithm
 │   │   ├── config.js        # Configuration settings
 │   │   ├── models.js        # Data models
@@ -68,7 +74,7 @@ fll-competition-scheduler/
    npm install
    ```
 
-3. Create a `.env` file with the following variables:
+3. Create a `.env` file with the following variables (see `.env.example`):
 
    ```
    MONGO_URI=your_mongodb_connection_string
@@ -97,6 +103,12 @@ To run tests:
 
 ```
 npm test
+```
+
+To run integration tests:
+
+```
+npm run test:integration
 ```
 
 ## License
