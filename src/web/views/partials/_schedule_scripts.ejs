@@ -3,20 +3,16 @@
   function formatTime(minutes) {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}`;
   }
 
   // Initialize schedule data from server
   const scheduleData = {
-    events: <%- JSON.stringify(schedule.teamsSchedule.flatMap((team, teamIndex) =>
-      team.map(event => ({
-        teamId: teamIndex,
-        startTime: event.startTime,
-        type: event.type,
-        location: event.locationName,
-        duration: event.duration
-      }))
-    ).filter(Boolean)) %>
+    events: JSON.parse(
+      "<%- JSON.stringify(schedule.teamsSchedule.flatMap(function(team, teamIndex) { return team.map(function(event) { return { teamId: teamIndex, teamName: event.teamName, startTime: event.startTime, type: event.type, location: event.locationName, duration: event.duration }; }); }).filter(Boolean)) %>"
+    ),
   };
 
   // Populate upcoming events
@@ -25,26 +21,42 @@
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
     const upcomingEvents = scheduleData.events
-      .filter(event => event.startTime >= currentMinutes)
+      .filter((event) => event.startTime >= currentMinutes)
       .sort((a, b) => a.startTime - b.startTime)
       .slice(0, 5);
 
-    const upcomingEventsHtml = upcomingEvents.map(event => `
-      <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
-        <div>
-          <p class="font-medium">Team ${event.teamId}</p>
-          <p class="text-sm text-gray-500">${
-            event.type === 'tableRun' ? 'Robot Game' :
-            event.type === 'robotJudging' ? 'Robot Design' : 'Project'
-          } at ${event.location}</p>
-        </div>
-        <div class="text-right">
-          <p class="text-sm font-medium">${formatTime(event.startTime)}</p>
-        </div>
-      </div>
-    `).join('');
+    const upcomingEventsHtml = upcomingEvents
+      .map(
+        (event) =>
+          '<div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">' +
+          "<div>" +
+          '<p class="font-medium">' +
+          '<span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded mr-1 text-xs">#' +
+          event.teamId +
+          "</span>" +
+          event.teamName +
+          "</p>" +
+          '<p class="text-sm text-gray-500">' +
+          (event.type === "tableRun"
+            ? "Robot Game"
+            : event.type === "robotJudging"
+            ? "Robot Design"
+            : "Project") +
+          " at " +
+          event.location +
+          "</p>" +
+          "</div>" +
+          '<div class="text-right">' +
+          '<p class="text-sm font-medium">' +
+          formatTime(event.startTime) +
+          "</p>" +
+          "</div>" +
+          "</div>"
+      )
+      .join("");
 
-    document.getElementById('upcoming-events').innerHTML = upcomingEventsHtml ||
+    document.getElementById("upcoming-events").innerHTML =
+      upcomingEventsHtml ||
       '<p class="text-gray-500 text-center p-3">No upcoming events</p>';
   }
 
@@ -54,40 +66,53 @@
 
   // Populate schedule statistics
   function updateScheduleStats() {
-    const stats = scheduleData.events.reduce((acc, event) => ({
-      totalEvents: acc.totalEvents + 1,
-      robotGames: acc.robotGames + (event.type === 'tableRun' ? 1 : 0),
-      judgingSessions: acc.judgingSessions + (event.type !== 'tableRun' ? 1 : 0),
-      averageEventDuration: acc.averageEventDuration + event.duration
-    }), {
-      totalEvents: 0,
-      robotGames: 0,
-      judgingSessions: 0,
-      averageEventDuration: 0
-    });
+    const stats = scheduleData.events.reduce(
+      (acc, event) => ({
+        totalEvents: acc.totalEvents + 1,
+        robotGames: acc.robotGames + (event.type === "tableRun" ? 1 : 0),
+        judgingSessions:
+          acc.judgingSessions + (event.type !== "tableRun" ? 1 : 0),
+        averageEventDuration: acc.averageEventDuration + event.duration,
+      }),
+      {
+        totalEvents: 0,
+        robotGames: 0,
+        judgingSessions: 0,
+        averageEventDuration: 0,
+      }
+    );
 
-    stats.averageEventDuration = Math.round(stats.averageEventDuration / stats.totalEvents);
+    stats.averageEventDuration = Math.round(
+      stats.averageEventDuration / stats.totalEvents
+    );
 
-    document.getElementById('schedule-stats').innerHTML = `
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <p class="text-sm text-gray-500">Total Events</p>
-          <p class="text-2xl font-bold">${stats.totalEvents}</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <p class="text-sm text-gray-500">Robot Games</p>
-          <p class="text-2xl font-bold">${stats.robotGames}</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <p class="text-sm text-gray-500">Judging Sessions</p>
-          <p class="text-2xl font-bold">${stats.judgingSessions}</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <p class="text-sm text-gray-500">Avg Duration</p>
-          <p class="text-2xl font-bold">${stats.averageEventDuration} min</p>
-        </div>
-      </div>
-    `;
+    document.getElementById("schedule-stats").innerHTML =
+      '<div class="grid grid-cols-2 gap-4">' +
+      '<div class="bg-white p-4 rounded-lg shadow-sm">' +
+      '<p class="text-sm text-gray-500">Total Events</p>' +
+      '<p class="text-2xl font-bold">' +
+      stats.totalEvents +
+      "</p>" +
+      "</div>" +
+      '<div class="bg-white p-4 rounded-lg shadow-sm">' +
+      '<p class="text-sm text-gray-500">Robot Games</p>' +
+      '<p class="text-2xl font-bold">' +
+      stats.robotGames +
+      "</p>" +
+      "</div>" +
+      '<div class="bg-white p-4 rounded-lg shadow-sm">' +
+      '<p class="text-sm text-gray-500">Judging Sessions</p>' +
+      '<p class="text-2xl font-bold">' +
+      stats.judgingSessions +
+      "</p>" +
+      "</div>" +
+      '<div class="bg-white p-4 rounded-lg shadow-sm">' +
+      '<p class="text-sm text-gray-500">Avg Duration</p>' +
+      '<p class="text-2xl font-bold">' +
+      stats.averageEventDuration +
+      " min</p>" +
+      "</div>" +
+      "</div>";
   }
 
   updateScheduleStats();
