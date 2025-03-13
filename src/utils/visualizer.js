@@ -5,7 +5,7 @@
  */
 
 import CONFIG from "./config.js";
-import { formatTime } from "./utils.js";
+import { formatTime, formatTimeAMPM } from "./utils.js";
 
 /**
  * Generate a text representation of a schedule
@@ -111,22 +111,30 @@ function visualizeJudgingSchedules(schedule) {
   let output = "JUDGING ROOM SCHEDULES\n";
   output += "=====================\n\n";
 
+  // Calculate the number of rooms for each type of judging
+  const numProjectRooms = Math.ceil(CONFIG.NUM_JUDGING_ROOMS / 2);
+  const numRobotRooms = Math.floor(CONFIG.NUM_JUDGING_ROOMS / 2);
+
   for (let i = 0; i < CONFIG.NUM_JUDGING_ROOMS; i++) {
     const roomEvents = judgingSchedule[i] || [];
     roomEvents.sort((a, b) => a.startTime - b.startTime);
 
     let roomType = "";
-    if (i < CONFIG.NUM_JUDGING_ROOMS / 2) {
+    if (i < numProjectRooms) {
       roomType = "Project Judging";
+      output += `${roomType} Room ${i + 1}:\n`;
     } else {
       roomType = "Robot Design Judging";
+      output += `${roomType} Room ${i - numProjectRooms + 1}:\n`;
     }
 
-    output += `${roomType} Room ${(i % (CONFIG.NUM_JUDGING_ROOMS / 2)) + 1}:\n`;
-
     for (const event of roomEvents) {
-      const startTimeStr = formatTime(event.startTime);
-      const endTimeStr = formatTime(event.startTime + event.duration);
+      const startTimeStr = formatTimeAMPM(
+        event.startTime + CONFIG.TIMING.START_TIME
+      );
+      const endTimeStr = formatTimeAMPM(
+        event.startTime + event.duration + CONFIG.TIMING.START_TIME
+      );
 
       output += `  ${startTimeStr} - ${endTimeStr}: Team ${event.teamId}\n`;
     }

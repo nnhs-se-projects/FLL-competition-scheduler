@@ -51,11 +51,7 @@ class FLLSchedule {
    * @param {number} numJudgingRooms - Number of judging rooms
    */
   setNumJudgingRooms(numJudgingRooms) {
-    if (
-      numJudgingRooms >= 4 &&
-      numJudgingRooms <= 16 &&
-      numJudgingRooms % 2 === 0
-    ) {
+    if (numJudgingRooms >= 2 && numJudgingRooms <= 16) {
       this.numJudgingRooms = numJudgingRooms;
     }
   }
@@ -96,11 +92,16 @@ class FLLSchedule {
    * Schedule judging sessions for all teams
    */
   scheduleJudgingSessions() {
+    // Calculate the number of rooms for each type of judging
+    // For odd numbers, allocate one more room to project judging
+    const numProjectRooms = Math.ceil(this.numJudgingRooms / 2);
+    const numRobotRooms = Math.floor(this.numJudgingRooms / 2);
+
     // Schedule project judging sessions
     for (let i = 0; i < this.numTeams; i++) {
       const teamId = i + 1;
-      const roomId = i % (this.numJudgingRooms / 2);
-      const startTime = Math.floor(i / (this.numJudgingRooms / 2)) * (25 + 10); // 25 min session + 10 min break
+      const roomId = i % numProjectRooms;
+      const startTime = Math.floor(i / numProjectRooms) * (25 + 10); // 25 min session + 10 min break
 
       // Create project judging event
       this.genes.push(
@@ -119,10 +120,8 @@ class FLLSchedule {
     // Schedule robot judging sessions
     for (let i = 0; i < this.numTeams; i++) {
       const teamId = i + 1;
-      const roomId =
-        (i % (this.numJudgingRooms / 2)) + this.numJudgingRooms / 2;
-      const startTime =
-        Math.floor(i / (this.numJudgingRooms / 2)) * (25 + 10) + 25 + 30; // 25 min session + 10 min break + 25 min buffer + 30 min between sessions
+      const roomId = (i % numRobotRooms) + numProjectRooms;
+      const startTime = Math.floor(i / numRobotRooms) * (25 + 10) + 25 + 30; // 25 min session + 10 min break + 25 min buffer + 30 min between sessions
 
       // Create robot judging event
       this.genes.push(
@@ -132,7 +131,7 @@ class FLLSchedule {
           startTime,
           25, // 25 min session
           roomId,
-          `Robot Design Room ${(roomId % (this.numJudgingRooms / 2)) + 1}`,
+          `Robot Design Room ${roomId - numProjectRooms + 1}`,
           ROBOT_JUDGING_TYPE
         )
       );

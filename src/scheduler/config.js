@@ -14,7 +14,7 @@ const CONFIG = {
   NUM_ROBOT_TABLES: 4,
 
   // Number of judging rooms (typically 2 types: project and robot design)
-  NUM_JUDGING_ROOMS: 8,
+  NUM_JUDGING_ROOMS: 7,
 
   // Number of rounds each team should play at the robot game tables
   ROUNDS_PER_TEAM: 3,

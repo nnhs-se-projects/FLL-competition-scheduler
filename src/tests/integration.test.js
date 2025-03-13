@@ -45,10 +45,12 @@ for (let teamId = 1; teamId <= CONFIG.NUM_TEAMS; teamId++) {
   }
 
   // Add judging events
-  const projectRoomId = teamId % (CONFIG.NUM_JUDGING_ROOMS / 2);
-  const robotRoomId =
-    ((teamId + 2) % (CONFIG.NUM_JUDGING_ROOMS / 2)) +
-    CONFIG.NUM_JUDGING_ROOMS / 2;
+  // Calculate the number of rooms for each type of judging
+  const numProjectRooms = Math.ceil(CONFIG.NUM_JUDGING_ROOMS / 2);
+  const numRobotRooms = Math.floor(CONFIG.NUM_JUDGING_ROOMS / 2);
+
+  const projectRoomId = teamId % numProjectRooms;
+  const robotRoomId = ((teamId + 2) % numRobotRooms) + numProjectRooms;
 
   schedule.addEvent(
     new Event(
@@ -69,7 +71,7 @@ for (let teamId = 1; teamId <= CONFIG.NUM_TEAMS; teamId++) {
       240 + (teamId % 8) * 30,
       CONFIG.DURATIONS.JUDGING_SESSION,
       robotRoomId,
-      `Robot Design Room ${robotRoomId - CONFIG.NUM_JUDGING_ROOMS / 2 + 1}`,
+      `Robot Design Room ${robotRoomId - numProjectRooms + 1}`,
       CONFIG.EVENT_TYPES.ROBOT_JUDGING
     )
   );
@@ -78,7 +80,7 @@ for (let teamId = 1; teamId <= CONFIG.NUM_TEAMS; teamId++) {
 // Build the different views of the schedule
 console.log("Building the different views of the schedule...");
 const tableSchedule = [];
-const judgingSchedule = [];
+const judgingSchedule = {};
 const teamsSchedule = [];
 
 // Group events by table
@@ -89,18 +91,17 @@ for (let tableId = 0; tableId < CONFIG.NUM_ROBOT_TABLES; tableId++) {
   );
 }
 
-// Group events by judging room
-for (let roomId = 0; roomId < CONFIG.NUM_JUDGING_ROOMS; roomId++) {
-  if (roomId < CONFIG.NUM_JUDGING_ROOMS / 2) {
-    judgingSchedule[roomId] = schedule.getLocationEvents(
-      roomId,
-      CONFIG.EVENT_TYPES.PROJECT_JUDGING
-    );
-  } else {
-    judgingSchedule[roomId] = schedule.getLocationEvents(
-      roomId - CONFIG.NUM_JUDGING_ROOMS / 2 + CONFIG.NUM_JUDGING_ROOMS / 2,
-      CONFIG.EVENT_TYPES.ROBOT_JUDGING
-    );
+// Build the judging schedule
+for (let i = 0; i < CONFIG.NUM_JUDGING_ROOMS; i++) {
+  judgingSchedule[i] = [];
+}
+
+for (const event of schedule.events) {
+  if (
+    event.type === CONFIG.EVENT_TYPES.PROJECT_JUDGING ||
+    event.type === CONFIG.EVENT_TYPES.ROBOT_JUDGING
+  ) {
+    judgingSchedule[event.locationId].push(event);
   }
 }
 
@@ -139,6 +140,29 @@ if (teamsSchedule[1] && teamsSchedule[1].length > 0) {
   }
 } else {
   console.log("  No events found for Team 1");
+}
+
+// Print the judging schedule
+console.log("\nJudging Schedule:");
+for (let roomId = 0; roomId < CONFIG.NUM_JUDGING_ROOMS; roomId++) {
+  const numProjectRooms = Math.ceil(CONFIG.NUM_JUDGING_ROOMS / 2);
+
+  if (roomId < numProjectRooms) {
+    console.log(`Project Room ${roomId + 1}:`);
+  } else {
+    console.log(`Robot Design Room ${roomId - numProjectRooms + 1}:`);
+  }
+
+  const roomEvents = judgingSchedule[roomId] || [];
+  roomEvents.sort((a, b) => a.startTime - b.startTime);
+
+  for (const event of roomEvents) {
+    console.log(
+      `  ${formatTime(event.startTime)} - ${formatTime(
+        event.getEndTime()
+      )}: Team ${event.teamId}`
+    );
+  }
 }
 
 console.log("\nIntegration test completed successfully!");

@@ -40,12 +40,17 @@ function generateSimpleSchedule() {
  * @param {Schedule} schedule - The schedule to add judging sessions to
  */
 function scheduleJudgingSessions(schedule) {
+  // Calculate the number of rooms for each type of judging
+  // For odd numbers, allocate one more room to project judging
+  const numProjectRooms = Math.ceil(CONFIG.NUM_JUDGING_ROOMS / 2);
+  const numRobotRooms = Math.floor(CONFIG.NUM_JUDGING_ROOMS / 2);
+
   // Schedule project judging sessions
   for (let i = 0; i < CONFIG.NUM_TEAMS; i++) {
     const teamId = i + 1;
-    const roomId = i % (CONFIG.NUM_JUDGING_ROOMS / 2);
+    const roomId = i % numProjectRooms;
     const startTime =
-      Math.floor(i / (CONFIG.NUM_JUDGING_ROOMS / 2)) *
+      Math.floor(i / numProjectRooms) *
       (CONFIG.DURATIONS.JUDGING_SESSION + CONFIG.DURATIONS.JUDGING_BREAK);
 
     // Adjust for lunch break
@@ -71,10 +76,9 @@ function scheduleJudgingSessions(schedule) {
   // Schedule robot judging sessions
   for (let i = 0; i < CONFIG.NUM_TEAMS; i++) {
     const teamId = i + 1;
-    const roomId =
-      (i % (CONFIG.NUM_JUDGING_ROOMS / 2)) + CONFIG.NUM_JUDGING_ROOMS / 2;
+    const roomId = (i % numRobotRooms) + numProjectRooms;
     const startTime =
-      Math.floor(i / (CONFIG.NUM_JUDGING_ROOMS / 2)) *
+      Math.floor(i / numRobotRooms) *
         (CONFIG.DURATIONS.JUDGING_SESSION + CONFIG.DURATIONS.JUDGING_BREAK) +
       CONFIG.DURATIONS.JUDGING_SESSION +
       30; // Add 30 minutes buffer
