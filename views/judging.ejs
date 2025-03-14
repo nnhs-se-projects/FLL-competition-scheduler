@@ -11,7 +11,7 @@
     <div class="no-print">
       <%- include('partials/_summary_cards') %>
 
-      <!-- Print Button -->
+      <!-- Print and Export Buttons -->
       <div class="flex justify-end mb-4">
         <button
           onclick="printSchedule()"
@@ -33,6 +33,7 @@
           </svg>
           Print Schedule
         </button>
+        <!-- Export PDF button will be added here by JavaScript -->
       </div>
     </div>
 
@@ -45,15 +46,32 @@
       </p>
     </div>
 
-    <!-- Judging Content -->
+    <!-- Judging Rooms Content -->
     <div class="bg-white rounded-lg shadow p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <% schedule.judgingSchedule.forEach((room, roomIndex) => { %>
-        <div class="bg-gray-50 rounded-lg p-4 judging-room">
-          <h3 class="text-lg font-medium mb-4">Room <%= roomIndex + 1 %></h3>
+        <% if (schedule && schedule.judgingSchedule &&
+        schedule.judgingSchedule.length > 0) { %> <%
+        schedule.judgingSchedule.forEach((room, roomIndex) => { %>
+        <div class="bg-gray-50 rounded-lg p-4 judging-schedule">
+          <h3 class="text-lg font-medium mb-4">
+            Judging Room <%= roomIndex + 1 %>
+          </h3>
           <%- include('partials/_judging_schedule', { room }) %>
         </div>
-        <% }); %>
+        <% }); %> <% } else if (schedule && schedule.judgingRooms &&
+        schedule.judgingRooms.length > 0) { %> <%
+        schedule.judgingRooms.forEach((room, roomIndex) => { %>
+        <div class="bg-gray-50 rounded-lg p-4 judging-schedule">
+          <h3 class="text-lg font-medium mb-4">
+            Judging Room <%= roomIndex + 1 %>
+          </h3>
+          <%- include('partials/_judging_schedule', { room }) %>
+        </div>
+        <% }); %> <% } else { %>
+        <div class="col-span-2 text-center py-8">
+          <p class="text-gray-500">No judging rooms scheduled yet.</p>
+        </div>
+        <% } %>
       </div>
     </div>
   </div>
@@ -64,3 +82,4 @@
 
 <!-- Print Helper Script -->
 <script src="/js/print-helper.js"></script>
+<script src="/js/export-pdf.js"></script>
