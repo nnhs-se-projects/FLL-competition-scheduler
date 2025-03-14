@@ -22,7 +22,16 @@ fll-competition-scheduler/
 ├── package.json             # Project metadata and dependencies
 ├── .env                     # Environment variables (not in git)
 ├── .env.example             # Example environment variables
+├── config/                  # Configuration files
+│   ├── .eslintrc.json       # ESLint configuration
+│   ├── .prettierignore      # Prettier ignore patterns
+│   └── jest.config.js       # Jest configuration
+├── scripts/                 # Utility scripts
+│   ├── setup.js             # Project setup script
+│   └── start.js             # Application start script
 ├── src/                     # Source code
+│   ├── data/                # Data files
+│   │   └── schedule.json    # Generated schedule data
 │   ├── index.js             # Source entry point
 │   ├── tests/               # Test files
 │   │   ├── integration.test.js  # Integration tests
@@ -34,6 +43,7 @@ fll-competition-scheduler/
 │   │   ├── geneticAlgorithm.js # Genetic algorithm implementation
 │   │   └── simpleScheduler.js  # Simple scheduling algorithm
 │   ├── utils/               # Utility functions
+│   │   ├── utils.js         # General utility functions
 │   │   └── visualizer.js    # Schedule visualization
 │   └── web/                 # Web application
 │       ├── server.js        # Express server
@@ -74,20 +84,26 @@ fll-competition-scheduler/
    npm install
    ```
 
-3. Create a `.env` file with the following variables (see `.env.example`):
+3. Run the setup script:
+
+   ```
+   npm run setup
+   ```
+
+4. Create a `.env` file with the following variables (see `.env.example`):
 
    ```
    MONGO_URI=your_mongodb_connection_string
    SESSION_SECRET=your_session_secret
    ```
 
-4. Start the server:
+5. Start the server:
 
    ```
    npm start
    ```
 
-5. Open your browser and navigate to `http://localhost:8080`
+6. Open your browser and navigate to `http://localhost:8080`
 
 ## Development
 
@@ -109,6 +125,14 @@ To run integration tests:
 
 ```
 npm run test:integration
+```
+
+## Linting
+
+To lint the code:
+
+```
+npm run lint
 ```
 
 ## License

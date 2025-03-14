@@ -7,8 +7,11 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest",
-    "test:integration": "node src/tests/integration.test.js"
+    "test": "jest --config config/jest.config.js",
+    "test:integration": "node src/tests/integration.test.js",
+    "lint": "eslint --config config/.eslintrc.json src/",
+    "setup": "node scripts/setup.js",
+    "run": "./scripts/run.sh"
   },
   "keywords": [
     "FLL",
