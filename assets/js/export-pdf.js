@@ -1,30 +1,32 @@
 /**
  * PDF Export functionality for FLL Tournament Management System
- * Uses jsPDF and html2canvas for direct PDF download
  */
 document.addEventListener("DOMContentLoaded", function () {
-  // Load required libraries if not already loaded
-  loadRequiredLibraries();
-
   // Add export PDF buttons to relevant pages
   addExportPdfButtons();
+
+  // Load required libraries
+  loadRequiredLibraries();
 });
 
 function loadRequiredLibraries() {
-  // Check if jsPDF is already loaded
-  if (typeof jspdf === "undefined" && typeof jsPDF === "undefined") {
-    const jsPDFScript = document.createElement("script");
-    jsPDFScript.src =
-      "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
-    document.head.appendChild(jsPDFScript);
-  }
-
-  // Check if html2canvas is already loaded
-  if (typeof html2canvas === "undefined") {
+  // Load html2canvas
+  if (typeof window.html2canvas === "undefined") {
     const html2canvasScript = document.createElement("script");
     html2canvasScript.src =
       "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
     document.head.appendChild(html2canvasScript);
+  }
+
+  // Load jsPDF
+  if (
+    typeof window.jspdf === "undefined" &&
+    typeof window.jsPDF === "undefined"
+  ) {
+    const jsPdfScript = document.createElement("script");
+    jsPdfScript.src =
+      "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    document.head.appendChild(jsPdfScript);
   }
 }
 
@@ -63,7 +65,7 @@ function addExportPdfButtons() {
     }
 
     // Remove any duplicate export buttons that might be in the DOM
-    const exportButtons = document.querySelectorAll('[class*="export-pdf"]');
+    const exportButtons = document.querySelectorAll(".export-pdf-button");
     if (exportButtons.length > 1) {
       for (let i = 1; i < exportButtons.length; i++) {
         exportButtons[i].remove();
@@ -73,17 +75,6 @@ function addExportPdfButtons() {
 }
 
 function exportToPdf() {
-  // Check if required libraries are loaded
-  if (
-    typeof html2canvas === "undefined" ||
-    (typeof jspdf === "undefined" && typeof jsPDF === "undefined")
-  ) {
-    alert(
-      "PDF export libraries are still loading. Please try again in a few seconds."
-    );
-    return;
-  }
-
   // Get page title for filename
   let pageTitle = "fll-schedule";
   if (window.location.pathname.includes("/tables")) {
@@ -96,284 +87,288 @@ function exportToPdf() {
   const timestamp = new Date().toISOString().slice(0, 10);
   const filename = `${pageTitle}-${timestamp}.pdf`;
 
-  // Create a clone of the content to avoid modifying the original
-  const contentElement = document.querySelector(".max-w-7xl");
-  const contentClone = contentElement.cloneNode(true);
+  // Show loading indicator
+  const loadingIndicator = document.createElement("div");
+  loadingIndicator.id = "pdf-loading-indicator";
+  loadingIndicator.style.position = "fixed";
+  loadingIndicator.style.top = "50%";
+  loadingIndicator.style.left = "50%";
+  loadingIndicator.style.transform = "translate(-50%, -50%)";
+  loadingIndicator.style.padding = "20px";
+  loadingIndicator.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+  loadingIndicator.style.color = "white";
+  loadingIndicator.style.borderRadius = "5px";
+  loadingIndicator.style.zIndex = "9999";
+  loadingIndicator.textContent = "Generating PDF...";
+  document.body.appendChild(loadingIndicator);
 
-  // Create a temporary container for the PDF content
-  const tempContainer = document.createElement("div");
-  tempContainer.style.position = "absolute";
-  tempContainer.style.left = "-9999px";
-  tempContainer.style.backgroundColor = "white";
-  tempContainer.style.width = "800px"; // Fixed width for better PDF generation
-  document.body.appendChild(tempContainer);
-
-  // Add a header to the PDF
-  const header = document.createElement("div");
-  header.style.textAlign = "center";
-  header.style.marginBottom = "20px";
-  header.innerHTML = `
-    <h1 style="font-size: 24px; margin-bottom: 5px;">FLL Competition Schedule</h1>
-    <h2 style="font-size: 18px; margin-bottom: 5px;">${pageTitle
-      .replace(/-/g, " ")
-      .replace(/\b\w/g, (l) => l.toUpperCase())}</h2>
-    <p style="font-size: 14px;">Generated: ${new Date().toLocaleDateString()}</p>
-  `;
-  tempContainer.appendChild(header);
-
-  // Process the clone to make it suitable for PDF
-  // Remove no-print elements
-  contentClone.querySelectorAll(".no-print").forEach((el) => el.remove());
-
-  // Show print-only elements
-  contentClone.querySelectorAll(".hidden.print\\:block").forEach((el) => {
-    el.classList.remove("hidden");
-    el.style.display = "block";
-  });
-
-  // Get the main content container with schedules
-  const mainContent = contentClone.querySelector(
-    ".bg-white.rounded-lg.shadow.p-6"
-  );
-  if (mainContent) {
-    tempContainer.appendChild(mainContent);
-  } else {
-    // If main content not found, try to get all tables
-    const tables = contentClone.querySelectorAll("table");
-    if (tables.length > 0) {
-      tables.forEach((table) => {
-        const tableContainer = document.createElement("div");
-        tableContainer.style.marginBottom = "20px";
-
-        // Try to get table title
-        const tableParent = table.parentElement;
-        const tableTitle = tableParent.querySelector("h3");
-        if (tableTitle) {
-          const titleElement = document.createElement("h3");
-          titleElement.textContent = tableTitle.textContent;
-          titleElement.style.fontSize = "16px";
-          titleElement.style.marginBottom = "10px";
-          tableContainer.appendChild(titleElement);
-        }
-
-        // Style the table
-        table.style.width = "100%";
-        table.style.borderCollapse = "collapse";
-        table.style.marginBottom = "15px";
-
-        // Style table cells
-        table.querySelectorAll("th, td").forEach((cell) => {
-          cell.style.border = "1px solid #ddd";
-          cell.style.padding = "8px";
-          cell.style.textAlign = "left";
-        });
-
-        // Style table headers
-        table.querySelectorAll("th").forEach((header) => {
-          header.style.backgroundColor = "#f2f2f2";
-          header.style.fontWeight = "bold";
-        });
-
-        tableContainer.appendChild(table);
-        tempContainer.appendChild(tableContainer);
-      });
-    } else {
-      // If no tables found, add an error message
-      const errorMsg = document.createElement("p");
-      errorMsg.textContent = "No schedule content found to export.";
-      tempContainer.appendChild(errorMsg);
+  // Check if libraries are loaded
+  if (
+    typeof window.html2canvas === "undefined" ||
+    (typeof window.jspdf === "undefined" && typeof window.jsPDF === "undefined")
+  ) {
+    // Load required libraries
+    if (typeof window.html2canvas === "undefined") {
+      const html2canvasScript = document.createElement("script");
+      html2canvasScript.src =
+        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+      document.head.appendChild(html2canvasScript);
     }
-  }
 
-  // Apply styles to ensure content is visible
-  tempContainer.querySelectorAll(".bg-gray-50, .bg-white").forEach((el) => {
-    el.style.display = "block";
-    el.style.backgroundColor = "white";
-  });
+    if (
+      typeof window.jspdf === "undefined" &&
+      typeof window.jsPDF === "undefined"
+    ) {
+      const jsPdfScript = document.createElement("script");
+      jsPdfScript.src =
+        "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+      document.head.appendChild(jsPdfScript);
+    }
 
-  tempContainer.querySelectorAll("table").forEach((table) => {
-    table.style.width = "100%";
-    table.style.borderCollapse = "collapse";
-    table.style.marginBottom = "15px";
-  });
+    // Wait for libraries to load
+    const checkLibrariesLoaded = setInterval(() => {
+      if (
+        window.html2canvas !== undefined &&
+        (window.jspdf !== undefined || window.jsPDF !== undefined)
+      ) {
+        clearInterval(checkLibrariesLoaded);
+        captureAndGeneratePDF(filename, loadingIndicator);
+      }
+    }, 100);
 
-  tempContainer.querySelectorAll(".grid").forEach((grid) => {
-    grid.style.display = "block";
-  });
-
-  tempContainer.querySelectorAll(".whitespace-nowrap").forEach((cell) => {
-    cell.style.whiteSpace = "normal";
-    cell.style.wordWrap = "break-word";
-  });
-
-  // Use html2canvas to capture the content
-  html2canvas(tempContainer, {
-    scale: 2,
-    useCORS: true,
-    logging: false,
-    backgroundColor: "white",
-  })
-    .then((canvas) => {
-      // Create PDF
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-      });
-
-      // Calculate dimensions
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
-      const ratio = canvasWidth / pdfWidth;
-      const totalPages = Math.ceil(canvasHeight / (pdfHeight * ratio));
-
-      // Add pages to PDF
-      for (let i = 0; i < totalPages; i++) {
-        if (i > 0) {
-          pdf.addPage();
-        }
-
-        // Calculate the portion of the canvas to use for this page
-        const srcY = i * pdfHeight * ratio;
-        const srcHeight = Math.min(pdfHeight * ratio, canvasHeight - srcY);
-
-        pdf.addImage(
-          imgData,
-          "JPEG",
-          0,
-          0,
-          pdfWidth,
-          srcHeight / ratio,
-          null,
-          "FAST",
-          0,
-          srcY
+    // Set a timeout in case libraries don't load
+    setTimeout(() => {
+      clearInterval(checkLibrariesLoaded);
+      if (
+        typeof window.html2canvas === "undefined" ||
+        (typeof window.jspdf === "undefined" &&
+          typeof window.jsPDF === "undefined")
+      ) {
+        document.body.removeChild(loadingIndicator);
+        alert(
+          "Failed to load PDF generation libraries. Please try again later."
         );
       }
-
-      // Save the PDF
-      pdf.save(filename);
-
-      // Clean up
-      document.body.removeChild(tempContainer);
-    })
-    .catch((error) => {
-      console.error("PDF generation failed:", error);
-      alert("Failed to generate PDF. Please try again.");
-      document.body.removeChild(tempContainer);
-    });
+    }, 5000);
+  } else {
+    // Libraries already loaded
+    captureAndGeneratePDF(filename, loadingIndicator);
+  }
 }
 
-/**
- * Adjusts styles on a cloned content element so that all schedule elements are visible
- * and styled similarly to the print view.
- */
-function adjustScheduleStyles(rootElement) {
-  // Force background elements to display correctly
-  rootElement.querySelectorAll(".bg-gray-50, .bg-white").forEach((el) => {
+function captureAndGeneratePDF(filename, loadingIndicator) {
+  try {
+    // Create a hidden clone of the content to avoid modifying the visible page
+    const contentElement = document.querySelector(
+      ".bg-white.rounded-lg.shadow.p-6"
+    );
+    if (!contentElement) {
+      throw new Error("Could not find schedule content to export");
+    }
+
+    // Create a clone container
+    const cloneContainer = document.createElement("div");
+    cloneContainer.id = "pdf-clone-container";
+    cloneContainer.style.position = "absolute";
+    cloneContainer.style.left = "-9999px";
+    cloneContainer.style.top = "0";
+    cloneContainer.style.width = contentElement.offsetWidth + "px";
+    cloneContainer.style.backgroundColor = "white";
+    cloneContainer.style.zIndex = "-9999";
+
+    // Clone the content
+    const clone = contentElement.cloneNode(true);
+    cloneContainer.appendChild(clone);
+    document.body.appendChild(cloneContainer);
+
+    // Apply print styles to the clone
+    applyPrintStylesToClone(clone);
+
+    // Use html2canvas to capture the clone
+    window
+      .html2canvas(clone, {
+        scale: 2, // Increased scale for better quality
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+      })
+      .then((canvas) => {
+        try {
+          // Create PDF using jsPDF - fix the constructor name
+          let pdf;
+          if (window.jspdf) {
+            // Use jspdf if available
+            pdf = new window.jspdf.jsPDF({
+              orientation: "portrait",
+              unit: "mm",
+              format: "a4",
+            });
+          } else {
+            // Use jsPDF if jspdf is not available
+            pdf = new window.jsPDF({
+              orientation: "portrait",
+              unit: "mm",
+              format: "a4",
+            });
+          }
+
+          // Calculate dimensions
+          const imgWidth = 210; // A4 width in mm
+          const pageHeight = 295; // A4 height in mm
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          let heightLeft = imgHeight;
+          let position = 0;
+
+          // Add first page
+          const imgData = canvas.toDataURL("image/jpeg", 1.0);
+          pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+
+          // Add additional pages if needed
+          while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          // Save the PDF
+          pdf.save(filename);
+
+          // Clean up
+          document.body.removeChild(cloneContainer);
+          document.body.removeChild(loadingIndicator);
+        } catch (error) {
+          console.error("Error creating PDF:", error);
+          document.body.removeChild(cloneContainer);
+          document.body.removeChild(loadingIndicator);
+          alert("Failed to create PDF: " + error.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error capturing content:", error);
+        document.body.removeChild(cloneContainer);
+        document.body.removeChild(loadingIndicator);
+        alert("Failed to capture content for PDF: " + error.message);
+      });
+  } catch (error) {
+    console.error("Error preparing content for PDF:", error);
+    document.body.removeChild(loadingIndicator);
+    alert("Failed to prepare content for PDF: " + error.message);
+  }
+}
+
+function applyPrintStylesToClone(element) {
+  // Force all content to be visible
+  element.querySelectorAll(".bg-gray-50, .bg-white").forEach((el) => {
     el.style.display = "block";
     el.style.backgroundColor = "white";
   });
 
-  // Ensure all tables are visible and styled
-  rootElement.querySelectorAll("table").forEach((el) => {
+  // Ensure tables are visible and properly formatted
+  element.querySelectorAll("table").forEach((el) => {
     el.style.display = "table";
     el.style.tableLayout = "fixed";
     el.style.width = "100%";
     el.style.borderCollapse = "collapse";
-    el.style.marginBottom = "1rem";
+    el.style.marginBottom = "20px";
   });
 
   // Fix flex containers
-  rootElement.querySelectorAll(".flex").forEach((el) => {
+  element.querySelectorAll(".flex").forEach((el) => {
     el.style.display = "flex";
   });
 
-  // Fix grid containers – if needed, you can choose to retain grid styles instead
-  rootElement.querySelectorAll(".grid").forEach((el) => {
-    el.style.display = "block";
-  });
-
-  // Fix table cell whitespace so that content wraps properly
-  rootElement.querySelectorAll(".whitespace-nowrap").forEach((el) => {
+  // Fix table cell whitespace
+  element.querySelectorAll(".whitespace-nowrap").forEach((el) => {
     el.style.whiteSpace = "normal";
     el.style.wordWrap = "break-word";
   });
 
-  // Style table cells
-  rootElement.querySelectorAll("td, th").forEach((el) => {
+  // Fix table cell padding and add borders
+  element.querySelectorAll("td, th").forEach((el) => {
     el.style.padding = "6px 8px";
     el.style.border = "1px solid #ddd";
-    el.style.textAlign = "left";
   });
 
-  // Style table headers
-  rootElement.querySelectorAll("th").forEach((el) => {
-    el.style.backgroundColor = "#f2f2f2";
-    el.style.fontWeight = "bold";
+  // Adjust Robot Game Tables (3 columns)
+  element.querySelectorAll(".table-schedule table").forEach((table) => {
+    // Time column
+    table
+      .querySelectorAll("th:nth-child(1), td:nth-child(1)")
+      .forEach((col) => {
+        col.style.width = "20%";
+      });
+
+    // Team column
+    table
+      .querySelectorAll("th:nth-child(2), td:nth-child(2)")
+      .forEach((col) => {
+        col.style.width = "40%";
+      });
+
+    // Duration column
+    table
+      .querySelectorAll("th:nth-child(3), td:nth-child(3)")
+      .forEach((col) => {
+        col.style.width = "40%";
+      });
   });
 
-  // Adjust Robot Game Tables (assumed 3 columns)
-  rootElement.querySelectorAll(".table-schedule table").forEach((table) => {
-    const timeColumns = table.querySelectorAll(
-      "th:nth-child(1), td:nth-child(1)"
-    );
-    timeColumns.forEach((col) => {
-      col.style.width = "20%";
-    });
-    const teamColumns = table.querySelectorAll(
-      "th:nth-child(2), td:nth-child(2)"
-    );
-    teamColumns.forEach((col) => {
-      col.style.width = "40%";
-    });
-    const durationColumns = table.querySelectorAll(
-      "th:nth-child(3), td:nth-child(3)"
-    );
-    durationColumns.forEach((col) => {
-      col.style.width = "40%";
-    });
+  // Adjust Judging Rooms (4 columns)
+  element.querySelectorAll(".judging-room table").forEach((table) => {
+    // Time column
+    table
+      .querySelectorAll("th:nth-child(1), td:nth-child(1)")
+      .forEach((col) => {
+        col.style.width = "15%";
+      });
+
+    // Team column
+    table
+      .querySelectorAll("th:nth-child(2), td:nth-child(2)")
+      .forEach((col) => {
+        col.style.width = "25%";
+      });
+
+    // Type column
+    table
+      .querySelectorAll("th:nth-child(3), td:nth-child(3)")
+      .forEach((col) => {
+        col.style.width = "40%";
+      });
+
+    // Duration column
+    table
+      .querySelectorAll("th:nth-child(4), td:nth-child(4)")
+      .forEach((col) => {
+        col.style.width = "20%";
+      });
   });
 
-  // Adjust Judging Rooms (assumed 4 columns)
-  rootElement.querySelectorAll(".judging-schedule table").forEach((table) => {
-    const timeColumns = table.querySelectorAll(
-      "th:nth-child(1), td:nth-child(1)"
-    );
-    timeColumns.forEach((col) => {
-      col.style.width = "15%";
-    });
-    const teamColumns = table.querySelectorAll(
-      "th:nth-child(2), td:nth-child(2)"
-    );
-    teamColumns.forEach((col) => {
-      col.style.width = "25%";
-    });
-    const typeColumns = table.querySelectorAll(
-      "th:nth-child(3), td:nth-child(3)"
-    );
-    typeColumns.forEach((col) => {
-      col.style.width = "40%";
-    });
-    const durationColumns = table.querySelectorAll(
-      "th:nth-child(4), td:nth-child(4)"
-    );
-    durationColumns.forEach((col) => {
-      col.style.width = "20%";
-    });
+  // Make sure all hidden elements that should be visible in print are shown
+  element.querySelectorAll(".hidden.print\\:block").forEach((el) => {
+    el.classList.remove("hidden");
+    el.style.display = "block";
   });
 
-  // Ensure schedule containers are set to display and avoid breaking in the middle
-  rootElement
-    .querySelectorAll(".table-schedule, .judging-schedule, .team-schedule")
-    .forEach((el) => {
-      el.style.display = "block";
-      el.style.pageBreakInside = "avoid";
-      el.style.breakInside = "avoid";
-      el.style.marginBottom = "20px";
-      el.style.backgroundColor = "white";
-    });
+  // Hide elements that shouldn't be in the PDF
+  element.querySelectorAll(".no-print").forEach((el) => {
+    el.style.display = "none";
+  });
+
+  // Make sure all schedule containers are visible
+  element.querySelectorAll(".schedule-container").forEach((el) => {
+    el.style.display = "block";
+    el.style.marginBottom = "20px";
+  });
+
+  // Ensure all headings are visible
+  element.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((el) => {
+    el.style.display = "block";
+    el.style.marginBottom = "10px";
+    el.style.marginTop = "20px";
+    el.style.color = "#000";
+  });
 }
