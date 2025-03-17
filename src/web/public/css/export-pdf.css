@@ -1,0 +1,271 @@
+/* Styling for PDF Export Button */
+.export-pdf-button {
+  transition: background-color 0.3s ease;
+}
+
+/* Print styles to hide the export button when printing */
+@media print {
+  .export-pdf-button {
+    display: none !important;
+  }
+}
+
+/* PDF Export Container Styles */
+.pdf-export-container {
+  font-family: Arial, sans-serif;
+  background-color: white !important;
+  color: black;
+  width: 100%;
+}
+
+.pdf-export-container .max-w-7xl {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 10px !important;
+}
+
+/* Hide elements not needed for PDF */
+.pdf-export-container nav,
+.pdf-export-container footer,
+.pdf-export-container .no-print,
+.pdf-export-container button {
+  display: none !important;
+}
+
+/* Container adjustments */
+.pdf-export-container main {
+  background-color: white !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+/* Page breaks */
+.pdf-export-container .page-break {
+  page-break-after: always;
+  break-after: page;
+}
+
+/* Tables page specific */
+.pdf-export-container .table-schedule {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin-bottom: 20px;
+  background-color: white !important;
+  display: block !important;
+}
+
+/* Judging page specific */
+.pdf-export-container .judging-schedule {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin-bottom: 20px;
+  background-color: white !important;
+  display: block !important;
+}
+
+/* Teams page specific */
+.pdf-export-container .team-schedule {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin-bottom: 20px;
+  background-color: white !important;
+  display: block !important;
+}
+
+/* Schedule items */
+.pdf-export-container .schedule-item {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Ensure headers print on each page */
+.pdf-export-container h1,
+.pdf-export-container h2,
+.pdf-export-container h3 {
+  page-break-after: avoid;
+  break-after: avoid;
+  font-family: Arial, sans-serif;
+  color: black !important;
+}
+
+/* Adjust grid layouts for PDF */
+.pdf-export-container .grid {
+  display: block !important;
+}
+
+/* Show print-only elements */
+.pdf-export-container .print\:block {
+  display: block !important;
+}
+
+.pdf-export-container .hidden.print\:block {
+  display: block !important;
+}
+
+/* Table styling for PDF */
+.pdf-export-container table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-bottom: 1em !important;
+  display: table !important;
+  font-size: 11pt !important;
+  table-layout: fixed !important;
+}
+
+/* Specific styles for print tables */
+.pdf-export-container .print-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+.pdf-export-container .print-table colgroup {
+  display: table-column-group !important;
+}
+
+.pdf-export-container .print-table col {
+  display: table-column !important;
+}
+
+.pdf-export-container th,
+.pdf-export-container td {
+  border: 1px solid #ddd !important;
+  padding: 6px 8px !important;
+  text-align: left !important;
+  vertical-align: middle !important;
+  overflow: visible !important;
+  word-wrap: break-word !important;
+  white-space: normal !important;
+}
+
+.pdf-export-container th {
+  background-color: #f2f2f2 !important;
+  font-weight: bold !important;
+  color: #333 !important;
+  text-transform: uppercase !important;
+  font-size: 10pt !important;
+}
+
+/* Robot Game Tables - 3 columns */
+.pdf-export-container .table-schedule table th:nth-child(1),
+.pdf-export-container .table-schedule table td:nth-child(1) {
+  width: 20% !important;
+}
+
+.pdf-export-container .table-schedule table th:nth-child(2),
+.pdf-export-container .table-schedule table td:nth-child(2) {
+  width: 40% !important;
+}
+
+.pdf-export-container .table-schedule table th:nth-child(3),
+.pdf-export-container .table-schedule table td:nth-child(3) {
+  width: 40% !important;
+}
+
+/* Judging Rooms - 4 columns */
+.pdf-export-container .judging-schedule table th:nth-child(1),
+.pdf-export-container .judging-schedule table td:nth-child(1) {
+  width: 15% !important;
+}
+
+.pdf-export-container .judging-schedule table th:nth-child(2),
+.pdf-export-container .judging-schedule table td:nth-child(2) {
+  width: 25% !important;
+}
+
+.pdf-export-container .judging-schedule table th:nth-child(3),
+.pdf-export-container .judging-schedule table td:nth-child(3) {
+  width: 40% !important;
+}
+
+.pdf-export-container .judging-schedule table th:nth-child(4),
+.pdf-export-container .judging-schedule table td:nth-child(4) {
+  width: 20% !important;
+}
+
+/* Remove shadows and backgrounds */
+.pdf-export-container .shadow,
+.pdf-export-container .shadow-sm,
+.pdf-export-container .shadow-md,
+.pdf-export-container .shadow-lg {
+  box-shadow: none !important;
+}
+
+/* Ensure text is readable */
+.pdf-export-container p,
+.pdf-export-container span,
+.pdf-export-container div {
+  color: black !important;
+}
+
+/* Fix flexbox for PDF */
+.pdf-export-container .flex {
+  display: flex !important;
+}
+
+/* Specific fixes for team schedule cards */
+.pdf-export-container .team-schedule .schedule-item {
+  border: 1px solid #ddd !important;
+  padding: 10px !important;
+  margin-bottom: 10px !important;
+  background-color: white !important;
+}
+
+.pdf-export-container .team-schedule .schedule-item .flex {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+/* Ensure white background for all content */
+.pdf-export-container .bg-white,
+.pdf-export-container .bg-gray-50,
+.pdf-export-container .bg-gray-100 {
+  background-color: white !important;
+}
+
+/* Make sure content is visible */
+.pdf-export-container .bg-gray-50 {
+  display: block !important;
+}
+
+/* Adjust spacing */
+.pdf-export-container .p-6,
+.pdf-export-container .p-4,
+.pdf-export-container .p-3 {
+  padding: 10px !important;
+}
+
+.pdf-export-container .mb-8,
+.pdf-export-container .mb-6,
+.pdf-export-container .mb-4 {
+  margin-bottom: 15px !important;
+}
+
+/* Fix for overflow containers */
+.pdf-export-container .overflow-x-auto {
+  overflow: visible !important;
+}
+
+/* Fix for rounded corners */
+.pdf-export-container .rounded-lg,
+.pdf-export-container .rounded {
+  border-radius: 0 !important;
+}
+
+/* Fix for whitespace in tables */
+.pdf-export-container .whitespace-nowrap {
+  white-space: normal !important;
+}
+
+/* Improve table cell padding */
+.pdf-export-container .px-6,
+.pdf-export-container .py-4 {
+  padding: 6px !important;
+}
+
+/* Improve table header padding */
+.pdf-export-container .px-6.py-3 {
+  padding: 6px !important;
+}
