@@ -1,0 +1,57 @@
+<div class="overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-200 print-table">
+    <colgroup>
+      <col style="width: 15%" />
+      <col style="width: 15%" />
+      <col style="width: 50%" />
+      <col style="width: 20%" />
+    </colgroup>
+    <thead class="bg-gray-50">
+      <tr>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Time
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Team #
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Team Name
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Duration
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <% table.sort((a, b) => a.startTime - b.startTime).forEach(event => { %>
+      <tr class="hover:bg-gray-50 schedule-item">
+        <td
+          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium"
+        >
+          <%= Math.floor(event.startTime/60) %>:<%=
+          String(event.startTime%60).padStart(2, '0') %>
+        </td>
+        <td
+          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium"
+        >
+          <%= event.teamId %>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+          <%= event.teamName %>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+          <%= event.duration %> min
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

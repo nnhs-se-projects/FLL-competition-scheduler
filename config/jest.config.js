@@ -1,3 +1,9 @@
+/**
+ * Jest Configuration
+ *
+ * This file configures Jest for testing the FLL Competition Scheduler.
+ */
+
 const config = {
   testEnvironment: "jest-environment-node",
   transform: {},
@@ -5,6 +11,7 @@ const config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
+  rootDir: "../",
 };
 
 export default config;

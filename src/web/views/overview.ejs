@@ -1,0 +1,34 @@
+<!-- include header -->
+<%- include('include/_header') %>
+<!-- /include header -->
+
+<!-- Main Site -->
+<%- include('partials/_nav') %>
+
+<main class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Summary Cards -->
+    <%- include('partials/_summary_cards') %>
+
+    <!-- Overview Content -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="text-lg font-medium mb-4">Current & Upcoming Events</h3>
+          <div class="space-y-3" id="upcoming-events"></div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="text-lg font-medium mb-4">Schedule Statistics</h3>
+          <div id="schedule-stats"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Master Schedule -->
+    <%- include('partials/_master_schedule') %>
+  </div>
+</main>
+
+<%- include('partials/_schedule_scripts') %>
+<!-- include footer -->
+<%- include('include/_footer') %>
