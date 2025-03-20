@@ -79,6 +79,20 @@ function adjustForLunch(time, lunchStartTime, lunchDuration) {
 }
 
 /**
+ * Format time in minutes to HH:MM AM/PM format
+ * @param {number} minutes - Time in minutes
+ * @returns {string} Formatted time string in 12-hour format (e.g. "9:15 AM")
+ */
+export function formatTimeAMPM(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM
+
+  return `${formattedHours}:${mins.toString().padStart(2, "0")} ${ampm}`;
+}
+
+/**
  * Formats a time in minutes to a string
  * @param {number} minutes - The time in minutes
  * @returns {string} The formatted time string
