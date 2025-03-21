@@ -206,6 +206,9 @@ route.post("/save-config", (req, res) => {
   // Clear existing schedule when config changes
   req.session.schedule = null;
 
+  // Generate new schedule with updated config
+  req.session.schedule = generateNewSchedule(req.session.config);
+
   res.redirect("/schedule-config");
 });
 
