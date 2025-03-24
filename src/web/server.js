@@ -68,7 +68,7 @@ app.use((req, res, next) => {
     res.redirect("/auth/");
     return;
   }
-
+  //return
   next();
 });
 

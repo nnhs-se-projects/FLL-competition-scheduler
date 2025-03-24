@@ -47,21 +47,28 @@ function generateNewSchedule(options = {}) {
     teamsSchedule: schedule.buildTeamsSchedule(),
   };
 
-  // Apply custom team names if provided
-  if (options.teamNames && options.teamNames.length > 0) {
+  // Apply custom team names and numbers if provided
+  if (options.teamInfo && options.teamInfo.length > 0) {
     [
       scheduleData.tableRuns,
       scheduleData.judgingSchedule,
       scheduleData.teamsSchedule,
     ].forEach((scheduleType) => {
       if (Array.isArray(scheduleType)) {
-        scheduleType.forEach((item) => {
-          if (Array.isArray(item)) {
-            item.forEach((event) => {
-              if (event.teamID && options.teamNames[event.teamID - 1]) {
-                event.teamName = options.teamNames[event.teamID - 1];
+        scheduleType.forEach((items) => {
+          if (Array.isArray(items)) {
+            items.forEach((event) => {
+              if (event.teamID && options.teamInfo[event.teamID - 1]) {
+                const teamInfo = options.teamInfo[event.teamID - 1];
+                event.teamName = teamInfo.name;
+                event.teamNumber = teamInfo.number;
               }
             });
+          } else if (items.teamID && options.teamInfo[items.teamID - 1]) {
+            // Handle direct event objects
+            const teamInfo = options.teamInfo[items.teamID - 1];
+            items.teamName = teamInfo.name;
+            items.teamNumber = teamInfo.number;
           }
         });
       }
@@ -143,7 +150,7 @@ route.get("/schedule-config", (req, res) => {
       numTeams: 32,
       numTables: 4,
       numJudgingRooms: 8,
-      teamNames: [],
+      teamInfo: [],
     };
   }
 
@@ -170,7 +177,7 @@ route.get("/regenerate-schedule", (req, res) => {
       parseInt(req.query.numJudgingRooms) ||
       req.session.config?.numJudgingRooms ||
       8,
-    teamNames: req.session.config?.teamNames || [],
+    teamInfo: req.session.config?.teamInfo || [],
   };
 
   // Update session config
@@ -200,7 +207,10 @@ route.post("/save-config", (req, res) => {
     numTeams: parseInt(req.body.numTeams) || 32,
     numTables: parseInt(req.body.numTables) || 4,
     numJudgingRooms: parseInt(req.body.numJudgingRooms) || 8,
-    teamNames: req.body.teamNames || [],
+    teamInfo: req.body.teamNames.map((name, index) => ({
+      name: name,
+      number: parseInt(req.body.teamNumbers[index]) || index + 1,
+    })),
   };
 
   // Clear existing schedule when config changes

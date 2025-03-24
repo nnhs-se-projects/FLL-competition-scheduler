@@ -92,31 +92,44 @@
                 <select
                   id="teamSelector"
                   class="w-full md:w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  onchange="showTeamNameEdit()"
+                  onchange="showTeamEdit()"
                 >
                   <option value="">Choose a team...</option>
                 </select>
               </div>
 
-              <!-- Team Name Edit Form -->
+              <!-- Team Edit Form -->
               <div
-                id="teamNameEditForm"
+                id="teamEditForm"
                 class="hidden bg-gray-50 p-6 rounded-lg mb-6"
               >
-                <div class="max-w-md">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Edit Team Name
-                  </label>
-                  <div class="flex space-x-4">
+                <div class="max-w-md space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Team Name
+                    </label>
                     <input
                       type="text"
                       id="teamNameInput"
-                      class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Enter team name"
                     />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Team #
+                    </label>
+                    <input
+                      type="number"
+                      id="teamNumberInput"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter team number"
+                    />
+                  </div>
+                  <div class="pt-2">
                     <button
                       type="button"
-                      onclick="updateTeamName()"
+                      onclick="updateTeamInfo()"
                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                     >
                       Update
@@ -127,14 +140,14 @@
 
               <!-- Team Names List -->
               <div
-                id="teamNamesList"
+                id="teamList"
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
               >
                 <!-- Team names will be displayed here -->
               </div>
 
               <!-- Hidden input to store team names -->
-              <div id="teamNamesContainer"></div>
+              <div id="teamInfoContainer"></div>
             </div>
 
             <div class="mt-8 flex justify-end space-x-4">
@@ -193,97 +206,112 @@
 
 <!-- Add this script before the footer -->
 <script>
-  let teamNames = <%- JSON.stringify(config?.teamNames || []) %>;
+  let teamInfo = <%- JSON.stringify(config?.teamInfo || []) %>;
   const numTeams = <%= typeof config !== 'undefined' ? config.numTeams : 32 %>;
 
-  function initializeTeamNames() {
-    // Initialize team names array if empty
-    if (!teamNames.length) {
-      teamNames = Array(numTeams).fill().map((_, i) => `Team ${i + 1}`);
+  function initializeTeamInfo() {
+    // Initialize team info array if empty
+    if (!teamInfo.length) {
+      teamInfo = Array(numTeams).fill().map((_, i) => ({
+        name: `Team ${i + 1}`,
+        number: i + 1
+      }));
     }
 
     // Populate dropdown
     const selector = document.getElementById('teamSelector');
     selector.innerHTML = '<option value="">Choose a team...</option>';
-    teamNames.forEach((name, index) => {
-      selector.innerHTML += `<option value="${index}">Team ${index + 1}: ${name}</option>`;
+    teamInfo.forEach((team, index) => {
+      selector.innerHTML += `<option value="${index}">Team ${index + 1}: ${team.name} (#${team.number})</option>`;
     });
 
-    // Update team names list display
-    updateTeamNamesList();
+    // Update team list display
+    updateTeamList();
     updateHiddenInputs();
   }
 
-  function showTeamNameEdit() {
+  function showTeamEdit() {
     const selector = document.getElementById('teamSelector');
-    const form = document.getElementById('teamNameEditForm');
-    const input = document.getElementById('teamNameInput');
+    const form = document.getElementById('teamEditForm');
+    const nameInput = document.getElementById('teamNameInput');
+    const numberInput = document.getElementById('teamNumberInput');
 
     if (selector.value !== '') {
       const index = parseInt(selector.value);
-      input.value = teamNames[index];
+      const team = teamInfo[index];
+      nameInput.value = team.name;
+      numberInput.value = team.number;
       form.classList.remove('hidden');
     } else {
       form.classList.add('hidden');
     }
   }
 
-  function updateTeamName() {
+  function updateTeamInfo() {
     const selector = document.getElementById('teamSelector');
-    const input = document.getElementById('teamNameInput');
+    const nameInput = document.getElementById('teamNameInput');
+    const numberInput = document.getElementById('teamNumberInput');
     const index = parseInt(selector.value);
 
-    if (input.value.trim()) {
-      teamNames[index] = input.value.trim();
-      updateTeamNamesList();
+    if (nameInput.value.trim() && numberInput.value.trim()) {
+      teamInfo[index] = {
+        name: nameInput.value.trim(),
+        number: parseInt(numberInput.value)
+      };
+      updateTeamList();
       updateHiddenInputs();
 
       // Update dropdown option
       const option = selector.options[index + 1];
-      option.text = `Team ${index + 1}: ${teamNames[index]}`;
+      option.text = `Team ${index + 1}: ${teamInfo[index].name} (#${teamInfo[index].number})`;
 
       // Hide the edit form
-      document.getElementById('teamNameEditForm').classList.add('hidden');
+      document.getElementById('teamEditForm').classList.add('hidden');
       selector.value = '';
     }
   }
 
-  function updateTeamNamesList() {
-    const container = document.getElementById('teamNamesList');
-    container.innerHTML = teamNames.map((name, index) => `
+  function updateTeamList() {
+    const container = document.getElementById('teamList');
+    container.innerHTML = teamInfo.map((team, index) => `
       <div class="bg-white p-4 rounded-lg shadow">
         <div class="text-sm text-gray-500">Team ${index + 1}</div>
-        <div class="font-medium text-gray-900">${name}</div>
+        <div class="font-medium text-gray-900">${team.name}</div>
+        <div class="text-sm text-gray-600">Team #${team.number}</div>
       </div>
     `).join('');
   }
 
   function updateHiddenInputs() {
-    const container = document.getElementById('teamNamesContainer');
-    container.innerHTML = teamNames.map((name, index) => `
-      <input type="hidden" name="teamNames[]" value="${name}">
+    const container = document.getElementById('teamInfoContainer');
+    container.innerHTML = teamInfo.map((team, index) => `
+      <input type="hidden" name="teamNames[]" value="${team.name}">
+      <input type="hidden" name="teamNumbers[]" value="${team.number}">
     `).join('');
   }
 
   // Initialize when page loads
-  document.addEventListener('DOMContentLoaded', initializeTeamNames);
+  document.addEventListener('DOMContentLoaded', initializeTeamInfo);
 
-  // Update team names when number of teams changes
+  // Update team info when number of teams changes
   document.getElementById('numTeams').addEventListener('change', function() {
     const newNumTeams = parseInt(this.value) || 32;
 
-    // Adjust team names array
-    if (newNumTeams > teamNames.length) {
+    // Adjust team info array
+    if (newNumTeams > teamInfo.length) {
       // Add new teams
-      for (let i = teamNames.length; i < newNumTeams; i++) {
-        teamNames.push(`Team ${i + 1}`);
+      for (let i = teamInfo.length; i < newNumTeams; i++) {
+        teamInfo.push({
+          name: `Team ${i + 1}`,
+          number: i + 1
+        });
       }
-    } else if (newNumTeams < teamNames.length) {
+    } else if (newNumTeams < teamInfo.length) {
       // Remove excess teams
-      teamNames = teamNames.slice(0, newNumTeams);
+      teamInfo = teamInfo.slice(0, newNumTeams);
     }
 
-    initializeTeamNames();
+    initializeTeamInfo();
   });
 </script>
 
