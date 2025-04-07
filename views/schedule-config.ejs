@@ -1,0 +1,122 @@
+<!-- Configuration Options -->
+<div class="bg-white rounded-lg shadow mb-8">
+  <div class="p-6">
+    <h3 class="text-lg font-medium mb-6">Schedule Generation</h3>
+
+    <div class="mb-8">
+      <form action="/save-config" method="POST" class="mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div>
+            <label
+              for="numTeams"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Number of Teams</label
+            >
+            <input
+              type="number"
+              id="numTeams"
+              name="numTeams"
+              min="10"
+              max="50"
+              value="<%= config?.numTeams || 32 %>"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              onchange="generateTeamNameInputs()"
+            />
+          </div>
+          <div>
+            <label
+              for="numTables"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Number of Robot Tables</label
+            >
+            <input
+              type="number"
+              id="numTables"
+              name="numTables"
+              min="2"
+              max="8"
+              value="<%= config?.numTables || 4 %>"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label
+              for="numJudgingRooms"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Number of Judging Rooms</label
+            >
+            <input
+              type="number"
+              id="numJudgingRooms"
+              name="numJudgingRooms"
+              min="4"
+              max="16"
+              value="<%= config?.numJudgingRooms || 8 %>"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- Team Names Section -->
+        <div class="mt-8 mb-6">
+          <h4 class="text-lg font-medium text-gray-900 mb-4">Team Names</h4>
+          <div
+            id="teamNamesContainer"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
+            <!-- Team name inputs will be generated here -->
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-end space-x-4">
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-150 ease-in-out"
+          >
+            Save Configuration
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Rest of your existing configuration content -->
+  </div>
+</div>
+
+<!-- Add this script at the bottom of the file -->
+<script>
+  function generateTeamNameInputs() {
+    const numTeams = parseInt(document.getElementById('numTeams').value) || 32;
+    const container = document.getElementById('teamNamesContainer');
+    container.innerHTML = '';
+
+    // Get existing team names from config if available
+    const existingTeamNames = <%- JSON.stringify(config?.teamNames || []) %>;
+
+    for (let i = 0; i < numTeams; i++) {
+      const div = document.createElement('div');
+      div.className = 'flex items-center bg-gray-50 p-3 rounded-lg';
+
+      const teamName = existingTeamNames[i] || `Team ${i + 1}`;
+
+      div.innerHTML = `
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Team ${i + 1}
+          </label>
+          <input
+            type="text"
+            name="teamNames[]"
+            value="${teamName}"
+            placeholder="Enter team name"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+        </div>
+      `;
+      container.appendChild(div);
+    }
+  }
+
+  // Generate team name inputs when the page loads
+  document.addEventListener('DOMContentLoaded', generateTeamNameInputs);
+</script>

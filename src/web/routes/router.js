@@ -41,11 +41,41 @@ function generateNewSchedule(options = {}) {
   }
 
   schedule.populateWithRandomGenes();
-  return {
+  const scheduleData = {
     tableRuns: schedule.buildTableSchedule(),
     judgingSchedule: schedule.buildJudgingSchedule(),
     teamsSchedule: schedule.buildTeamsSchedule(),
   };
+
+  // Apply custom team names and numbers if provided
+  if (options.teamInfo && options.teamInfo.length > 0) {
+    [
+      scheduleData.tableRuns,
+      scheduleData.judgingSchedule,
+      scheduleData.teamsSchedule,
+    ].forEach((scheduleType) => {
+      if (Array.isArray(scheduleType)) {
+        scheduleType.forEach((items) => {
+          if (Array.isArray(items)) {
+            items.forEach((event) => {
+              if (event.teamID && options.teamInfo[event.teamID - 1]) {
+                const teamInfo = options.teamInfo[event.teamID - 1];
+                event.teamName = teamInfo.name;
+                event.teamNumber = teamInfo.number;
+              }
+            });
+          } else if (items.teamID && options.teamInfo[items.teamID - 1]) {
+            // Handle direct event objects
+            const teamInfo = options.teamInfo[items.teamID - 1];
+            items.teamName = teamInfo.name;
+            items.teamNumber = teamInfo.number;
+          }
+        });
+      }
+    });
+  }
+
+  return scheduleData;
 }
 
 // Landing page route
@@ -114,25 +144,48 @@ route.get("/teams", (req, res) => {
 
 // Schedule configuration page route
 route.get("/schedule-config", (req, res) => {
+  // Initialize config if it doesn't exist
+  if (!req.session.config) {
+    req.session.config = {
+      numTeams: 32,
+      numTables: 4,
+      numJudgingRooms: 8,
+      teamInfo: [],
+    };
+  }
+
   // Generate schedule if it doesn't exist in session
   if (!req.session.schedule) {
-    req.session.schedule = generateNewSchedule();
+    req.session.schedule = generateNewSchedule(req.session.config);
   }
+
   res.render("schedule-config", {
     schedule: req.session.schedule,
+    config: req.session.config,
     path: "/schedule-config",
   });
 });
 
 // Route to regenerate the schedule
 route.get("/regenerate-schedule", (req, res) => {
-  const options = {
-    numTeams: req.query.numTeams,
-    numTables: req.query.numTables,
-    numJudgingRooms: req.query.numJudgingRooms,
+  const config = {
+    numTeams:
+      parseInt(req.query.numTeams) || req.session.config?.numTeams || 32,
+    numTables:
+      parseInt(req.query.numTables) || req.session.config?.numTables || 4,
+    numJudgingRooms:
+      parseInt(req.query.numJudgingRooms) ||
+      req.session.config?.numJudgingRooms ||
+      8,
+    teamInfo: req.session.config?.teamInfo || [],
   };
 
-  req.session.schedule = generateNewSchedule(options);
+  // Update session config
+  req.session.config = config;
+
+  // Generate new schedule with config
+  req.session.schedule = generateNewSchedule(config);
+
   res.redirect(req.headers.referer || "/schedule-config");
 });
 
@@ -146,5 +199,27 @@ route.get("/example", (req, res) => {
 
 // Use the auth router for /auth routes
 route.use("/auth", authRouter);
+
+// Add this route to handle saving configuration
+route.post("/save-config", (req, res) => {
+  // Save configuration to session
+  req.session.config = {
+    numTeams: parseInt(req.body.numTeams) || 32,
+    numTables: parseInt(req.body.numTables) || 4,
+    numJudgingRooms: parseInt(req.body.numJudgingRooms) || 8,
+    teamInfo: req.body.teamNames.map((name, index) => ({
+      name: name,
+      number: parseInt(req.body.teamNumbers[index]) || index + 1,
+    })),
+  };
+
+  // Clear existing schedule when config changes
+  req.session.schedule = null;
+
+  // Generate new schedule with updated config
+  req.session.schedule = generateNewSchedule(req.session.config);
+
+  res.redirect("/schedule-config");
+});
 
 export default route;
