@@ -101,7 +101,8 @@ class FLLSchedule {
     for (let i = 0; i < this.numTeams; i++) {
       const teamId = i + 1;
       const roomId = i % numProjectRooms;
-      const startTime = Math.floor(i / numProjectRooms) * (25 + 10); // 25 min session + 10 min break
+      // Calculate start time with 5 minute intervals and proper spacing
+      const startTime = Math.floor(i / numProjectRooms) * (20 + 5); // 20 min session + 5 min break
 
       // Create project judging event
       this.genes.push(
@@ -109,7 +110,7 @@ class FLLSchedule {
           teamId,
           `Team ${teamId}`,
           startTime,
-          25, // 25 min session
+          20, // 20 min session
           roomId,
           `Project Judging Room ${roomId + 1}`,
           PROJECT_JUDGING_TYPE
@@ -121,7 +122,9 @@ class FLLSchedule {
     for (let i = 0; i < this.numTeams; i++) {
       const teamId = i + 1;
       const roomId = (i % numRobotRooms) + numProjectRooms;
-      const startTime = Math.floor(i / numRobotRooms) * (25 + 10) + 25 + 30; // 25 min session + 10 min break + 25 min buffer + 30 min between sessions
+      // Calculate start time with 5 minute intervals and proper spacing
+      // Offset robot judging to start later in the day
+      const startTime = Math.floor(i / numRobotRooms) * (20 + 5) + 80; // 20 min session + 5 min break + 80 min offset
 
       // Create robot judging event
       this.genes.push(
@@ -129,7 +132,7 @@ class FLLSchedule {
           teamId,
           `Team ${teamId}`,
           startTime,
-          25, // 25 min session
+          20, // 20 min session
           roomId,
           `Robot Design Room ${roomId - numProjectRooms + 1}`,
           ROBOT_JUDGING_TYPE
@@ -153,9 +156,10 @@ class FLLSchedule {
         const tableId = i % this.numRobotTables;
 
         // Calculate start time based on round and team
+        // Distribute table runs throughout the day
         let startTime =
-          200 + // Start table runs after judging sessions
-          round * (this.numTeams / this.numRobotTables) * 10 + // 10 min per table run
+          30 + // Start table runs after a small buffer
+          round * 60 + // Space rounds by 60 minutes
           Math.floor(i / this.numRobotTables) * 10; // 10 min per table run
 
         // Get the team's existing events
@@ -168,15 +172,23 @@ class FLLSchedule {
 
           for (const event of teamEvents) {
             // Check if the table run would overlap with another event
-            // Add a 15-minute buffer between events
+            // Add a 5-minute buffer between events
             if (
-              startTime < event.startTime + event.duration + 15 &&
-              startTime + 10 + 15 > event.startTime
+              startTime < event.startTime + event.duration + 5 &&
+              startTime + 10 + 5 > event.startTime
             ) {
               hasConflict = true;
-              startTime = event.startTime + event.duration + 15;
+              startTime = event.startTime + event.duration + 5;
               break;
             }
+          }
+
+          // Check for lunch conflict (around 12:00 PM)
+          const lunchStartTime = 180; // 12:00 PM (3 hours after 9:00 AM)
+          const lunchEndTime = lunchStartTime + 45; // 45 min lunch
+
+          if (startTime >= lunchStartTime - 5 && startTime <= lunchEndTime) {
+            startTime = lunchEndTime + 5; // Schedule after lunch with a buffer
           }
         }
 
