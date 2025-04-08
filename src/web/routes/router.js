@@ -27,23 +27,16 @@ import authRouter from "./auth.js";
 function generateNewSchedule(options = {}) {
   const schedule = new FLLSchedule();
 
-  // Set custom parameters if provided
-  if (options.numTeams) {
-    schedule.setNumTeams(parseInt(options.numTeams));
-  }
-
-  if (options.numTables) {
-    schedule.setNumTables(parseInt(options.numTables));
-  }
-
-  if (options.numJudgingRooms) {
-    schedule.setNumJudgingRooms(parseInt(options.numJudgingRooms));
-  }
-
-  // Set the start time
+  // Set the start time first before generating the schedule
   if (options.startTimeInMinutes) {
-    schedule.setStartTime(options.startTimeInMinutes);
+    schedule.setStartTime(parseInt(options.startTimeInMinutes));
   }
+
+  // Then set other parameters and generate
+  if (options.numTeams) schedule.setNumTeams(parseInt(options.numTeams));
+  if (options.numTables) schedule.setNumTables(parseInt(options.numTables));
+  if (options.numJudgingRooms)
+    schedule.setNumJudgingRooms(parseInt(options.numJudgingRooms));
 
   schedule.populateWithRandomGenes();
   const scheduleData = {

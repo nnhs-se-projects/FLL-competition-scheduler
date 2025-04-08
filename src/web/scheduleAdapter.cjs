@@ -103,17 +103,15 @@ class FLLSchedule {
    * Schedule judging sessions for all teams
    */
   scheduleJudgingSessions() {
-    // Calculate the number of rooms for each type of judging
-    // For odd numbers, allocate one more room to project judging
     const numProjectRooms = Math.ceil(this.numJudgingRooms / 2);
     const numRobotRooms = Math.floor(this.numJudgingRooms / 2);
 
-    // Schedule project judging sessions
+    // Schedule project judging sessions starting at configured start time
     for (let i = 0; i < this.numTeams; i++) {
       const teamId = i + 1;
       const roomId = i % numProjectRooms;
-      // Calculate start time with 5 minute intervals and proper spacing
-      const startTime = Math.floor(i / numProjectRooms) * (20 + 5); // 20 min session + 5 min break
+      // Calculate start time with 5 minute intervals
+      const startTime = Math.floor(i / numProjectRooms) * 25; // 20 min session + 5 min break
 
       // Create project judging event
       this.genes.push(
@@ -121,7 +119,7 @@ class FLLSchedule {
           teamId,
           `Team ${teamId}`,
           startTime,
-          20, // 20 min session
+          20,
           roomId,
           `Project Judging Room ${roomId + 1}`,
           PROJECT_JUDGING_TYPE
@@ -129,13 +127,12 @@ class FLLSchedule {
       );
     }
 
-    // Schedule robot judging sessions
+    // Schedule robot judging sessions - start with small offset
     for (let i = 0; i < this.numTeams; i++) {
       const teamId = i + 1;
       const roomId = (i % numRobotRooms) + numProjectRooms;
-      // Calculate start time with 5 minute intervals and proper spacing
-      // Offset robot judging to start later in the day
-      const startTime = Math.floor(i / numRobotRooms) * (20 + 5) + 80; // 20 min session + 5 min break + 80 min offset
+      // Calculate start time with 5 minute intervals
+      const startTime = Math.floor(i / numRobotRooms) * 25 + 30; // 20 min session + 5 min break + 30 min offset
 
       // Create robot judging event
       this.genes.push(
@@ -143,7 +140,7 @@ class FLLSchedule {
           teamId,
           `Team ${teamId}`,
           startTime,
-          20, // 20 min session
+          20,
           roomId,
           `Robot Design Room ${roomId - numProjectRooms + 1}`,
           ROBOT_JUDGING_TYPE
