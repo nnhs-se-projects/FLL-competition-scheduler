@@ -27,18 +27,16 @@ import authRouter from "./auth.js";
 function generateNewSchedule(options = {}) {
   const schedule = new FLLSchedule();
 
-  // Set custom parameters if provided
-  if (options.numTeams) {
-    schedule.setNumTeams(parseInt(options.numTeams));
+  // Set the start time first before generating the schedule
+  if (options.startTimeInMinutes) {
+    schedule.setStartTime(parseInt(options.startTimeInMinutes));
   }
 
-  if (options.numTables) {
-    schedule.setNumTables(parseInt(options.numTables));
-  }
-
-  if (options.numJudgingRooms) {
+  // Then set other parameters and generate
+  if (options.numTeams) schedule.setNumTeams(parseInt(options.numTeams));
+  if (options.numTables) schedule.setNumTables(parseInt(options.numTables));
+  if (options.numJudgingRooms)
     schedule.setNumJudgingRooms(parseInt(options.numJudgingRooms));
-  }
 
   schedule.populateWithRandomGenes();
   const scheduleData = {
@@ -177,6 +175,8 @@ route.get("/regenerate-schedule", (req, res) => {
       parseInt(req.query.numJudgingRooms) ||
       req.session.config?.numJudgingRooms ||
       8,
+    startTime: req.session.config?.startTime || "09:00",
+    startTimeInMinutes: req.session.config?.startTimeInMinutes || 540,
     teamInfo: req.session.config?.teamInfo || [],
   };
 
@@ -202,11 +202,18 @@ route.use("/auth", authRouter);
 
 // Add this route to handle saving configuration
 route.post("/save-config", (req, res) => {
+  // Convert start time to minutes since midnight
+  const startTime = req.body.startTime || "09:00";
+  const [hours, minutes] = startTime.split(":").map(Number);
+  const startTimeInMinutes = hours * 60 + minutes;
+
   // Save configuration to session
   req.session.config = {
     numTeams: parseInt(req.body.numTeams) || 32,
     numTables: parseInt(req.body.numTables) || 4,
     numJudgingRooms: parseInt(req.body.numJudgingRooms) || 8,
+    startTime: startTime,
+    startTimeInMinutes: startTimeInMinutes,
     teamInfo: req.body.teamNames.map((name, index) => ({
       name: name,
       number: parseInt(req.body.teamNumbers[index]) || index + 1,
