@@ -1,11 +1,115 @@
 <script>
-  // Function to format time
+  // Function to format time in 12-hour format with AM/PM
   function formatTime(minutes) {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours.toString().padStart(2, "0")}:${mins
-      .toString()
-      .padStart(2, "0")}`;
+    const period = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${mins.toString().padStart(2, "0")} ${period}`;
+  }
+
+  // Function to generate PDF
+  function generatePDF() {
+    const doc = new jsPDF();
+    let y = 20;
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text("FLL Competition Schedule", 105, y, { align: "center" });
+    y += 20;
+
+    // Get schedule data from server
+    const judgingSchedule = <%- JSON.stringify(schedule.judgingSchedule) %>;
+    const tableRuns = <%- JSON.stringify(schedule.tableRuns) %>;
+    const teamsSchedule = <%- JSON.stringify(schedule.teamsSchedule) %>;
+
+    // Add Judging Schedule
+    doc.setFontSize(14);
+    doc.text("Judging Schedule", 14, y);
+    y += 10;
+
+    doc.setFontSize(10);
+    judgingSchedule.forEach((room, roomIndex) => {
+      if (room.length > 0) {
+        doc.text(`Room ${roomIndex + 1}:`, 14, y);
+        y += 7;
+        room.forEach((event) => {
+          const timeStr = formatTime(event.startTime);
+          doc.text(
+            `${timeStr} - ${event.teamName} (#${
+              event.teamNumber || event.teamID
+            })`,
+            20,
+            y
+          );
+          y += 7;
+        });
+        y += 5;
+      }
+    });
+
+    // Add Robot Game Schedule
+    y += 10;
+    doc.setFontSize(14);
+    doc.text("Robot Game Schedule", 14, y);
+    y += 10;
+
+    doc.setFontSize(10);
+    tableRuns.forEach((table, tableIndex) => {
+      if (table.length > 0) {
+        doc.text(`Table ${tableIndex + 1}:`, 14, y);
+        y += 7;
+        table.forEach((event) => {
+          const timeStr = formatTime(event.startTime);
+          doc.text(
+            `${timeStr} - ${event.teamName} (#${
+              event.teamNumber || event.teamID
+            })`,
+            20,
+            y
+          );
+          y += 7;
+        });
+        y += 5;
+      }
+    });
+
+    // Add Team Schedules
+    y += 10;
+    doc.setFontSize(14);
+    doc.text("Team Schedules", 14, y);
+    y += 10;
+
+    doc.setFontSize(10);
+    teamsSchedule.forEach((teamEvents, teamIndex) => {
+      if (teamIndex > 0 && teamEvents.length > 0) {
+        doc.text(
+          `Team ${teamIndex}: ${teamEvents[0].teamName} (#${
+            teamEvents[0].teamNumber || teamIndex
+          })`,
+          14,
+          y
+        );
+        y += 7;
+        teamEvents.forEach((event) => {
+          const timeStr = formatTime(event.startTime);
+          let eventType = "";
+          if (event.type === "tableRun") {
+            eventType = "Robot Game";
+          } else if (event.type === "robotJudging") {
+            eventType = "Robot Design Judging";
+          } else if (event.type === "projectJudging") {
+            eventType = "Project Judging";
+          }
+          doc.text(`${timeStr} - ${eventType} at ${event.locationName}`, 20, y);
+          y += 7;
+        });
+        y += 5;
+      }
+    });
+
+    // Save the PDF
+    doc.save("fll-schedule.pdf");
   }
 
   // Initialize schedule data from server
