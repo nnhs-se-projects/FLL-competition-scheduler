@@ -18,7 +18,8 @@ class Event {
    * @param {number} duration - Duration of the event in minutes
    * @param {number} locationId - The location's unique identifier
    * @param {string} locationName - The location's name
-   * @param {string} type - The type of event (tableRun, projectJudging, robotJudging)
+   * @param {string} type - The type of event (tableRun, projectJudging, robotJudging, lunch)
+   * @param {string} resourceType - The type of resource ("table" or "judging" or "other")
    */
   constructor(
     teamId,
@@ -27,7 +28,8 @@ class Event {
     duration,
     locationId,
     locationName,
-    type
+    type,
+    resourceType = null
   ) {
     this.teamId = teamId;
     this.teamName = teamName;
@@ -36,6 +38,24 @@ class Event {
     this.locationId = locationId;
     this.locationName = locationName;
     this.type = type;
+
+    // Auto-detect resource type if not provided
+    if (!resourceType) {
+      if (type === CONFIG.EVENT_TYPES.TABLE_RUN) {
+        this.resourceType = "table";
+      } else if (
+        type === CONFIG.EVENT_TYPES.PROJECT_JUDGING ||
+        type === CONFIG.EVENT_TYPES.ROBOT_JUDGING
+      ) {
+        this.resourceType = "judging";
+      } else if (type === CONFIG.EVENT_TYPES.LUNCH) {
+        this.resourceType = "other";
+      } else {
+        this.resourceType = "other";
+      }
+    } else {
+      this.resourceType = resourceType;
+    }
   }
 
   /**
@@ -51,7 +71,8 @@ class Event {
       this.duration === otherEvent.duration &&
       this.locationId === otherEvent.locationId &&
       this.locationName === otherEvent.locationName &&
-      this.type === otherEvent.type
+      this.type === otherEvent.type &&
+      this.resourceType === otherEvent.resourceType
     );
   }
 
@@ -67,7 +88,8 @@ class Event {
       this.duration,
       this.locationId,
       this.locationName,
-      this.type
+      this.type,
+      this.resourceType
     );
   }
 
@@ -87,8 +109,26 @@ class Event {
    */
   overlaps(otherEvent, buffer = 0) {
     return (
-      this.startTime < otherEvent.startTime + otherEvent.duration + buffer &&
-      this.startTime + this.duration + buffer > otherEvent.startTime
+      this.startTime < otherEvent.getEndTime() + buffer &&
+      this.getEndTime() + buffer > otherEvent.startTime
+    );
+  }
+
+  /**
+   * Create a resource key for this event
+   * @returns {string} A unique identifier for this event's resource
+   */
+  getResourceKey() {
+    return `${this.resourceType}-${this.locationId}`;
+  }
+
+  /**
+   * Check if this event is within the day bounds
+   * @returns {boolean} True if the event is within day bounds
+   */
+  isWithinDayBounds() {
+    return (
+      this.startTime >= CONFIG.DAY_START && this.getEndTime() <= CONFIG.DAY_END
     );
   }
 }
@@ -99,6 +139,8 @@ class Event {
 class Schedule {
   constructor() {
     this.events = [];
+    this.byTeam = new Map(); // Map<teamId, Event[]>
+    this.byResource = new Map(); // Map<resourceKey, Event[]>
     this.score = 0;
     this.mutationProbability = CONFIG.GENETIC.MUTATION_PROBABILITY;
     this.numberOfPotentialMutations = CONFIG.GENETIC.MUTATIONS_PER_SCHEDULE;
@@ -110,6 +152,19 @@ class Schedule {
    */
   addEvent(event) {
     this.events.push(event);
+
+    // Add to byTeam index
+    if (!this.byTeam.has(event.teamId)) {
+      this.byTeam.set(event.teamId, []);
+    }
+    this.byTeam.get(event.teamId).push(event);
+
+    // Add to byResource index
+    const resourceKey = event.getResourceKey();
+    if (!this.byResource.has(resourceKey)) {
+      this.byResource.set(resourceKey, []);
+    }
+    this.byResource.get(resourceKey).push(event);
   }
 
   /**
@@ -126,19 +181,16 @@ class Schedule {
    * @returns {Event[]} Events for the team
    */
   getTeamEvents(teamId) {
-    return this.events.filter((event) => event.teamId === teamId);
+    return this.byTeam.get(teamId) || [];
   }
 
   /**
-   * Get events for a specific location
-   * @param {number} locationId - The location's ID
-   * @param {string} type - The type of event
-   * @returns {Event[]} Events at the location
+   * Get events for a specific resource
+   * @param {string} resourceKey - The resource key
+   * @returns {Event[]} Events for the resource
    */
-  getLocationEvents(locationId, type) {
-    return this.events.filter(
-      (event) => event.locationId === locationId && event.type === type
-    );
+  getResourceEvents(resourceKey) {
+    return this.byResource.get(resourceKey) || [];
   }
 
   /**
@@ -188,7 +240,19 @@ class Schedule {
    * @param {Event[]} events - New events
    */
   replaceEventsInRange(start, end, events) {
+    // First, remove old events from indexes
+    const oldEvents = this.events.slice(start, end);
+    for (const event of oldEvents) {
+      this.removeFromIndexes(event);
+    }
+
+    // Then replace in main array
     this.events.splice(start, end - start, ...events);
+
+    // Add new events to indexes
+    for (const event of events) {
+      this.addToIndexes(event);
+    }
   }
 
   /**
@@ -197,7 +261,58 @@ class Schedule {
    * @param {Event} event - The new event
    */
   replaceEventAtIndex(index, event) {
+    // Remove old event from indexes
+    this.removeFromIndexes(this.events[index]);
+
+    // Replace in main array
     this.events[index] = event;
+
+    // Add new event to indexes
+    this.addToIndexes(event);
+  }
+
+  /**
+   * Remove an event from the indexes
+   * @param {Event} event - The event to remove
+   * @private
+   */
+  removeFromIndexes(event) {
+    // Remove from byTeam
+    if (this.byTeam.has(event.teamId)) {
+      this.byTeam.set(
+        event.teamId,
+        this.byTeam.get(event.teamId).filter((e) => !e.equals(event))
+      );
+    }
+
+    // Remove from byResource
+    const resourceKey = event.getResourceKey();
+    if (this.byResource.has(resourceKey)) {
+      this.byResource.set(
+        resourceKey,
+        this.byResource.get(resourceKey).filter((e) => !e.equals(event))
+      );
+    }
+  }
+
+  /**
+   * Add an event to the indexes
+   * @param {Event} event - The event to add
+   * @private
+   */
+  addToIndexes(event) {
+    // Add to byTeam
+    if (!this.byTeam.has(event.teamId)) {
+      this.byTeam.set(event.teamId, []);
+    }
+    this.byTeam.get(event.teamId).push(event);
+
+    // Add to byResource
+    const resourceKey = event.getResourceKey();
+    if (!this.byResource.has(resourceKey)) {
+      this.byResource.set(resourceKey, []);
+    }
+    this.byResource.get(resourceKey).push(event);
   }
 
   /**
@@ -205,6 +320,21 @@ class Schedule {
    */
   sortByStartTime() {
     this.events.sort((a, b) => a.startTime - b.startTime);
+
+    // Sort the indexes as well
+    for (const [teamId, events] of this.byTeam.entries()) {
+      this.byTeam.set(
+        teamId,
+        events.sort((a, b) => a.startTime - b.startTime)
+      );
+    }
+
+    for (const [resourceKey, events] of this.byResource.entries()) {
+      this.byResource.set(
+        resourceKey,
+        events.sort((a, b) => a.startTime - b.startTime)
+      );
+    }
   }
 
   /**
@@ -214,18 +344,12 @@ class Schedule {
   buildTeamSchedule() {
     const teamSchedule = {};
 
-    for (let i = 1; i <= CONFIG.NUM_TEAMS; i++) {
-      teamSchedule[i] = [];
+    // Convert Map to object for compatibility with existing code
+    for (const [teamId, events] of this.byTeam.entries()) {
+      teamSchedule[teamId] = [...events].sort(
+        (a, b) => a.startTime - b.startTime
+      );
     }
-
-    for (const event of this.events) {
-      teamSchedule[event.teamId].push(event);
-    }
-
-    // Sort each team's events by start time
-    Object.values(teamSchedule).forEach((events) => {
-      events.sort((a, b) => a.startTime - b.startTime);
-    });
 
     return teamSchedule;
   }
@@ -237,20 +361,13 @@ class Schedule {
   buildTableSchedule() {
     const tableSchedule = {};
 
+    // Get table events from byResource
     for (let i = 0; i < CONFIG.NUM_ROBOT_TABLES; i++) {
-      tableSchedule[i] = [];
+      const resourceKey = `table-${i}`;
+      tableSchedule[i] = this.getResourceEvents(resourceKey).sort(
+        (a, b) => a.startTime - b.startTime
+      );
     }
-
-    for (const event of this.events) {
-      if (event.type === CONFIG.EVENT_TYPES.TABLE_RUN) {
-        tableSchedule[event.locationId].push(event);
-      }
-    }
-
-    // Sort each table's events by start time
-    Object.values(tableSchedule).forEach((events) => {
-      events.sort((a, b) => a.startTime - b.startTime);
-    });
 
     return tableSchedule;
   }
@@ -262,25 +379,76 @@ class Schedule {
   buildJudgingSchedule() {
     const judgingSchedule = {};
 
+    // Get judging events from byResource
     for (let i = 0; i < CONFIG.NUM_JUDGING_ROOMS; i++) {
-      judgingSchedule[i] = [];
+      const resourceKey = `judging-${i}`;
+      judgingSchedule[i] = this.getResourceEvents(resourceKey).sort(
+        (a, b) => a.startTime - b.startTime
+      );
     }
-
-    for (const event of this.events) {
-      if (
-        event.type === CONFIG.EVENT_TYPES.PROJECT_JUDGING ||
-        event.type === CONFIG.EVENT_TYPES.ROBOT_JUDGING
-      ) {
-        judgingSchedule[event.locationId].push(event);
-      }
-    }
-
-    // Sort each judging room's events by start time
-    Object.values(judgingSchedule).forEach((events) => {
-      events.sort((a, b) => a.startTime - b.startTime);
-    });
 
     return judgingSchedule;
+  }
+
+  /**
+   * Check if all events are within day bounds
+   * @returns {boolean} True if all events are within day bounds
+   */
+  isWithinDayBounds() {
+    for (const event of this.events) {
+      if (!event.isWithinDayBounds()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Check if any team has overlapping events (with buffer)
+   * @param {number} buffer - Buffer time in minutes
+   * @returns {boolean} True if no overlaps found
+   */
+  hasNoTeamOverlaps(buffer = CONFIG.DURATIONS.MIN_TRANSITION_TIME) {
+    for (const [teamId, events] of this.byTeam.entries()) {
+      const sortedEvents = [...events].sort(
+        (a, b) => a.startTime - b.startTime
+      );
+
+      for (let i = 0; i < sortedEvents.length - 1; i++) {
+        if (sortedEvents[i].overlaps(sortedEvents[i + 1], buffer)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Check if any resource has overlapping events (with buffer)
+   * @param {number} buffer - Buffer time in minutes
+   * @returns {boolean} True if no overlaps found
+   */
+  hasNoResourceOverlaps(buffer = 0) {
+    for (const [resourceKey, events] of this.byResource.entries()) {
+      const sortedEvents = [...events].sort(
+        (a, b) => a.startTime - b.startTime
+      );
+
+      for (let i = 0; i < sortedEvents.length - 1; i++) {
+        // Use appropriate buffer based on resource type
+        let resourceBuffer = buffer;
+        if (resourceKey.startsWith("table-")) {
+          resourceBuffer = CONFIG.DURATIONS.TABLE_BUFFER;
+        } else if (resourceKey.startsWith("judging-")) {
+          resourceBuffer = CONFIG.DURATIONS.JUDGE_BUFFER;
+        }
+
+        if (sortedEvents[i].overlaps(sortedEvents[i + 1], resourceBuffer)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }
 
