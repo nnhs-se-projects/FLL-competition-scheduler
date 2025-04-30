@@ -309,8 +309,197 @@
         </div>
       </div>
     </div>
+
+    <!-- AI Schedule Optimizer -->
+    <div class="bg-white rounded-lg shadow mt-8">
+      <div class="p-6">
+        <h3 class="text-lg font-medium mb-4">AI Schedule Optimizer</h3>
+        <p class="text-gray-700 mb-4">
+          Use Google's Gemini AI to automatically generate an optimized schedule based on your requirements.
+        </p>
+        
+        <button 
+          id="openAIOptimizerBtn" 
+          class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-150 ease-in-out"
+        >
+          Open AI Optimizer
+        </button>
+      </div>
+    </div>
   </div>
 </main>
+
+<!-- AI Schedule Optimizer Modal -->
+<div id="aiOptimizerModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="fixed inset-0 bg-black opacity-50" id="modalOverlay"></div>
+    
+    <div class="relative bg-white rounded-lg max-w-3xl w-full mx-auto p-6 shadow-xl z-10">
+      <h2 class="text-xl font-bold mb-4">AI Schedule Optimizer</h2>
+      
+      <form id="aiOptimizerForm" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Number of Teams</label>
+            <input 
+              type="number" 
+              name="aiNumTeams" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+              value="<%= config?.numTeams || 32 %>"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Number of Robot Tables</label>
+            <input 
+              type="number" 
+              name="aiNumTables" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+              value="<%= config?.numTables || 4 %>"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Number of Judging Rooms</label>
+            <input 
+              type="number" 
+              name="aiNumJudgingRooms" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="<%= config?.numJudgingRooms || 8 %>"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Event Start Time</label>
+            <input 
+              type="time" 
+              name="aiStartTime" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="08:00"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Event End Time</label>
+            <input 
+              type="time" 
+              name="aiEndTime" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="17:00"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Lunch Start Time</label>
+            <input 
+              type="time" 
+              name="aiLunchTime" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="11:30"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Lunch Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiLunchDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="45"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Table Run Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiTableDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="5"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Table Buffer Time (minutes)</label>
+            <input 
+              type="number" 
+              name="aiTableBuffer" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="2"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Judging Session Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiJudgeDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="15"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Judging Buffer Time (minutes)</label>
+            <input 
+              type="number" 
+              name="aiJudgeBuffer" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="3"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Opening Ceremony Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiOpeningDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="20"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Closing Ceremony Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiClosingDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="30"
+            >
+          </div>
+        </div>
+        
+        <div id="aiScheduleResult" class="hidden bg-gray-50 p-4 rounded-lg">
+          <div class="flex items-center">
+            <div class="spinner mr-3 hidden">
+              <div class="w-6 h-6 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+            </div>
+            <div class="result-message"></div>
+          </div>
+        </div>
+        
+        <div class="flex justify-end gap-3">
+          <button 
+            type="button"
+            id="closeAIModalBtn"
+            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          
+          <button 
+            type="submit"
+            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            id="generateAIScheduleBtn"
+          >
+            Generate Optimized Schedule
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- Add this script before the footer -->
 <script>
@@ -423,6 +612,122 @@
     }
 
     initializeTeamInfo();
+  });
+
+  // AI Optimizer Modal Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('aiOptimizerModal');
+    const openBtn = document.getElementById('openAIOptimizerBtn');
+    const closeBtn = document.getElementById('closeAIModalBtn');
+    const overlay = document.getElementById('modalOverlay');
+    const form = document.getElementById('aiOptimizerForm');
+    const resultContainer = document.getElementById('aiScheduleResult');
+    const spinner = resultContainer.querySelector('.spinner');
+    const resultMessage = resultContainer.querySelector('.result-message');
+    
+    // Open modal
+    openBtn.addEventListener('click', function() {
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    });
+    
+    // Close modal
+    function closeModal() {
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+    
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const scheduleParams = {
+        numTeams: parseInt(formData.get('aiNumTeams')),
+        numTables: parseInt(formData.get('aiNumTables')),
+        numJudgingRooms: parseInt(formData.get('aiNumJudgingRooms')),
+        startTime: formData.get('aiStartTime'),
+        endTime: formData.get('aiEndTime'),
+        lunchTime: formData.get('aiLunchTime'),
+        lunchDuration: parseInt(formData.get('aiLunchDuration')),
+        tableDuration: parseInt(formData.get('aiTableDuration')),
+        tableBuffer: parseInt(formData.get('aiTableBuffer')),
+        judgeDuration: parseInt(formData.get('aiJudgeDuration')),
+        judgeBuffer: parseInt(formData.get('aiJudgeBuffer')),
+        openingDuration: parseInt(formData.get('aiOpeningDuration')),
+        closingDuration: parseInt(formData.get('aiClosingDuration'))
+      };
+      
+      // Call Gemini API via our backend
+      callGeminiAPI(scheduleParams)
+        .then(parameters => {
+          // Success - redirect to schedule page with the new schedule
+          spinner.classList.add('hidden');
+          resultMessage.innerHTML = 'Success! Optimized schedule generated. Applying now...';
+          
+          // Apply the schedule
+          setTimeout(() => {
+            window.location.href = '/regenerate-schedule?' + 
+              `numTeams=${parameters.numTeams}&` +
+              `numTables=${parameters.numTables}&` +
+              `numJudgingRooms=${parameters.numJudgingRooms}&` +
+              `dayStart=${parameters.dayStart}&` +
+              `dayEnd=${parameters.dayEnd}&` +
+              `lunchTime=${parameters.lunchTime}&` +
+              `lunchDuration=${parameters.lunchDuration}`;
+          }, 1500);
+        })
+        .catch(error => {
+          // Error
+          spinner.classList.add('hidden');
+          resultMessage.innerHTML = `<span class="text-red-600">Error: ${error.message}</span>`;
+        });
+    });
+    
+    // Function to call Gemini API via our backend
+    async function callGeminiAPI(params) {
+      try {
+        // Show loading state
+        resultContainer.classList.remove('hidden');
+        spinner.classList.remove('hidden');
+        resultMessage.innerHTML = 'Generating optimized schedule with AI...';
+        
+        // Call our backend API that interfaces with Gemini
+        const response = await fetch('/api/gemini-optimize', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(params)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to generate schedule');
+        }
+        
+        const data = await response.json();
+        
+        // Update UI with success message
+        spinner.classList.add('hidden');
+        resultMessage.innerHTML = 'Success! Optimized schedule generated. Applying now...';
+        
+        // Return the optimized parameters
+        return data.parameters;
+      } catch (error) {
+        console.error('Gemini API error:', error);
+        throw new Error('Failed to generate schedule with AI: ' + error.message);
+      }
+    }
+    
+    // Helper function to convert time to hours (8:30 -> 8.5)
+    function convertTimeToHours(timeString) {
+      const [hours, minutes] = timeString.split(':').map(Number);
+      return hours + (minutes / 60);
+    }
   });
 </script>
 

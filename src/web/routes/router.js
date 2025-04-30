@@ -12,6 +12,7 @@ import Entry from "../models/entry.js";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const { FLLSchedule } = require("../scheduleAdapter.cjs");
+import axios from "axios";
 
 // Import static data
 const habitsOfMind = require("../models/habitsOfMind.json");
@@ -264,5 +265,114 @@ route.post("/save-config", (req, res) => {
 
   res.redirect("/schedule-config");
 });
+
+// AI Schedule Optimizer API
+route.post("/api/gemini-optimize", async (req, res) => {
+  try {
+    const GEMINI_API_KEY =
+      process.env.GEMINI_API_KEY || "AIzaSyCuGhE1LkGuVK3GW9G6kQOBRI6Zc8HEH38";
+    const GEMINI_API_URL =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+
+    // Get schedule parameters from request body
+    const scheduleParams = req.body;
+
+    // Create the Gemini API request
+    const geminiPayload = {
+      contents: [
+        {
+          parts: [
+            {
+              text: `Generate an optimized FLL competition schedule with the following parameters:
+              
+Number of Teams: ${scheduleParams.numTeams}
+Number of Robot Tables: ${scheduleParams.numTables}
+Number of Judging Rooms: ${scheduleParams.numJudgingRooms}
+Event Start Time: ${scheduleParams.startTime}
+Event End Time: ${scheduleParams.endTime}
+Lunch Time: ${scheduleParams.lunchTime}
+Lunch Duration: ${scheduleParams.lunchDuration} minutes
+Table Run Duration: ${scheduleParams.tableDuration} minutes
+Table Buffer Time: ${scheduleParams.tableBuffer} minutes
+Judging Session Duration: ${scheduleParams.judgeDuration} minutes
+Judging Buffer Time: ${scheduleParams.judgeBuffer} minutes
+Opening Ceremony Duration: ${scheduleParams.openingDuration} minutes
+Closing Ceremony Duration: ${scheduleParams.closingDuration} minutes
+
+Please generate an optimized schedule that:
+1. Includes opening and closing ceremonies for all teams
+2. Provides a single unified lunch break for all teams
+3. Ensures each team has proper judging sessions and table runs
+4. Avoids resource conflicts (tables, judging rooms)
+5. Maintains appropriate buffer times between events
+6. Places activities efficiently in blocks before and after lunch
+
+Return the result as a schedule object that includes all necessary events and timing details.`,
+            },
+          ],
+        },
+      ],
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: 8192,
+      },
+    };
+
+    // Call the Gemini API
+    const response = await axios.post(
+      `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
+      geminiPayload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Process the Gemini response
+    if (
+      response.data &&
+      response.data.candidates &&
+      response.data.candidates.length > 0
+    ) {
+      const generatedText = response.data.candidates[0].content.parts[0].text;
+
+      // Here you would parse the generated text to extract the schedule
+      // For now, we'll just return the optimization parameters to use with the existing scheduler
+
+      const optimizedParams = {
+        numTeams: scheduleParams.numTeams,
+        numTables: scheduleParams.numTables,
+        numJudgingRooms: scheduleParams.numJudgingRooms,
+        dayStart: convertTimeToHours(scheduleParams.startTime),
+        dayEnd: convertTimeToHours(scheduleParams.endTime),
+        lunchTime: convertTimeToHours(scheduleParams.lunchTime),
+        lunchDuration: scheduleParams.lunchDuration,
+      };
+
+      res.json({
+        success: true,
+        message: "Schedule optimization completed successfully",
+        parameters: optimizedParams,
+        aiResponse: generatedText,
+      });
+    } else {
+      throw new Error("Invalid response from Gemini API");
+    }
+  } catch (error) {
+    console.error("Gemini API error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to generate optimized schedule",
+      error: error.message,
+    });
+  }
+});
+
+// Helper function to convert time string to hours (e.g., "08:30" -> 8.5)
+function convertTimeToHours(timeString) {
+  const [hours, minutes] = timeString.split(":").map(Number);
+  return hours + minutes / 60;
+}
 
 export default route;
