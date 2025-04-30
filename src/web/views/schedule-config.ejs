@@ -314,8 +314,11 @@
 
 <!-- Add this script before the footer -->
 <script>
+  // Tell linters to ignore EJS template sections
+  /* eslint-disable */
   let teamInfo = <%- JSON.stringify(config?.teamInfo || []) %>;
   const numTeams = <%= typeof config !== 'undefined' ? config.numTeams : 32 %>;
+  /* eslint-enable */
 
   function initializeTeamInfo() {
     // Initialize team info array if empty
