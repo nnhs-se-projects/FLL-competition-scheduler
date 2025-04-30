@@ -220,6 +220,177 @@
   }
 
   updateScheduleStats();
+
+  // Export to Google Sheets functions
+
+  // Direct export handlers for the buttons
+  window.exportJudgingSchedule = function() {
+    const judgingSchedule = <%- JSON.stringify(schedule.judgingSchedule) %>;
+    const data = [];
+
+    judgingSchedule.forEach((room, roomIndex) => {
+      room.forEach(event => {
+        data.push({
+          room: `Room ${roomIndex + 1}`,
+          time: formatTime(event.startTime),
+          team: event.teamName,
+          teamNumber: event.teamNumber || event.teamID,
+          type: event.type === 'robotJudging' ? 'Robot Design' : 'Project',
+          duration: `${event.duration} min`
+        });
+      });
+    });
+
+    downloadCSV(data, 'FLL_Judging_Schedule');
+  };
+
+  window.exportTableSchedule = function() {
+    const tableRuns = <%- JSON.stringify(schedule.tableRuns) %>;
+    const data = [];
+
+    tableRuns.forEach((table, tableIndex) => {
+      table.forEach(event => {
+        data.push({
+          table: `Table ${tableIndex + 1}`,
+          time: formatTime(event.startTime),
+          team: event.teamName,
+          teamNumber: event.teamNumber || event.teamID,
+          type: 'Robot Game',
+          duration: `${event.duration} min`
+        });
+      });
+    });
+
+    downloadCSV(data, 'FLL_Table_Schedule');
+  };
+
+  window.exportTeamSchedule = function() {
+    const teamsSchedule = <%- JSON.stringify(schedule.teamsSchedule) %>;
+    const data = [];
+
+    teamsSchedule.forEach((events, teamIndex) => {
+      if (teamIndex === 0) return; // Skip index 0 as it's empty
+
+      events.forEach(event => {
+        let eventType = '';
+        if (event.type === 'tableRun') eventType = 'Robot Game';
+        else if (event.type === 'projectJudging') eventType = 'Project';
+        else if (event.type === 'robotJudging') eventType = 'Robot Design';
+
+        data.push({
+          team: `Team ${teamIndex}`,
+          teamName: event.teamName,
+          teamNumber: event.teamNumber || event.teamID,
+          time: formatTime(event.startTime),
+          eventType: eventType,
+          location: event.locationName,
+          duration: `${event.duration} min`
+        });
+      });
+    });
+
+    downloadCSV(data, 'FLL_Team_Schedule');
+  };
+
+  window.exportFullSchedule = function() {
+    const teamsSchedule = <%- JSON.stringify(schedule.teamsSchedule) %>;
+    const judgingSchedule = <%- JSON.stringify(schedule.judgingSchedule) %>;
+    const tableRuns = <%- JSON.stringify(schedule.tableRuns) %>;
+    const data = [];
+
+    // Add judging schedule data
+    judgingSchedule.forEach((room, roomIndex) => {
+      room.forEach(event => {
+        data.push({
+          section: 'Judging',
+          location: `Room ${roomIndex + 1}`,
+          team: event.teamName,
+          teamNumber: event.teamNumber || event.teamID,
+          time: formatTime(event.startTime),
+          eventType: event.type === 'robotJudging' ? 'Robot Design' : 'Project',
+          duration: `${event.duration} min`
+        });
+      });
+    });
+
+    // Add table runs data
+    tableRuns.forEach((table, tableIndex) => {
+      table.forEach(event => {
+        data.push({
+          section: 'Robot Game',
+          location: `Table ${tableIndex + 1}`,
+          team: event.teamName,
+          teamNumber: event.teamNumber || event.teamID,
+          time: formatTime(event.startTime),
+          eventType: 'Robot Game',
+          duration: `${event.duration} min`
+        });
+      });
+    });
+
+    // Sort by time
+    data.sort((a, b) => {
+      const timeA = a.time;
+      const timeB = b.time;
+      return timeA.localeCompare(timeB);
+    });
+
+    downloadCSV(data, 'FLL_Complete_Schedule');
+  };
+
+  // Helper function to download CSV
+  function downloadCSV(dataArray, filename) {
+    try {
+      // If no data, show error
+      if (!dataArray || !dataArray.length) {
+        alert('No data to export');
+        return;
+      }
+
+      // Create CSV content
+      let csvContent = '';
+
+      // Add headers (column names from first object)
+      const headers = Object.keys(dataArray[0]);
+      csvContent += headers.join(',') + '\r\n';
+
+      // Add data rows
+      dataArray.forEach(item => {
+        const row = headers.map(header => {
+          let cell = item[header] === undefined ? '' : item[header];
+          // Escape quotes and wrap fields with commas in quotes
+          if (typeof cell === 'string') {
+            cell = cell.replace(/"/g, '""');
+            if (cell.includes(',') || cell.includes('"') || cell.includes('\n')) {
+              cell = `"${cell}"`;
+            }
+          }
+          return cell;
+        }).join(',');
+        csvContent += row + '\r\n';
+      });
+
+      // Create download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename + '.csv');
+      link.style.visibility = 'hidden';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Show success message
+      alert('CSV file downloaded successfully! To open in Google Sheets:\n1. Go to sheets.google.com\n2. Create a new spreadsheet\n3. Click File > Import > Upload\n4. Select the CSV file you just downloaded');
+
+    } catch (error) {
+      console.error('Error creating CSV:', error);
+      alert('An error occurred while creating the CSV file.');
+    }
+  }
 </script>
 
 <style>
