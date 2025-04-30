@@ -2,12 +2,21 @@
 <div class="bg-white rounded-lg shadow p-6 mt-8 master-schedule-container">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-xl font-bold text-gray-900">Schedule Handout By Team</h2>
-    <button
-      onclick="window.print()"
-      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm no-print"
-    >
-      Print Schedule
-    </button>
+    <div class="flex space-x-2 no-print">
+      <button
+        id="exportFullBtn"
+        onclick="window.exportFullSchedule()"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm"
+      >
+        Export to Google Sheets
+      </button>
+      <button
+        onclick="window.print()"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm"
+      >
+        Print Schedule
+      </button>
+    </div>
   </div>
 
   <div class="overflow-x-auto">

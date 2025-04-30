@@ -1,328 +1,127 @@
-/* Print-specific styles for FLL Competition Scheduler */
+/* Print styles for FLL Competition Scheduler */
 
 @media print {
-  /* Hide elements not needed for printing */
+  /* Global print styles */
+  body {
+    background-color: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+
+  /* Hide navigation and buttons */
   nav,
-  footer,
   .no-print,
-  button:not(.print-button) {
+  button,
+  .flex.justify-end.mb-4 {
     display: none !important;
   }
 
-  /* Reset page margins */
-  @page {
-    margin: 0.5cm;
-  }
-
-  /* General body styles */
-  body {
-    font-size: 10pt;
-    line-height: 1.3;
-    background: #fff;
-    color: #000;
-  }
-
-  /* Make sure white backgrounds print */
-  .bg-white {
-    background-color: #fff !important;
-    color: #000 !important;
-  }
-
-  /* Hide summary cards and other sections */
-  .summary-cards,
-  .bg-gray-50:not(.master-schedule-container) {
-    display: none !important;
-  }
-
-  /* Master schedule specific styles */
-  .master-schedule-container {
-    page-break-inside: avoid;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  .master-schedule-container table {
-    width: 100%;
-    font-size: 8pt;
-    border-collapse: collapse;
-  }
-
-  .master-schedule-container th,
-  .master-schedule-container td {
-    padding: 2px !important;
-    border: 1px solid #000 !important;
-  }
-
-  /* Ensure table headers repeat on each page */
-  thead {
-    display: table-header-group;
-  }
-
-  /* Prevent row breaks */
-  tr {
-    page-break-inside: avoid;
-  }
-
-  /* Add title to the printed page */
-  .master-schedule-container::before {
-    content: "FLL Competition Schedule";
-    display: block;
-    text-align: center;
-    font-size: 14pt;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  /* Basic page setup */
-  body {
-    background-color: white !important;
-    margin: 0;
-    padding: 0;
-  }
-
-  main {
-    background-color: white !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    display: block !important;
-  }
-
-  /* Container adjustments */
-  .max-w-7xl {
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 10px !important;
-  }
-
-  /* Page breaks */
-  .page-break {
-    page-break-after: always;
-    break-after: page;
-  }
-
-  /* Tables page specific */
-  .table-schedule {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    margin-bottom: 20px;
-    background-color: white !important;
-  }
-
-  /* Judging page specific */
-  .judging-room {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    margin-bottom: 20px;
-    background-color: white !important;
-  }
-
-  /* Teams page specific */
-  .team-schedule {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    margin-bottom: 20px;
-    background-color: white !important;
-  }
-
-  /* Schedule items */
-  .schedule-item {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  /* Ensure headers print on each page */
-  h1,
-  h2,
-  h3 {
-    page-break-after: avoid;
-    break-after: avoid;
-  }
-
-  /* Adjust grid layouts for print */
-  .grid {
-    display: block !important;
-  }
-
-  /* Show print-only elements */
-  .print\:block {
-    display: block !important;
-  }
-
+  /* Show elements that should be visible in print */
   .hidden.print\:block {
     display: block !important;
   }
 
-  /* Table styling for print */
+  /* Tables */
   table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1em;
-    display: table !important;
-    font-size: 11pt;
-    table-layout: fixed !important;
-  }
-
-  /* Specific styles for print tables */
-  .print-table {
     width: 100% !important;
-    table-layout: fixed !important;
     border-collapse: collapse !important;
+    page-break-inside: auto !important;
   }
 
-  .print-table colgroup {
-    display: table-column-group !important;
-  }
-
-  .print-table col {
-    display: table-column !important;
-  }
-
-  th,
-  td {
-    border: 1px solid #ddd;
-    padding: 6px 8px !important;
-    text-align: left;
-    vertical-align: middle;
-    overflow: visible;
-    word-wrap: break-word;
-    white-space: normal !important;
+  tr {
+    page-break-inside: avoid !important;
+    page-break-after: auto !important;
   }
 
   th {
-    background-color: #f2f2f2 !important;
-    font-weight: bold;
-    color: #333 !important;
-    text-transform: uppercase;
-    font-size: 10pt;
-  }
-
-  /* Robot Game Tables - 3 columns */
-  .table-schedule table th:nth-child(1),
-  .table-schedule table td:nth-child(1) {
-    width: 20% !important;
-  }
-
-  .table-schedule table th:nth-child(2),
-  .table-schedule table td:nth-child(2) {
-    width: 40% !important;
-  }
-
-  .table-schedule table th:nth-child(3),
-  .table-schedule table td:nth-child(3) {
-    width: 40% !important;
-  }
-
-  /* Judging Rooms - 4 columns */
-  .judging-room table th:nth-child(1),
-  .judging-room table td:nth-child(1) {
-    width: 15% !important;
-  }
-
-  .judging-room table th:nth-child(2),
-  .judging-room table td:nth-child(2) {
-    width: 25% !important;
-  }
-
-  .judging-room table th:nth-child(3),
-  .judging-room table td:nth-child(3) {
-    width: 40% !important;
-  }
-
-  .judging-room table th:nth-child(4),
-  .judging-room table td:nth-child(4) {
-    width: 20% !important;
-  }
-
-  /* Ensure good contrast for printing */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    color-adjust: exact !important;
-  }
-
-  /* Remove shadows and backgrounds */
-  .shadow,
-  .shadow-sm,
-  .shadow-md,
-  .shadow-lg {
-    box-shadow: none !important;
-  }
-
-  /* Ensure text is readable */
-  p,
-  span,
-  div {
+    background-color: #f3f4f6 !important;
     color: black !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
   }
 
-  /* Fix flexbox for printing */
-  .flex {
-    display: flex !important;
+  td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+    text-align: left !important;
   }
 
-  /* Specific fixes for team schedule cards */
-  .team-schedule .schedule-item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: white !important;
-  }
-
-  .team-schedule .schedule-item .flex {
-    display: flex !important;
-    justify-content: space-between;
-  }
-
-  /* Ensure white background for all content */
-  .bg-gray-50 {
-    display: block !important;
-  }
-
-  /* Adjust spacing */
-  .p-6,
-  .p-4,
-  .p-3 {
-    padding: 10px !important;
-  }
-
-  .mb-8,
-  .mb-6,
-  .mb-4 {
-    margin-bottom: 15px !important;
-  }
-
-  /* Fix for overflow containers */
-  .overflow-x-auto {
-    overflow: visible !important;
-  }
-
-  /* Ensure all content is visible */
-  .min-h-screen {
-    min-height: 0 !important;
-  }
-
-  /* Fix for rounded corners */
+  /* Card, containers, and backgrounds */
+  .bg-gray-50,
+  .bg-white,
   .rounded-lg,
-  .rounded {
+  .shadow,
+  .p-6 {
+    background-color: white !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
     border-radius: 0 !important;
   }
 
-  /* Fix for whitespace in tables */
+  .bg-gray-50 {
+    margin-bottom: 20px !important;
+    padding: 10px !important;
+    border: 1px solid #eee !important;
+  }
+
+  /* Headers and text */
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin-top: 20px !important;
+    margin-bottom: 10px !important;
+    page-break-after: avoid !important;
+    color: black !important;
+  }
+
+  /* Grid layouts */
+  .grid {
+    display: block !important;
+  }
+
+  .grid > div {
+    margin-bottom: 20px !important;
+  }
+
+  /* Page breaks */
+  .judging-schedule,
+  .table-schedule,
+  .team-schedule {
+    page-break-inside: avoid !important;
+  }
+
+  /* Adjust spacing */
+  .p-4,
+  .px-4,
+  .py-4,
+  .p-6,
+  .px-6,
+  .py-6 {
+    padding: 0 !important;
+  }
+
+  .mt-2,
+  .mt-4,
+  .mt-6,
+  .mt-8,
+  .mb-2,
+  .mb-4,
+  .mb-6,
+  .mb-8,
+  .my-2,
+  .my-4,
+  .my-6,
+  .my-8 {
+    margin: 0 !important;
+  }
+
+  /* Ensure table columns have reasonable widths */
   .whitespace-nowrap {
     white-space: normal !important;
-  }
-
-  /* Improve table cell padding */
-  .px-6,
-  .py-4 {
-    padding: 6px !important;
-  }
-
-  /* Improve table header padding */
-  .px-6.py-3 {
-    padding: 6px !important;
   }
 }
