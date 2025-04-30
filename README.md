@@ -9,7 +9,10 @@ The FLL Competition Scheduler is a web application that helps organizers create 
 ## Features
 
 - Generate optimized schedules for FLL competitions
-- Customize the number of teams, tables, and judging rooms
+- Configure any number of teams, tables, and judging rooms
+- Define day bounds and lunch waves
+- Enforce proper buffer times between activities
+- Prevent resource conflicts (team, table, and judging room)
 - View schedules from different perspectives (teams, tables, judging rooms)
 - User authentication with Google Sign-In
 - Responsive web interface
@@ -40,6 +43,7 @@ fll-competition-scheduler/
 │   ├── scheduler/           # Scheduling algorithm
 │   │   ├── config.js        # Configuration settings
 │   │   ├── models.js        # Data models
+│   │   ├── scheduler.js     # Main scheduling logic
 │   │   ├── geneticAlgorithm.js # Genetic algorithm implementation
 │   │   └── simpleScheduler.js  # Simple scheduling algorithm
 │   ├── utils/               # Utility functions
@@ -104,6 +108,70 @@ fll-competition-scheduler/
    ```
 
 6. Open your browser and navigate to `http://localhost:8080`
+
+## Schedule Configuration
+
+The scheduler supports a wide range of configuration options:
+
+### Core Parameters
+
+- **NUM_TEAMS**: Number of teams participating (10-50)
+- **NUM_ROBOT_TABLES**: Number of robot game tables (2-8)
+- **NUM_JUDGING_ROOMS**: Number of judging rooms (2-16)
+- **ROUNDS_PER_TEAM**: Number of robot game rounds per team (typically 3)
+
+### Day Bounds
+
+- **DAY_START**: Start time of the competition day in minutes (e.g., 8:00 AM = 480)
+- **DAY_END**: End time of the competition day in minutes (e.g., 5:00 PM = 1020)
+
+### Durations
+
+- **TABLE_RUN**: Duration of a robot game run in minutes
+- **TABLE_BUFFER**: Buffer time between consecutive table runs
+- **JUDGING_SESSION**: Duration of a judging session in minutes
+- **JUDGE_BUFFER**: Buffer time between consecutive judging sessions
+- **LUNCH_DURATION**: Duration of lunch break in minutes
+- **MIN_TRANSITION_TIME**: Minimum time required for teams to move between events
+
+### Lunch Waves
+
+- **LUNCH_WAVES**: Array of lunch start times in minutes (e.g., [660, 690, 720] for 11:00 AM, 11:30 AM, 12:00 PM)
+
+### Genetic Algorithm Parameters
+
+- **POPULATION_SIZE**: Size of the population in the genetic algorithm
+- **GENERATIONS**: Number of generations to evolve
+- **MUTATION_PROBABILITY**: Probability of mutation (0.0-1.0)
+- **MUTATIONS_PER_SCHEDULE**: Number of potential mutations per schedule
+- **ELITE_PERCENTAGE**: Percentage of top schedules to keep unchanged (0.0-1.0)
+
+## Schedule Generation
+
+The schedule generation process follows these steps:
+
+1. Create a random initial schedule
+2. Evaluate the schedule for conflicts and constraints
+3. Optimize the schedule using a genetic algorithm
+4. Return the best schedule found
+
+### Scheduling Rules
+
+The scheduler enforces several rules:
+
+- Each team must have exactly one project judging session
+- Each team must have exactly one robot design judging session
+- Each team must have exactly ROUNDS_PER_TEAM table runs
+- No team can have overlapping events (with transition buffer)
+- No resource (table or judging room) can have overlapping events (with buffer)
+- All events must be within the day bounds
+- Teams should be assigned to a lunch wave if possible
+
+The genetic algorithm optimizes for:
+
+- Minimizing idle time for teams
+- Maximizing resource utilization
+- Providing lunch breaks for all teams
 
 ## Development
 

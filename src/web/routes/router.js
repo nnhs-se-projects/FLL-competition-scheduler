@@ -27,22 +27,34 @@ import authRouter from "./auth.js";
 function generateNewSchedule(options = {}) {
   const schedule = new FLLSchedule();
 
-  // Set the start time first before generating the schedule
-  if (options.startTimeInMinutes) {
-    schedule.setStartTime(parseInt(options.startTimeInMinutes));
-  }
-
-  // Then set other parameters and generate
+  // Set configuration parameters
   if (options.numTeams) schedule.setNumTeams(parseInt(options.numTeams));
   if (options.numTables) schedule.setNumTables(parseInt(options.numTables));
   if (options.numJudgingRooms)
     schedule.setNumJudgingRooms(parseInt(options.numJudgingRooms));
+
+  // Set day bounds if provided
+  if (options.dayStart && options.dayEnd) {
+    schedule.setDayBounds(
+      parseFloat(options.dayStart),
+      parseFloat(options.dayEnd)
+    );
+  }
+
+  // Set lunch time if provided
+  if (options.lunchTime && options.lunchDuration) {
+    schedule.setLunchTime(
+      parseFloat(options.lunchTime),
+      parseInt(options.lunchDuration)
+    );
+  }
 
   schedule.populateWithRandomGenes();
   const scheduleData = {
     tableRuns: schedule.buildTableSchedule(),
     judgingSchedule: schedule.buildJudgingSchedule(),
     teamsSchedule: schedule.buildTeamsSchedule(),
+    score: schedule.score,
   };
 
   // Apply custom team names and numbers if provided
@@ -148,6 +160,10 @@ route.get("/schedule-config", (req, res) => {
       numTeams: 32,
       numTables: 4,
       numJudgingRooms: 8,
+      dayStart: 8,
+      dayEnd: 17,
+      lunchTime: 11.5,
+      lunchDuration: 45,
       teamInfo: [],
     };
   }
@@ -175,8 +191,15 @@ route.get("/regenerate-schedule", (req, res) => {
       parseInt(req.query.numJudgingRooms) ||
       req.session.config?.numJudgingRooms ||
       8,
-    startTime: req.session.config?.startTime || "09:00",
-    startTimeInMinutes: req.session.config?.startTimeInMinutes || 540,
+    dayStart:
+      parseFloat(req.query.dayStart) || req.session.config?.dayStart || 8,
+    dayEnd: parseFloat(req.query.dayEnd) || req.session.config?.dayEnd || 17,
+    lunchTime:
+      parseFloat(req.query.lunchTime) || req.session.config?.lunchTime || 11.5,
+    lunchDuration:
+      parseInt(req.query.lunchDuration) ||
+      req.session.config?.lunchDuration ||
+      45,
     teamInfo: req.session.config?.teamInfo || [],
   };
 
@@ -187,6 +210,20 @@ route.get("/regenerate-schedule", (req, res) => {
   req.session.schedule = generateNewSchedule(config);
 
   res.redirect(req.headers.referer || "/schedule-config");
+});
+
+// Export schedule to JSON
+route.get("/export-schedule", (req, res) => {
+  if (!req.session.schedule) {
+    req.session.schedule = generateNewSchedule();
+  }
+
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader(
+    "Content-Disposition",
+    "attachment; filename=fll-schedule.json"
+  );
+  res.send(JSON.stringify(req.session.schedule, null, 2));
 });
 
 // Example route for API access
@@ -202,22 +239,21 @@ route.use("/auth", authRouter);
 
 // Add this route to handle saving configuration
 route.post("/save-config", (req, res) => {
-  // Convert start time to minutes since midnight
-  const startTime = req.body.startTime || "09:00";
-  const [hours, minutes] = startTime.split(":").map(Number);
-  const startTimeInMinutes = hours * 60 + minutes;
-
   // Save configuration to session
   req.session.config = {
     numTeams: parseInt(req.body.numTeams) || 32,
     numTables: parseInt(req.body.numTables) || 4,
     numJudgingRooms: parseInt(req.body.numJudgingRooms) || 8,
-    startTime: startTime,
-    startTimeInMinutes: startTimeInMinutes,
-    teamInfo: req.body.teamNames.map((name, index) => ({
-      name: name,
-      number: parseInt(req.body.teamNumbers[index]) || index + 1,
-    })),
+    dayStart: parseFloat(req.body.dayStart) || 8,
+    dayEnd: parseFloat(req.body.dayEnd) || 17,
+    lunchTime: parseFloat(req.body.lunchTime) || 11.5,
+    lunchDuration: parseInt(req.body.lunchDuration) || 45,
+    teamInfo: req.body.teamNames
+      ? req.body.teamNames.map((name, index) => ({
+          name: name,
+          number: parseInt(req.body.teamNumbers[index]) || index + 1,
+        }))
+      : [],
   };
 
   // Clear existing schedule when config changes
