@@ -7,6 +7,18 @@
 
 <main class="min-h-screen bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Error Alert -->
+    <% if (typeof session !== 'undefined' && session.error) { %>
+      <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Error: </strong>
+        <span class="block sm:inline"><%= session.error %></span>
+        <button onclick="this.parentElement.style.display='none'" class="absolute top-0 right-0 mt-2 mr-2">
+          <span class="text-red-700">&times;</span>
+        </button>
+      </div>
+      <% session.error = null; %>
+    <% } %>
+    
     <!-- Page Header -->
     <div class="mb-8">
       <h2 class="text-2xl font-bold text-gray-900">Schedule Configuration</h2>
@@ -243,6 +255,10 @@
           </form>
         </div>
 
+        <!-- Hidden elements containing EJS data -->
+        <div id="team-info-data" style="display: none;"><%- JSON.stringify(config?.teamInfo || []) %></div>
+        <div id="num-teams-data" style="display: none;"><%= typeof config !== 'undefined' ? config.numTeams : 32 %></div>
+
         <!-- Current Schedule Information -->
         <div class="border-t border-gray-200 pt-6">
           <h4 class="font-medium text-gray-900 mb-4">
@@ -347,6 +363,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
               value="<%= config?.numTeams || 32 %>"
             >
+            <div class="text-xs text-gray-500 mt-1">Total number of teams competing in the tournament</div>
           </div>
           
           <div>
@@ -357,6 +374,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
               value="<%= config?.numTables || 4 %>"
             >
+            <div class="text-xs text-gray-500 mt-1">Number of available robot game tables (usually in pairs)</div>
           </div>
           
           <div>
@@ -367,6 +385,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="<%= config?.numJudgingRooms || 8 %>"
             >
+            <div class="text-xs text-gray-500 mt-1">Total judging rooms across all categories</div>
           </div>
           
           <div>
@@ -377,6 +396,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="08:00"
             >
+            <div class="text-xs text-gray-500 mt-1">When the first activities should begin</div>
           </div>
           
           <div>
@@ -387,6 +407,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="17:00"
             >
+            <div class="text-xs text-gray-500 mt-1">When all activities should be completed</div>
           </div>
           
           <div>
@@ -397,6 +418,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="11:30"
             >
+            <div class="text-xs text-gray-500 mt-1">When lunch break should begin</div>
           </div>
           
           <div>
@@ -407,6 +429,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="45"
             >
+            <div class="text-xs text-gray-500 mt-1">How long teams have for lunch</div>
           </div>
           
           <div>
@@ -417,6 +440,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="5"
             >
+            <div class="text-xs text-gray-500 mt-1">Time allocated for each robot game match</div>
           </div>
           
           <div>
@@ -427,6 +451,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="2"
             >
+            <div class="text-xs text-gray-500 mt-1">Time between table runs for setup</div>
           </div>
           
           <div>
@@ -437,6 +462,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="15"
             >
+            <div class="text-xs text-gray-500 mt-1">Time for each judging presentation</div>
           </div>
           
           <div>
@@ -447,6 +473,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="3"
             >
+            <div class="text-xs text-gray-500 mt-1">Time between judging sessions for transition</div>
           </div>
 
           <div>
@@ -457,6 +484,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="20"
             >
+            <div class="text-xs text-gray-500 mt-1">Length of opening ceremony</div>
           </div>
           
           <div>
@@ -467,7 +495,45 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="30"
             >
+            <div class="text-xs text-gray-500 mt-1">Length of closing ceremony</div>
           </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Team Transit Time (minutes)</label>
+            <input 
+              type="number" 
+              name="aiTransitTime" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="5"
+            >
+            <div class="text-xs text-gray-500 mt-1">Time teams need to move between locations</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Optimization Priority</label>
+            <select 
+              name="aiOptimizationPriority" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            >
+              <option value="balanced">Balanced (Default)</option>
+              <option value="compact">Compact Schedule</option>
+              <option value="spread">Spread Out Events</option>
+              <option value="team-friendly">Team Experience</option>
+              <option value="volunteer-friendly">Volunteer Experience</option>
+            </select>
+            <div class="text-xs text-gray-500 mt-1">What to prioritize in schedule generation</div>
+          </div>
+        </div>
+        
+        <div class="border-t border-gray-200 pt-4 mt-4">
+          <h4 class="font-medium text-gray-900 mb-4">Special Requirements</h4>
+          <textarea
+            name="aiSpecialRequirements"
+            rows="3"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+            placeholder="Enter any special scheduling requirements or constraints..."
+          ></textarea>
+          <div class="text-xs text-gray-500 mt-1">Examples: "Team 5 needs to start later", "Keep judging blocks in morning"</div>
         </div>
         
         <div id="aiScheduleResult" class="hidden bg-gray-50 p-4 rounded-lg">
@@ -503,11 +569,24 @@
 
 <!-- Add this script before the footer -->
 <script>
-  // Tell linters to ignore EJS template sections
-  /* eslint-disable */
-  let teamInfo = <%- JSON.stringify(config?.teamInfo || []) %>;
-  const numTeams = <%= typeof config !== 'undefined' ? config.numTeams : 32 %>;
-  /* eslint-enable */
+  // Store the team information in a hidden element to avoid EJS template issues
+  var teamInfo = [];
+  var numTeams = 32;
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    try {
+      // Parse team info from the hidden element
+      teamInfo = JSON.parse(document.getElementById('team-info-data').textContent || '[]');
+      numTeams = parseInt(document.getElementById('num-teams-data').textContent || '32');
+    } catch (e) {
+      console.error("Error parsing team info:", e);
+      teamInfo = [];
+      numTeams = 32;
+    }
+    
+    // Initialize team info with the parsed data
+    initializeTeamInfo();
+  });
 
   function initializeTeamInfo() {
     // Initialize team info array if empty
@@ -590,9 +669,6 @@
     `).join('');
   }
 
-  // Initialize when page loads
-  document.addEventListener('DOMContentLoaded', initializeTeamInfo);
-
   // Update team info when number of teams changes
   document.getElementById('numTeams').addEventListener('change', function() {
     const newNumTeams = parseInt(this.value) || 32;
@@ -658,34 +734,81 @@
         judgeDuration: parseInt(formData.get('aiJudgeDuration')),
         judgeBuffer: parseInt(formData.get('aiJudgeBuffer')),
         openingDuration: parseInt(formData.get('aiOpeningDuration')),
-        closingDuration: parseInt(formData.get('aiClosingDuration'))
+        closingDuration: parseInt(formData.get('aiClosingDuration')),
+        transitTime: parseInt(formData.get('aiTransitTime')),
+        optimizationPriority: formData.get('aiOptimizationPriority'),
+        specialRequirements: formData.get('aiSpecialRequirements')
       };
       
-      // Call Gemini API via our backend
-      callGeminiAPI(scheduleParams)
-        .then(parameters => {
-          // Success - redirect to schedule page with the new schedule
-          spinner.classList.add('hidden');
-          resultMessage.innerHTML = 'Success! Optimized schedule generated. Applying now...';
-          
-          // Apply the schedule
-          setTimeout(() => {
-            window.location.href = '/regenerate-schedule?' + 
-              `numTeams=${parameters.numTeams}&` +
-              `numTables=${parameters.numTables}&` +
-              `numJudgingRooms=${parameters.numJudgingRooms}&` +
-              `dayStart=${parameters.dayStart}&` +
-              `dayEnd=${parameters.dayEnd}&` +
-              `lunchTime=${parameters.lunchTime}&` +
-              `lunchDuration=${parameters.lunchDuration}`;
-          }, 1500);
-        })
-        .catch(error => {
-          // Error
-          spinner.classList.add('hidden');
-          resultMessage.innerHTML = `<span class="text-red-600">Error: ${error.message}</span>`;
-        });
+      // Basic form validation
+      if (validateScheduleParams(scheduleParams, resultMessage)) {
+        // Call Gemini API via our backend
+        callGeminiAPI(scheduleParams)
+          .then(parameters => {
+            // Success - redirect to schedule page with the new schedule
+            spinner.classList.add('hidden');
+            resultMessage.innerHTML = '<span class="text-green-600">Success! Optimized schedule generated. Applying now...</span>';
+            
+            // Apply the schedule
+            setTimeout(() => {
+              window.location.href = '/regenerate-schedule?' + 
+                `numTeams=${parameters.numTeams}&` +
+                `numTables=${parameters.numTables}&` +
+                `numJudgingRooms=${parameters.numJudgingRooms}&` +
+                `dayStart=${parameters.dayStart}&` +
+                `dayEnd=${parameters.dayEnd}&` +
+                `lunchTime=${parameters.lunchTime}&` +
+                `lunchDuration=${parameters.lunchDuration}`;
+            }, 1500);
+          })
+          .catch(error => {
+            // Error
+            spinner.classList.add('hidden');
+            resultMessage.innerHTML = `<span class="text-red-600">Error: ${error.message}</span>`;
+          });
+      }
     });
+    
+    // Validate schedule parameters
+    function validateScheduleParams(params, messageElement) {
+      // Convert time strings to comparable numbers
+      const startTimeMinutes = convertTimeToMinutes(params.startTime);
+      const endTimeMinutes = convertTimeToMinutes(params.endTime);
+      const lunchTimeMinutes = convertTimeToMinutes(params.lunchTime);
+      
+      // Check for invalid values
+      if (params.numTeams < 1 || params.numTeams > 200) {
+        messageElement.innerHTML = '<span class="text-red-600">Number of teams must be between 1 and 200</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      if (params.numTables < 1 || params.numTables > 20) {
+        messageElement.innerHTML = '<span class="text-red-600">Number of tables must be between 1 and 20</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      if (params.numJudgingRooms < 1 || params.numJudgingRooms > 20) {
+        messageElement.innerHTML = '<span class="text-red-600">Number of judging rooms must be between 1 and 20</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      if (endTimeMinutes <= startTimeMinutes) {
+        messageElement.innerHTML = '<span class="text-red-600">End time must be after start time</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      if (lunchTimeMinutes <= startTimeMinutes || lunchTimeMinutes >= endTimeMinutes) {
+        messageElement.innerHTML = '<span class="text-red-600">Lunch time must be between start and end times</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      return true;
+    }
     
     // Function to call Gemini API via our backend
     async function callGeminiAPI(params) {
@@ -704,22 +827,43 @@
           body: JSON.stringify(params)
         });
         
+        // First check if the response is OK
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to generate schedule');
+          // Try to parse the error response as JSON
+          try {
+            const errorData = await response.json();
+            throw new Error(errorData.message || errorData.error || 'Failed to generate schedule');
+          } catch (jsonError) {
+            // If we can't parse the JSON, use the status text
+            throw new Error(`Failed to generate schedule: ${response.status} ${response.statusText}`);
+          }
         }
         
-        const data = await response.json();
+        // Parse the successful response
+        let data;
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          throw new Error('Invalid response format from server');
+        }
+        
+        // Make sure the data has the expected format
+        if (!data || !data.parameters) {
+          throw new Error('Invalid schedule data received from server');
+        }
         
         // Update UI with success message
         spinner.classList.add('hidden');
-        resultMessage.innerHTML = 'Success! Optimized schedule generated. Applying now...';
+        resultMessage.innerHTML = '<span class="text-green-600">Success! Optimized schedule generated. Applying now...</span>';
         
         // Return the optimized parameters
         return data.parameters;
       } catch (error) {
         console.error('Gemini API error:', error);
-        throw new Error('Failed to generate schedule with AI: ' + error.message);
+        spinner.classList.add('hidden');
+        resultMessage.innerHTML = `<span class="text-red-600">Error: ${error.message}</span>
+          <p class="mt-2 text-sm text-red-500">Please try again or adjust your parameters.</p>`;
+        throw error; // Re-throw for the caller to handle
       }
     }
     
@@ -727,6 +871,12 @@
     function convertTimeToHours(timeString) {
       const [hours, minutes] = timeString.split(':').map(Number);
       return hours + (minutes / 60);
+    }
+    
+    // Helper function to convert time to minutes since midnight
+    function convertTimeToMinutes(timeString) {
+      const [hours, minutes] = timeString.split(':').map(Number);
+      return (hours * 60) + minutes;
     }
   });
 </script>

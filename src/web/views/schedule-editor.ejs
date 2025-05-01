@@ -1,0 +1,242 @@
+<!-- include header -->
+<%- include('include/_header') %>
+<!-- /include header -->
+
+<!-- Main Site -->
+<%- include('partials/_nav') %>
+
+<main class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-gray-900">
+        Interactive Schedule Editor
+      </h2>
+      <p class="mt-2 text-gray-600">
+        Drag and drop events to modify your competition schedule with AI-powered
+        conflict resolution
+      </p>
+    </div>
+
+    <!-- Controls -->
+    <div class="schedule-controls">
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="detectConflictsBtn"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Detect Conflicts
+        </button>
+        <button
+          id="fixAllConflictsBtn"
+          class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          Auto-Fix All Conflicts
+        </button>
+        <button
+          id="saveScheduleBtn"
+          class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+        >
+          Save Schedule
+        </button>
+      </div>
+
+      <div class="resource-filters mt-4">
+        <div class="text-sm text-gray-700 mr-2">Filter Resources:</div>
+        <button
+          class="resource-filter-btn filter-tables active"
+          data-filter="table"
+        >
+          Robot Tables
+        </button>
+        <button
+          class="resource-filter-btn filter-judging active"
+          data-filter="judgingRoom"
+        >
+          Judging Rooms
+        </button>
+        <button
+          class="resource-filter-btn filter-ceremonies active"
+          data-filter="ceremony"
+        >
+          Ceremonies
+        </button>
+      </div>
+    </div>
+
+    <!-- Status Messages -->
+    <div
+      id="aiStatus"
+      class="hidden bg-blue-100 text-blue-800 p-3 rounded mt-4"
+    ></div>
+
+    <!-- Conflict Warnings -->
+    <div id="conflictWarnings" class="hidden"></div>
+
+    <!-- AI Changes -->
+    <div id="aiChanges" class="hidden"></div>
+
+    <!-- Schedule Editor Grid -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="p-4">
+        <div class="schedule-editor-container">
+          <div id="scheduleGrid" class="min-h-[600px]">
+            <!-- Schedule grid will be rendered here -->
+            <div class="flex items-center justify-center h-64 text-gray-500">
+              Loading schedule grid...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="mt-8 bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">
+        How to Use the Schedule Editor
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-medium text-gray-800 mb-2">Editing Events</h4>
+          <ul class="list-disc pl-5 space-y-2 text-gray-600">
+            <li>
+              <strong>Drag and drop</strong> events to move them to a different
+              time or resource
+            </li>
+            <li>
+              The editor will
+              <strong>automatically detect conflicts</strong> when you move
+              events
+            </li>
+            <li>
+              Use the <strong>Detect Conflicts</strong> button to scan the
+              entire schedule
+            </li>
+            <li>
+              Use <strong>Auto-Fix All Conflicts</strong> to let AI resolve all
+              scheduling issues
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-medium text-gray-800 mb-2">Event Colors</h4>
+          <ul class="list-disc pl-5 space-y-2 text-gray-600">
+            <li>
+              <span
+                class="inline-block w-3 h-3 bg-blue-500 rounded-sm mr-1"
+              ></span>
+              <strong>Blue:</strong> Robot Game Runs
+            </li>
+            <li>
+              <span
+                class="inline-block w-3 h-3 bg-green-500 rounded-sm mr-1"
+              ></span>
+              <strong>Green:</strong> Project Judging
+            </li>
+            <li>
+              <span
+                class="inline-block w-3 h-3 bg-purple-500 rounded-sm mr-1"
+              ></span>
+              <strong>Purple:</strong> Robot Design Judging
+            </li>
+            <li>
+              <span
+                class="inline-block w-3 h-3 bg-amber-500 rounded-sm mr-1"
+              ></span>
+              <strong>Amber:</strong> Lunch Breaks
+            </li>
+            <li>
+              <span
+                class="inline-block w-3 h-3 bg-pink-500 rounded-sm mr-1"
+              ></span>
+              <strong>Pink:</strong> Ceremonies
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 bg-blue-50 p-4 rounded border border-blue-100">
+        <h4 class="font-medium text-blue-800 mb-2">Pro Tips</h4>
+        <ul class="list-disc pl-5 space-y-1 text-blue-700">
+          <li>Use the filter buttons to show/hide different resource types</li>
+          <li>
+            The AI will attempt to preserve your most recent changes when
+            resolving conflicts
+          </li>
+          <li>
+            Don't forget to save your schedule when you're satisfied with the
+            changes
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- JavaScript for Schedule Editor -->
+<link rel="stylesheet" href="/css/scheduleEditor.css" />
+<script>
+  // Store schedule data for use in the editor
+  // We need to convert the EJS template to valid JavaScript
+  var scheduleConfig = {};
+  var schedule = {};
+
+  // Set up the data once the page loads
+  document.addEventListener("DOMContentLoaded", function () {
+    try {
+      // Parse the JSON from the server-rendered data
+      scheduleConfig = JSON.parse(
+        document.getElementById("schedule-config-data").textContent
+      );
+      schedule = JSON.parse(
+        document.getElementById("schedule-data").textContent
+      );
+
+      // Initialize the editor with the parsed data
+      initScheduleEditor(scheduleConfig);
+    } catch (error) {
+      console.error("Error initializing schedule editor:", error);
+      document.getElementById("scheduleGrid").innerHTML = `
+        <div class="flex items-center justify-center h-64 text-red-500">
+          Error loading schedule data. Please refresh the page or contact support.
+        </div>
+      `;
+    }
+  });
+</script>
+
+<!-- Hidden elements containing the JSON data to avoid template issues -->
+<div id="schedule-config-data" style="display: none">
+  <%- JSON.stringify(config) %>
+</div>
+<div id="schedule-data" style="display: none">
+  <%- JSON.stringify(schedule) %>
+</div>
+
+<script src="/js/scheduleAI.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Resource filters setup (the main editor initialization is handled in the script above)
+    const filterButtons = document.querySelectorAll(".resource-filter-btn");
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const filterType = this.dataset.filter;
+        this.classList.toggle("active");
+
+        // Apply filter to grid
+        const grid = document.getElementById("scheduleGrid");
+        if (this.classList.contains("active")) {
+          grid.classList.remove(`hide-${filterType}`);
+        } else {
+          grid.classList.add(`hide-${filterType}`);
+        }
+      });
+    });
+  });
+</script>
+
+<!-- include footer -->
+<%- include('include/_footer') %>

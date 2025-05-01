@@ -155,35 +155,53 @@ class FLLSchedule {
    * Generate a simple schedule without relying on external modules
    */
   generateSimpleSchedule() {
-    // Clear any existing genes
-    this.genes = [];
+    try {
+      // Clear any existing genes
+      this.genes = [];
 
-    // Schedule opening ceremony
-    this.scheduleOpeningCeremony();
+      // Validate configuration
+      if (this.numTeams <= 0)
+        throw new Error("Number of teams must be greater than zero");
+      if (this.numRobotTables <= 0)
+        throw new Error("Number of robot tables must be greater than zero");
+      if (this.numJudgingRooms <= 0)
+        throw new Error("Number of judging rooms must be greater than zero");
+      if (this.dayStart >= this.dayEnd)
+        throw new Error("Day start time must be before day end time");
+      if (this.lunchTime <= this.dayStart || this.lunchTime >= this.dayEnd)
+        throw new Error("Lunch time must be between day start and end times");
 
-    // Calculate lunch time
-    const lunchStartTime = this.lunchTime;
+      // Schedule opening ceremony
+      this.scheduleOpeningCeremony();
 
-    // Schedule judging sessions
-    this.scheduleJudgingSessions(lunchStartTime);
+      // Calculate lunch time
+      const lunchStartTime = this.lunchTime;
 
-    // Schedule first round of table runs (before lunch)
-    this.scheduleTableRunsBeforeLunch();
+      // Schedule judging sessions
+      this.scheduleJudgingSessions(lunchStartTime);
 
-    // Schedule lunch
-    this.scheduleLunch();
+      // Schedule first round of table runs (before lunch)
+      this.scheduleTableRunsBeforeLunch();
 
-    // Schedule remaining table runs (after lunch)
-    this.scheduleTableRunsAfterLunch();
+      // Schedule lunch
+      this.scheduleLunch();
 
-    // Schedule closing ceremony
-    this.scheduleClosingCeremony();
+      // Schedule remaining table runs (after lunch)
+      this.scheduleTableRunsAfterLunch();
 
-    // Sort events by start time
-    this.genes.sort((a, b) => a.startTime - b.startTime);
+      // Schedule closing ceremony
+      this.scheduleClosingCeremony();
 
-    // Set a reasonable score
-    this.score = 0.85;
+      // Sort events by start time
+      this.genes.sort((a, b) => a.startTime - b.startTime);
+
+      // Set a reasonable score
+      this.score = 0.85;
+    } catch (error) {
+      console.error("Error in generateSimpleSchedule:", error);
+      // Re-throw with more context
+      throw new Error(`Failed to generate schedule: ${error.message}`);
+    }
   }
 
   /**
