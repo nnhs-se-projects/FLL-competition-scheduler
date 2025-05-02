@@ -11,39 +11,39 @@
     <div class="no-print">
       <%- include('partials/_summary_cards') %>
 
-      <!-- Print and Export Buttons -->
-      <div class="flex justify-end mb-4">
-        <button
-          onclick="printSchedule()"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-            />
-          </svg>
-          Print Schedule
-        </button>
+      <!-- Export Button -->
+      <div class="flex justify-end mb-4" id="exportBtnContainer">
         <!-- Export PDF button will be added here by JavaScript -->
       </div>
     </div>
 
     <!-- Print Header -->
-    <div class="hidden print:block mb-8">
+    <div class="hidden print:block mb-8 print-header">
       <h1 class="text-3xl font-bold text-center">FLL Competition Schedule</h1>
       <h2 class="text-xl font-medium text-center mt-2">Robot Game Tables</h2>
       <p class="text-center text-gray-600 mt-2">
         Generated: <%= new Date().toLocaleDateString() %>
       </p>
+      <p class="text-center text-gray-600 mt-1">
+        Table volunteers should verify team numbers and ensure teams are ready
+        before each match.
+      </p>
+      <div class="text-xs max-w-lg mx-auto mt-3 px-4">
+        <p class="font-bold mb-1">Table Instructions:</p>
+        <ul class="list-disc ml-4 mb-2">
+          <li>Teams should arrive 5 minutes before their scheduled time</li>
+          <li>Verify team numbers against the schedule</li>
+          <li>Allow teams to set up their robots during the buffer time</li>
+          <li>
+            <span class="text-blue-600 font-bold">Robot Game</span>: Standard
+            match (2:30 min match time)
+          </li>
+          <li>
+            <span class="text-teal-600 font-bold">Practice Run</span>: Allow for
+            adjustments and coaching
+          </li>
+        </ul>
+      </div>
     </div>
 
     <!-- Tables Content -->
@@ -63,6 +63,5 @@
 <!-- include footer -->
 <%- include('include/_footer') %>
 
-<!-- Print Helper Script -->
-<script src="/js/print-helper.js"></script>
+<!-- PDF Export Script -->
 <script src="/js/export-pdf.js"></script>

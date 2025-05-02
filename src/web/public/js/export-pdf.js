@@ -1,5 +1,6 @@
 /**
- * PDF Export functionality for FLL Tournament Management System
+ * PDF Export functionality for FLL Competition Scheduler
+ * Improved for creating concise, well-formatted handouts
  */
 document.addEventListener("DOMContentLoaded", function () {
   // Add export PDF buttons to relevant pages
@@ -33,57 +34,104 @@ function loadRequiredLibraries() {
 function addExportPdfButtons() {
   // Check if we're on a relevant page
   const currentPath = window.location.pathname;
+  const isTeamsPage = currentPath.includes("/teams");
+  const isTablesPage = currentPath.includes("/tables");
+  const isJudgingPage = currentPath.includes("/judging");
+  const isOverviewPage =
+    currentPath === "/" || currentPath.includes("/overview");
 
-  if (
-    currentPath.includes("/tables") ||
-    currentPath.includes("/judging") ||
-    currentPath.includes("/teams")
-  ) {
-    // Find the print button container
-    const printButtonContainer = document.querySelector(
-      ".flex.justify-end.mb-4"
-    );
+  // Add export buttons to schedule pages (teams, tables, judging)
+  if (isTeamsPage || isTablesPage || isJudgingPage) {
+    // Find the export button container
+    const exportBtnContainer = document.getElementById("exportBtnContainer");
 
     // Check if button already exists to prevent duplicates
-    if (printButtonContainer && !document.querySelector(".export-pdf-button")) {
+    if (
+      exportBtnContainer &&
+      !exportBtnContainer.querySelector(".export-pdf-button")
+    ) {
       // Create the export PDF button
-      const exportButton = document.createElement("button");
-      exportButton.className =
-        "export-pdf-button bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center ml-2";
-      exportButton.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        Export PDF
-      `;
+      const exportButton = createExportButton();
 
       // Add event listener
-      exportButton.addEventListener("click", exportToPdf);
+      exportButton.addEventListener("click", function () {
+        exportToPdf("schedule");
+      });
 
       // Add button to container
-      printButtonContainer.appendChild(exportButton);
-    }
-
-    // Remove any duplicate export buttons that might be in the DOM
-    const exportButtons = document.querySelectorAll(".export-pdf-button");
-    if (exportButtons.length > 1) {
-      for (let i = 1; i < exportButtons.length; i++) {
-        exportButtons[i].remove();
-      }
+      exportBtnContainer.appendChild(exportButton);
     }
   }
+
+  // Add export button to master schedule on overview page
+  if (isOverviewPage) {
+    // Find the master schedule export button container
+    const masterScheduleExportBtnContainer = document.getElementById(
+      "masterScheduleExportBtnContainer"
+    );
+
+    if (
+      masterScheduleExportBtnContainer &&
+      !masterScheduleExportBtnContainer.querySelector(".export-pdf-button")
+    ) {
+      // Create the export PDF button
+      const exportButton = createExportButton();
+
+      // Add event listener
+      exportButton.addEventListener("click", function () {
+        exportToPdf("master");
+      });
+
+      // Add button to container
+      masterScheduleExportBtnContainer.appendChild(exportButton);
+    }
+  }
+
+  // Remove any duplicate export buttons that might be in the DOM
+  const exportButtons = document.querySelectorAll(".export-pdf-button");
+  const buttonContainers = new Set();
+  exportButtons.forEach((button) => {
+    const container = button.parentElement;
+    if (buttonContainers.has(container)) {
+      button.remove();
+    } else {
+      buttonContainers.add(container);
+    }
+  });
 }
 
-function exportToPdf() {
+function createExportButton() {
+  const exportButton = document.createElement("button");
+  exportButton.className =
+    "export-pdf-button bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center";
+  exportButton.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+    Export PDF
+  `;
+  return exportButton;
+}
+
+function exportToPdf(type = "schedule") {
   // Get page title for filename
   let pageTitle = "fll-schedule";
-  if (window.location.pathname.includes("/tables")) {
+  const path = window.location.pathname;
+  const isTeamsPage = path.includes("/teams");
+  const isTablesPage = path.includes("/tables");
+  const isJudgingPage = path.includes("/judging");
+  const isMasterSchedule = type === "master";
+
+  if (isMasterSchedule) {
+    pageTitle = "master-schedule";
+  } else if (isTablesPage) {
     pageTitle = "robot-game-tables";
-  } else if (window.location.pathname.includes("/judging")) {
+  } else if (isJudgingPage) {
     pageTitle = "judging-rooms";
-  } else if (window.location.pathname.includes("/teams")) {
+  } else if (isTeamsPage) {
     pageTitle = "team-schedules";
   }
+
   const timestamp = new Date().toISOString().slice(0, 10);
   const filename = `${pageTitle}-${timestamp}.pdf`;
 
@@ -108,22 +156,7 @@ function exportToPdf() {
     (typeof window.jspdf === "undefined" && typeof window.jsPDF === "undefined")
   ) {
     // Load required libraries
-    if (typeof window.html2canvas === "undefined") {
-      const html2canvasScript = document.createElement("script");
-      html2canvasScript.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-      document.head.appendChild(html2canvasScript);
-    }
-
-    if (
-      typeof window.jspdf === "undefined" &&
-      typeof window.jsPDF === "undefined"
-    ) {
-      const jsPdfScript = document.createElement("script");
-      jsPdfScript.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
-      document.head.appendChild(jsPdfScript);
-    }
+    loadRequiredLibraries();
 
     // Wait for libraries to load
     const checkLibrariesLoaded = setInterval(() => {
@@ -132,7 +165,14 @@ function exportToPdf() {
         (window.jspdf !== undefined || window.jsPDF !== undefined)
       ) {
         clearInterval(checkLibrariesLoaded);
-        captureAndGeneratePDF(filename, loadingIndicator);
+        prepareAndGeneratePDF(
+          filename,
+          loadingIndicator,
+          isTeamsPage,
+          isTablesPage,
+          isJudgingPage,
+          isMasterSchedule
+        );
       }
     }, 100);
 
@@ -152,42 +192,92 @@ function exportToPdf() {
     }, 5000);
   } else {
     // Libraries already loaded
-    captureAndGeneratePDF(filename, loadingIndicator);
+    prepareAndGeneratePDF(
+      filename,
+      loadingIndicator,
+      isTeamsPage,
+      isTablesPage,
+      isJudgingPage,
+      isMasterSchedule
+    );
   }
 }
 
-function captureAndGeneratePDF(filename, loadingIndicator) {
+function prepareAndGeneratePDF(
+  filename,
+  loadingIndicator,
+  isTeamsPage,
+  isTablesPage,
+  isJudgingPage,
+  isMasterSchedule
+) {
   try {
-    // Create a hidden clone of the content to avoid modifying the visible page
-    const contentElement = document.querySelector(
-      ".bg-white.rounded-lg.shadow.p-6"
-    );
-    if (!contentElement) {
-      throw new Error("Could not find schedule content to export");
+    // Create optimized content for PDF export
+    const container = document.createElement("div");
+    container.id = "pdf-export-container";
+    container.style.position = "absolute";
+    container.style.left = "-9999px";
+    container.style.top = "0";
+    container.style.width = "210mm"; // A4 width
+    container.style.backgroundColor = "white";
+    container.style.fontFamily = "Arial, sans-serif";
+    container.style.fontSize = "11px";
+    container.style.padding = "10mm";
+    container.style.boxSizing = "border-box";
+
+    // Create header
+    const header = document.createElement("div");
+    header.style.textAlign = "center";
+    header.style.marginBottom = "10mm";
+
+    const title = document.createElement("h1");
+    title.style.fontSize = "18px";
+    title.style.marginBottom = "4px";
+    title.textContent = "FLL Competition Schedule";
+    header.appendChild(title);
+
+    const subtitle = document.createElement("h2");
+    subtitle.style.fontSize = "16px";
+    subtitle.style.marginBottom = "4px";
+
+    if (isMasterSchedule) {
+      subtitle.textContent = "Master Schedule";
+    } else if (isTeamsPage) {
+      subtitle.textContent = "Team Schedules";
+    } else if (isTablesPage) {
+      subtitle.textContent = "Robot Game Tables";
+    } else if (isJudgingPage) {
+      subtitle.textContent = "Judging Rooms";
     }
 
-    // Create a clone container
-    const cloneContainer = document.createElement("div");
-    cloneContainer.id = "pdf-clone-container";
-    cloneContainer.style.position = "absolute";
-    cloneContainer.style.left = "-9999px";
-    cloneContainer.style.top = "0";
-    cloneContainer.style.width = contentElement.offsetWidth + "px";
-    cloneContainer.style.backgroundColor = "white";
-    cloneContainer.style.zIndex = "-9999";
+    header.appendChild(subtitle);
 
-    // Clone the content
-    const clone = contentElement.cloneNode(true);
-    cloneContainer.appendChild(clone);
-    document.body.appendChild(cloneContainer);
+    const timestamp = document.createElement("p");
+    timestamp.style.fontSize = "12px";
+    timestamp.style.color = "#666";
+    timestamp.textContent = `Generated: ${new Date().toLocaleDateString()}`;
+    header.appendChild(timestamp);
 
-    // Apply print styles to the clone
-    applyPrintStylesToClone(clone);
+    container.appendChild(header);
 
-    // Use html2canvas to capture the clone
+    // Create content based on page type
+    if (isMasterSchedule) {
+      createMasterScheduleContent(container);
+    } else if (isTeamsPage) {
+      createTeamsPageContent(container);
+    } else if (isTablesPage) {
+      createTablesPageContent(container);
+    } else if (isJudgingPage) {
+      createJudgingPageContent(container);
+    }
+
+    // Add container to document
+    document.body.appendChild(container);
+
+    // Use html2canvas to capture the content
     window
-      .html2canvas(clone, {
-        scale: 2, // Increased scale for better quality
+      .html2canvas(container, {
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
@@ -195,17 +285,15 @@ function captureAndGeneratePDF(filename, loadingIndicator) {
       })
       .then((canvas) => {
         try {
-          // Create PDF using jsPDF - fix the constructor name
+          // Create PDF using jsPDF
           let pdf;
           if (window.jspdf) {
-            // Use jspdf if available
             pdf = new window.jspdf.jsPDF({
               orientation: "portrait",
               unit: "mm",
               format: "a4",
             });
           } else {
-            // Use jsPDF if jspdf is not available
             pdf = new window.jsPDF({
               orientation: "portrait",
               unit: "mm",
@@ -215,7 +303,7 @@ function captureAndGeneratePDF(filename, loadingIndicator) {
 
           // Calculate dimensions
           const imgWidth = 210; // A4 width in mm
-          const pageHeight = 295; // A4 height in mm
+          const pageHeight = 297; // A4 height in mm
           const imgHeight = (canvas.height * imgWidth) / canvas.width;
           let heightLeft = imgHeight;
           let position = 0;
@@ -237,18 +325,18 @@ function captureAndGeneratePDF(filename, loadingIndicator) {
           pdf.save(filename);
 
           // Clean up
-          document.body.removeChild(cloneContainer);
+          document.body.removeChild(container);
           document.body.removeChild(loadingIndicator);
         } catch (error) {
           console.error("Error creating PDF:", error);
-          document.body.removeChild(cloneContainer);
+          document.body.removeChild(container);
           document.body.removeChild(loadingIndicator);
           alert("Failed to create PDF: " + error.message);
         }
       })
       .catch((error) => {
         console.error("Error capturing content:", error);
-        document.body.removeChild(cloneContainer);
+        document.body.removeChild(container);
         document.body.removeChild(loadingIndicator);
         alert("Failed to capture content for PDF: " + error.message);
       });
@@ -259,116 +347,320 @@ function captureAndGeneratePDF(filename, loadingIndicator) {
   }
 }
 
-function applyPrintStylesToClone(element) {
-  // Force all content to be visible
-  element.querySelectorAll(".bg-gray-50, .bg-white").forEach((el) => {
-    el.style.display = "block";
-    el.style.backgroundColor = "white";
-  });
+function createMasterScheduleContent(container) {
+  // Create a legend for the master schedule
+  const legend = document.createElement("div");
+  legend.style.marginBottom = "10px";
+  legend.style.fontSize = "10px";
+  legend.innerHTML = `
+    <p style="margin-bottom: 5px; font-weight: bold;">Legend:</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+      <p><span style="display: inline-block; width: 10px; height: 10px; background-color: #fee2e2; margin-right: 5px;"></span>Opening/Closing</p>
+      <p><span style="display: inline-block; width: 10px; height: 10px; background-color: #ede9fe; margin-right: 5px;"></span>Robot Design</p>
+      <p><span style="display: inline-block; width: 10px; height: 10px; background-color: #dcfce7; margin-right: 5px;"></span>Project</p>
+      <p><span style="display: inline-block; width: 10px; height: 10px; background-color: #dbeafe; margin-right: 5px;"></span>Robot Game</p>
+      <p><span style="display: inline-block; width: 10px; height: 10px; background-color: #fef3c7; margin-right: 5px;"></span>Lunch</p>
+    </div>
+  `;
+  container.appendChild(legend);
 
-  // Ensure tables are visible and properly formatted
-  element.querySelectorAll("table").forEach((el) => {
-    el.style.display = "table";
-    el.style.tableLayout = "fixed";
-    el.style.width = "100%";
-    el.style.borderCollapse = "collapse";
-    el.style.marginBottom = "20px";
-  });
+  // Clone the master schedule table for the PDF
+  const originalTable = document.querySelector(
+    ".master-schedule-container table"
+  );
+  if (originalTable) {
+    const table = originalTable.cloneNode(true);
+    table.style.width = "100%";
+    table.style.borderCollapse = "collapse";
+    table.style.fontSize = "9px";
 
-  // Fix flex containers
-  element.querySelectorAll(".flex").forEach((el) => {
-    el.style.display = "flex";
-  });
+    // Format cells
+    const cells = table.querySelectorAll("th, td");
+    cells.forEach((cell) => {
+      cell.style.border = "1px solid #ddd";
+      cell.style.padding = "2px";
+      cell.style.textAlign = cell.classList.contains("text-center")
+        ? "center"
+        : "left";
 
-  // Fix table cell whitespace
-  element.querySelectorAll(".whitespace-nowrap").forEach((el) => {
-    el.style.whiteSpace = "normal";
-    el.style.wordWrap = "break-word";
-  });
+      // Preserve background colors
+      if (cell.classList.contains("bg-red-50"))
+        cell.style.backgroundColor = "#fee2e2";
+      if (cell.classList.contains("bg-purple-50"))
+        cell.style.backgroundColor = "#ede9fe";
+      if (cell.classList.contains("bg-green-50"))
+        cell.style.backgroundColor = "#dcfce7";
+      if (cell.classList.contains("bg-blue-50"))
+        cell.style.backgroundColor = "#dbeafe";
+      if (cell.classList.contains("bg-amber-50"))
+        cell.style.backgroundColor = "#fef3c7";
+      if (
+        cell.classList.contains("bg-gray-50") ||
+        cell.classList.contains("bg-gray-100")
+      )
+        cell.style.backgroundColor = "#f9fafb";
+    });
 
-  // Fix table cell padding and add borders
-  element.querySelectorAll("td, th").forEach((el) => {
-    el.style.padding = "6px 8px";
-    el.style.border = "1px solid #ddd";
-  });
+    container.appendChild(table);
+  } else {
+    const errorMsg = document.createElement("p");
+    errorMsg.textContent = "No master schedule found to export";
+    errorMsg.style.color = "red";
+    container.appendChild(errorMsg);
+  }
+}
 
-  // Adjust Robot Game Tables (3 columns)
-  element.querySelectorAll(".table-schedule table").forEach((table) => {
-    // Time column
-    table
-      .querySelectorAll("th:nth-child(1), td:nth-child(1)")
-      .forEach((col) => {
-        col.style.width = "20%";
+function createTeamsPageContent(container) {
+  // Create a more optimized and concise team schedule layout
+  const teams = document.querySelectorAll(".team-schedule");
+
+  teams.forEach((team, index) => {
+    // Extract team information
+    const teamHeaderEl = team.querySelector("h3");
+    const teamName = teamHeaderEl
+      ? teamHeaderEl.textContent.trim()
+      : `Team ${index + 1}`;
+
+    // Create team section
+    const teamSection = document.createElement("div");
+    teamSection.style.pageBreakInside = "avoid";
+    teamSection.style.marginBottom = "10mm";
+
+    // Create team header
+    const teamHeader = document.createElement("h3");
+    teamHeader.style.fontSize = "14px";
+    teamHeader.style.marginBottom = "5px";
+    teamHeader.style.backgroundColor = "#f0f0f0";
+    teamHeader.style.padding = "5px";
+    teamHeader.style.borderRadius = "3px";
+    teamHeader.textContent = teamName;
+    teamSection.appendChild(teamHeader);
+
+    // Create team schedule table
+    const table = document.createElement("table");
+    table.style.width = "100%";
+    table.style.borderCollapse = "collapse";
+    table.style.marginBottom = "5mm";
+
+    // Add table header
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+      <tr>
+        <th style="border: 1px solid #ddd; padding: 5px; background-color: #f2f2f2; width: 15%;">Time</th>
+        <th style="border: 1px solid #ddd; padding: 5px; background-color: #f2f2f2; width: 35%;">Activity</th>
+        <th style="border: 1px solid #ddd; padding: 5px; background-color: #f2f2f2; width: 35%;">Location</th>
+        <th style="border: 1px solid #ddd; padding: 5px; background-color: #f2f2f2; width: 15%;">Duration</th>
+      </tr>
+    `;
+    table.appendChild(thead);
+
+    // Add table body
+    const tbody = document.createElement("tbody");
+
+    // Get all events for this team and sort them by time
+    const events = Array.from(team.querySelectorAll(".schedule-item"));
+    events.sort((a, b) => {
+      const timeA = a
+        .querySelector(".text-right p:first-child")
+        .textContent.trim();
+      const timeB = b
+        .querySelector(".text-right p:first-child")
+        .textContent.trim();
+      return timeA.localeCompare(timeB);
+    });
+
+    // Add each event as a row
+    events.forEach((event) => {
+      const time = event
+        .querySelector(".text-right p:first-child")
+        .textContent.trim();
+      const duration = event
+        .querySelector(".text-right p:last-child")
+        .textContent.trim();
+      const activityEl = event.querySelector("p.font-medium span");
+      const activity = activityEl
+        ? activityEl.textContent.trim()
+        : event.querySelector("p.font-medium").textContent.trim();
+      const location = event
+        .querySelector("p.text-sm.text-gray-500")
+        .textContent.trim();
+
+      // Get event type color
+      let backgroundColor = "#ffffff";
+      if (activity.includes("Robot Game")) backgroundColor = "#ebf5ff";
+      else if (activity.includes("Robot Design")) backgroundColor = "#f5ebff";
+      else if (activity.includes("Project")) backgroundColor = "#ebffeb";
+      else if (activity.includes("Lunch")) backgroundColor = "#fff5eb";
+      else if (activity.includes("Opening")) backgroundColor = "#ffebeb";
+      else if (activity.includes("Closing")) backgroundColor = "#ffebeb";
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td style="border: 1px solid #ddd; padding: 5px; background-color: ${backgroundColor};">${time}</td>
+        <td style="border: 1px solid #ddd; padding: 5px; background-color: ${backgroundColor}; font-weight: medium;">${activity}</td>
+        <td style="border: 1px solid #ddd; padding: 5px; background-color: ${backgroundColor};">${location}</td>
+        <td style="border: 1px solid #ddd; padding: 5px; background-color: ${backgroundColor};">${duration}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    teamSection.appendChild(table);
+
+    // Add team section to container
+    container.appendChild(teamSection);
+
+    // Add page break after every two teams except the last
+    if (index % 2 === 1 && index < teams.length - 1) {
+      const pageBreak = document.createElement("div");
+      pageBreak.style.pageBreakAfter = "always";
+      pageBreak.style.height = "1px";
+      container.appendChild(pageBreak);
+    }
+  });
+}
+
+function createTablesPageContent(container) {
+  // Create a more optimized and concise tables layout
+  const tables = document.querySelectorAll(".table-schedule");
+
+  tables.forEach((tableSection, index) => {
+    // Extract table information
+    const tableHeaderEl = tableSection.querySelector("h3");
+    const tableName = tableHeaderEl
+      ? tableHeaderEl.textContent.trim()
+      : `Table ${index + 1}`;
+
+    // Create table section
+    const section = document.createElement("div");
+    section.style.pageBreakInside = "avoid";
+    section.style.marginBottom = "10mm";
+
+    // Create table header
+    const sectionHeader = document.createElement("h3");
+    sectionHeader.style.fontSize = "14px";
+    sectionHeader.style.marginBottom = "5px";
+    sectionHeader.style.backgroundColor = "#ebf5ff"; // Blue tint for robot tables
+    sectionHeader.style.padding = "5px";
+    sectionHeader.style.borderRadius = "3px";
+    sectionHeader.textContent = tableName;
+    section.appendChild(sectionHeader);
+
+    // Clone the existing table and format it
+    const originalTable = tableSection.querySelector("table");
+    if (originalTable) {
+      const table = originalTable.cloneNode(true);
+      table.style.width = "100%";
+      table.style.borderCollapse = "collapse";
+      table.style.marginBottom = "5mm";
+
+      // Format table cells
+      const cells = table.querySelectorAll("th, td");
+      cells.forEach((cell) => {
+        cell.style.border = "1px solid #ddd";
+        cell.style.padding = "5px";
+
+        // Set header background
+        if (cell.tagName.toLowerCase() === "th") {
+          cell.style.backgroundColor = "#f2f2f2";
+        }
+
+        // Add color to event type cells
+        if (cell.classList.contains("text-blue-600")) {
+          cell.style.color = "#2563eb";
+          cell.parentElement.style.backgroundColor = "#ebf5ff";
+        } else if (cell.classList.contains("text-teal-600")) {
+          cell.style.color = "#0d9488";
+          cell.parentElement.style.backgroundColor = "#ebfffd";
+        }
       });
 
-    // Team column
-    table
-      .querySelectorAll("th:nth-child(2), td:nth-child(2)")
-      .forEach((col) => {
-        col.style.width = "40%";
-      });
+      section.appendChild(table);
+    }
 
-    // Duration column
-    table
-      .querySelectorAll("th:nth-child(3), td:nth-child(3)")
-      .forEach((col) => {
-        col.style.width = "40%";
-      });
+    // Add section to container
+    container.appendChild(section);
+
+    // Add page break after every 2 tables except the last
+    if (index % 2 === 1 && index < tables.length - 1) {
+      const pageBreak = document.createElement("div");
+      pageBreak.style.pageBreakAfter = "always";
+      pageBreak.style.height = "1px";
+      container.appendChild(pageBreak);
+    }
   });
+}
 
-  // Adjust Judging Rooms (4 columns)
-  element.querySelectorAll(".judging-room table").forEach((table) => {
-    // Time column
-    table
-      .querySelectorAll("th:nth-child(1), td:nth-child(1)")
-      .forEach((col) => {
-        col.style.width = "15%";
+function createJudgingPageContent(container) {
+  // Create a more optimized and concise judging rooms layout
+  const judgingRooms = document.querySelectorAll(".judging-schedule");
+
+  judgingRooms.forEach((roomSection, index) => {
+    // Extract room information
+    const roomHeaderEl = roomSection.querySelector("h3");
+    const roomName = roomHeaderEl
+      ? roomHeaderEl.textContent.trim()
+      : `Judging Room ${index + 1}`;
+
+    // Create room section
+    const section = document.createElement("div");
+    section.style.pageBreakInside = "avoid";
+    section.style.marginBottom = "10mm";
+
+    // Create room header
+    const sectionHeader = document.createElement("h3");
+    sectionHeader.style.fontSize = "14px";
+    sectionHeader.style.marginBottom = "5px";
+    sectionHeader.style.backgroundColor = "#f5ebff"; // Purple tint for judging rooms
+    sectionHeader.style.padding = "5px";
+    sectionHeader.style.borderRadius = "3px";
+    sectionHeader.textContent = roomName;
+    section.appendChild(sectionHeader);
+
+    // Clone the existing table and format it
+    const originalTable = roomSection.querySelector("table");
+    if (originalTable) {
+      const table = originalTable.cloneNode(true);
+      table.style.width = "100%";
+      table.style.borderCollapse = "collapse";
+      table.style.marginBottom = "5mm";
+
+      // Format table cells
+      const cells = table.querySelectorAll("th, td");
+      cells.forEach((cell) => {
+        cell.style.border = "1px solid #ddd";
+        cell.style.padding = "5px";
+
+        // Set header background
+        if (cell.tagName.toLowerCase() === "th") {
+          cell.style.backgroundColor = "#f2f2f2";
+        }
+
+        // Add color to event type cells
+        if (cell.classList.contains("text-green-600")) {
+          cell.style.color = "#16a34a";
+          cell.parentElement.style.backgroundColor = "#ebffeb";
+        } else if (cell.classList.contains("text-purple-600")) {
+          cell.style.color = "#9333ea";
+          cell.parentElement.style.backgroundColor = "#f5ebff";
+        } else if (cell.classList.contains("text-indigo-600")) {
+          cell.style.color = "#4f46e5";
+          cell.parentElement.style.backgroundColor = "#eef0ff";
+        }
       });
 
-    // Team column
-    table
-      .querySelectorAll("th:nth-child(2), td:nth-child(2)")
-      .forEach((col) => {
-        col.style.width = "25%";
-      });
+      section.appendChild(table);
+    }
 
-    // Type column
-    table
-      .querySelectorAll("th:nth-child(3), td:nth-child(3)")
-      .forEach((col) => {
-        col.style.width = "40%";
-      });
+    // Add section to container
+    container.appendChild(section);
 
-    // Duration column
-    table
-      .querySelectorAll("th:nth-child(4), td:nth-child(4)")
-      .forEach((col) => {
-        col.style.width = "20%";
-      });
-  });
-
-  // Make sure all hidden elements that should be visible in print are shown
-  element.querySelectorAll(".hidden.print\\:block").forEach((el) => {
-    el.classList.remove("hidden");
-    el.style.display = "block";
-  });
-
-  // Hide elements that shouldn't be in the PDF
-  element.querySelectorAll(".no-print").forEach((el) => {
-    el.style.display = "none";
-  });
-
-  // Make sure all schedule containers are visible
-  element.querySelectorAll(".schedule-container").forEach((el) => {
-    el.style.display = "block";
-    el.style.marginBottom = "20px";
-  });
-
-  // Ensure all headings are visible
-  element.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((el) => {
-    el.style.display = "block";
-    el.style.marginBottom = "10px";
-    el.style.marginTop = "20px";
-    el.style.color = "#000";
+    // Add page break after every 2 rooms except the last
+    if (index % 2 === 1 && index < judgingRooms.length - 1) {
+      const pageBreak = document.createElement("div");
+      pageBreak.style.pageBreakAfter = "always";
+      pageBreak.style.height = "1px";
+      container.appendChild(pageBreak);
+    }
   });
 }
