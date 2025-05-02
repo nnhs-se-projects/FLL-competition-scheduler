@@ -8,6 +8,32 @@
       .padStart(2, "0")}`;
   }
 
+  // Function to get event type display name and color
+  function getEventTypeInfo(type) {
+    switch (type) {
+      case "tableRun":
+        return { name: "Robot Game", color: "bg-blue-100 text-blue-800" };
+      case "robotJudging":
+        return { name: "Robot Design", color: "bg-purple-100 text-purple-800" };
+      case "projectJudging":
+        return { name: "Project", color: "bg-green-100 text-green-800" };
+      case "coreValues":
+        return { name: "Core Values", color: "bg-indigo-100 text-indigo-800" };
+      case "lunch":
+        return { name: "Lunch Break", color: "bg-amber-100 text-amber-800" };
+      case "openingCeremony":
+        return { name: "Opening Ceremony", color: "bg-red-100 text-red-800" };
+      case "closingCeremony":
+        return { name: "Closing Ceremony", color: "bg-red-100 text-red-800" };
+      case "awards":
+        return { name: "Awards", color: "bg-yellow-100 text-yellow-800" };
+      case "practiceRun":
+        return { name: "Practice Run", color: "bg-teal-100 text-teal-800" };
+      default:
+        return { name: type, color: "bg-gray-100 text-gray-800" };
+    }
+  }
+
   // Initialize schedule data from server
   const scheduleData = {
     events: JSON.parse(
@@ -26,33 +52,31 @@
       .slice(0, 5);
 
     const upcomingEventsHtml = upcomingEvents
-      .map(
-        (event) =>
-          '<div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">' +
-          "<div>" +
-          '<p class="font-medium">' +
-          '<span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded mr-1 text-xs">#' +
-          event.teamId +
-          "</span>" +
-          event.teamName +
-          "</p>" +
-          '<p class="text-sm text-gray-500">' +
-          (event.type === "tableRun"
-            ? "Robot Game"
-            : event.type === "robotJudging"
-            ? "Robot Design"
-            : "Project") +
-          " at " +
-          event.location +
-          "</p>" +
-          "</div>" +
-          '<div class="text-right">' +
-          '<p class="text-sm font-medium">' +
-          formatTime(event.startTime) +
-          "</p>" +
-          "</div>" +
-          "</div>"
-      )
+      .map((event) => {
+        const typeInfo = getEventTypeInfo(event.type);
+        return `<div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+          <div>
+            <p class="font-medium">
+              <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded mr-1 text-xs">
+                #${event.teamId}
+              </span>
+              ${event.teamName}
+            </p>
+            <p class="text-sm text-gray-500">
+              <span class="inline-block ${
+                typeInfo.color
+              } px-2 py-0.5 rounded-full text-xs mr-1">
+                ${typeInfo.name}
+              </span> 
+              at ${event.location}
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-medium">${formatTime(event.startTime)}</p>
+            <p class="text-xs text-gray-500">${event.duration} min</p>
+          </div>
+        </div>`;
+      })
       .join("");
 
     document.getElementById("upcoming-events").innerHTML =
@@ -64,55 +88,120 @@
   updateUpcomingEvents();
   setInterval(updateUpcomingEvents, 60000);
 
+  // Categorize event types for stats
+  function categorizeEvent(event) {
+    if (event.type === "tableRun" || event.type === "practiceRun") {
+      return "robotGames";
+    } else if (
+      event.type === "projectJudging" ||
+      event.type === "robotJudging" ||
+      event.type === "coreValues"
+    ) {
+      return "judgingSessions";
+    } else if (event.type === "lunch") {
+      return "lunchBreaks";
+    } else if (
+      event.type === "openingCeremony" ||
+      event.type === "closingCeremony"
+    ) {
+      return "ceremonies";
+    } else if (event.type === "awards") {
+      return "awardsSessions";
+    } else {
+      return "otherEvents";
+    }
+  }
+
   // Populate schedule statistics
   function updateScheduleStats() {
     const stats = scheduleData.events.reduce(
-      (acc, event) => ({
-        totalEvents: acc.totalEvents + 1,
-        robotGames: acc.robotGames + (event.type === "tableRun" ? 1 : 0),
-        judgingSessions:
-          acc.judgingSessions + (event.type !== "tableRun" ? 1 : 0),
-        averageEventDuration: acc.averageEventDuration + event.duration,
-      }),
+      (acc, event) => {
+        const category = categorizeEvent(event);
+        acc[category] = (acc[category] || 0) + 1;
+        acc.totalEvents++;
+        acc.averageEventDuration += event.duration;
+        return acc;
+      },
       {
         totalEvents: 0,
         robotGames: 0,
         judgingSessions: 0,
+        lunchBreaks: 0,
+        ceremonies: 0,
+        awardsSessions: 0,
+        otherEvents: 0,
         averageEventDuration: 0,
       }
     );
 
-    stats.averageEventDuration = Math.round(
-      stats.averageEventDuration / stats.totalEvents
-    );
+    // Calculate average duration of events
+    if (stats.totalEvents > 0) {
+      stats.averageEventDuration = Math.round(
+        stats.averageEventDuration / stats.totalEvents
+      );
+    }
 
-    document.getElementById("schedule-stats").innerHTML =
-      '<div class="grid grid-cols-2 gap-4">' +
-      '<div class="bg-white p-4 rounded-lg shadow-sm">' +
-      '<p class="text-sm text-gray-500">Total Events</p>' +
-      '<p class="text-2xl font-bold">' +
-      stats.totalEvents +
-      "</p>" +
-      "</div>" +
-      '<div class="bg-white p-4 rounded-lg shadow-sm">' +
-      '<p class="text-sm text-gray-500">Robot Games</p>' +
-      '<p class="text-2xl font-bold">' +
-      stats.robotGames +
-      "</p>" +
-      "</div>" +
-      '<div class="bg-white p-4 rounded-lg shadow-sm">' +
-      '<p class="text-sm text-gray-500">Judging Sessions</p>' +
-      '<p class="text-2xl font-bold">' +
-      stats.judgingSessions +
-      "</p>" +
-      "</div>" +
-      '<div class="bg-white p-4 rounded-lg shadow-sm">' +
-      '<p class="text-sm text-gray-500">Avg Duration</p>' +
-      '<p class="text-2xl font-bold">' +
-      stats.averageEventDuration +
-      " min</p>" +
-      "</div>" +
-      "</div>";
+    // Build stats grid with all event types
+    let statsHTML = '<div class="grid grid-cols-2 gap-4">';
+
+    // Total Events
+    statsHTML += `
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <p class="text-sm text-gray-500">Total Events</p>
+        <p class="text-2xl font-bold">${stats.totalEvents}</p>
+      </div>`;
+
+    // Robot Games
+    statsHTML += `
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <p class="text-sm text-gray-500">Robot Games</p>
+        <p class="text-2xl font-bold text-blue-600">${stats.robotGames}</p>
+      </div>`;
+
+    // Judging Sessions
+    statsHTML += `
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <p class="text-sm text-gray-500">Judging Sessions</p>
+        <p class="text-2xl font-bold text-purple-600">${stats.judgingSessions}</p>
+      </div>`;
+
+    // Add lunch breaks if present
+    if (stats.lunchBreaks > 0) {
+      statsHTML += `
+        <div class="bg-white p-4 rounded-lg shadow-sm">
+          <p class="text-sm text-gray-500">Lunch Breaks</p>
+          <p class="text-2xl font-bold text-amber-600">${stats.lunchBreaks}</p>
+        </div>`;
+    }
+
+    // Add ceremonies if present
+    if (stats.ceremonies > 0) {
+      statsHTML += `
+        <div class="bg-white p-4 rounded-lg shadow-sm">
+          <p class="text-sm text-gray-500">Ceremonies</p>
+          <p class="text-2xl font-bold text-red-600">${stats.ceremonies}</p>
+        </div>`;
+    }
+
+    // Add awards if present
+    if (stats.awardsSessions > 0) {
+      statsHTML += `
+        <div class="bg-white p-4 rounded-lg shadow-sm">
+          <p class="text-sm text-gray-500">Awards</p>
+          <p class="text-2xl font-bold text-yellow-600">${stats.awardsSessions}</p>
+        </div>`;
+    }
+
+    // Average Duration
+    statsHTML += `
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <p class="text-sm text-gray-500">Avg Duration</p>
+        <p class="text-2xl font-bold">${stats.averageEventDuration} min</p>
+      </div>`;
+
+    statsHTML += "</div>";
+
+    document.getElementById("schedule-stats").innerHTML = statsHTML;
   }
 
   updateScheduleStats();

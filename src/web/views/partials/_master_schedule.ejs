@@ -19,34 +19,52 @@
             colspan="2"
           ></th>
           <th
-            class="border px-1 py-1 bg-gray-100 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-red-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            colspan="2"
+          >
+            Opening
+          </th>
+          <th
+            class="border px-1 py-1 bg-purple-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
             colspan="2"
           >
             Judging- Robot
           </th>
           <th
-            class="border px-1 py-1 bg-gray-100 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-green-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
             colspan="2"
           >
             Judging- Project
           </th>
           <th
-            class="border px-1 py-1 bg-gray-100 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
             colspan="2"
           >
             Round 1
           </th>
           <th
-            class="border px-1 py-1 bg-gray-100 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
             colspan="2"
           >
             Round 2
           </th>
           <th
-            class="border px-1 py-1 bg-gray-100 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
             colspan="2"
           >
             Round 3
+          </th>
+          <th
+            class="border px-1 py-1 bg-amber-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            colspan="1"
+          >
+            Lunch
+          </th>
+          <th
+            class="border px-1 py-1 bg-red-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            colspan="1"
+          >
+            Closing
           </th>
         </tr>
         <tr>
@@ -61,54 +79,70 @@
             Team Name
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-red-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            colspan="2"
           >
             Time
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-purple-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+          >
+            Time
+          </th>
+          <th
+            class="border px-1 py-1 bg-purple-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Room
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-green-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Time
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-green-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Room
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Time
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Table
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Time
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Table
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Time
           </th>
           <th
-            class="border px-1 py-1 bg-gray-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            class="border px-1 py-1 bg-blue-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
           >
             Table
+          </th>
+          <th
+            class="border px-1 py-1 bg-amber-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+          >
+            Time
+          </th>
+          <th
+            class="border px-1 py-1 bg-red-50 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+          >
+            Time
           </th>
         </tr>
       </thead>
@@ -144,30 +178,60 @@
       const robotJudging = teamEvents.find(e => e.type === 'robotJudging');
       const projectJudging = teamEvents.find(e => e.type === 'projectJudging');
       const tableRuns = teamEvents.filter(e => e.type === 'tableRun').sort((a, b) => a.startTime - b.startTime);
+      const lunch = teamEvents.find(e => e.type === 'lunch');
+      const openingCeremony = teamEvents.find(e => e.type === 'openingCeremony');
+      const closingCeremony = teamEvents.find(e => e.type === 'closingCeremony');
 
       // Create row with alternating background colors
       const rowClass = i % 2 === 0 ? 'bg-gray-50' : 'bg-white';
 
       html += '<tr class="' + rowClass + '">' +
         '<td class="border px-1 py-1 text-xs">' + i + '</td>' +
-        '<td class="border px-1 py-1 text-xs font-medium">' + teamEvents[0].teamName + '</td>' +
-        '<td class="border px-1 py-1 text-xs text-center">' + (robotJudging ? formatTimeAMPM(robotJudging.startTime) : '-') + '</td>' +
-        '<td class="border px-1 py-1 text-xs text-center">' + (robotJudging ? robotJudging.locationName.replace('Robot Design Room ', '') : '-') + '</td>' +
-        '<td class="border px-1 py-1 text-xs text-center">' + (projectJudging ? formatTimeAMPM(projectJudging.startTime) : '-') + '</td>' +
-        '<td class="border px-1 py-1 text-xs text-center">' + (projectJudging ? projectJudging.locationName.replace('Project Room ', '') : '-') + '</td>';
+        '<td class="border px-1 py-1 text-xs font-medium">' + teamEvents[0].teamName + '</td>';
+
+      // Opening ceremony
+      html += '<td class="border px-1 py-1 text-xs text-center bg-red-50" colspan="2">' +
+        (openingCeremony ? formatTimeAMPM(openingCeremony.startTime) : '-') +
+        '</td>';
+
+      // Robot Judging
+      html += '<td class="border px-1 py-1 text-xs text-center bg-purple-50">' +
+        (robotJudging ? formatTimeAMPM(robotJudging.startTime) : '-') +
+        '</td>' +
+        '<td class="border px-1 py-1 text-xs text-center bg-purple-50">' +
+        (robotJudging ? robotJudging.locationName.replace('Robot Design Room ', '') : '-') +
+        '</td>';
+
+      // Project Judging
+      html += '<td class="border px-1 py-1 text-xs text-center bg-green-50">' +
+        (projectJudging ? formatTimeAMPM(projectJudging.startTime) : '-') +
+        '</td>' +
+        '<td class="border px-1 py-1 text-xs text-center bg-green-50">' +
+        (projectJudging ? projectJudging.locationName.replace('Project Judging Room ', '').replace('Project Room ', '') : '-') +
+        '</td>';
 
       // Add table runs (up to 3)
       for (let j = 0; j < 3; j++) {
         if (j < tableRuns.length) {
           html +=
-            '<td class="border px-1 py-1 text-xs text-center">' + formatTimeAMPM(tableRuns[j].startTime) + '</td>' +
-            '<td class="border px-1 py-1 text-xs text-center">' + tableRuns[j].locationName.replace('Table ', '') + '</td>';
+            '<td class="border px-1 py-1 text-xs text-center bg-blue-50">' + formatTimeAMPM(tableRuns[j].startTime) + '</td>' +
+            '<td class="border px-1 py-1 text-xs text-center bg-blue-50">' + tableRuns[j].locationName.replace('Table ', '') + '</td>';
         } else {
           html +=
-            '<td class="border px-1 py-1 text-xs text-center">-</td>' +
-            '<td class="border px-1 py-1 text-xs text-center">-</td>';
+            '<td class="border px-1 py-1 text-xs text-center bg-blue-50">-</td>' +
+            '<td class="border px-1 py-1 text-xs text-center bg-blue-50">-</td>';
         }
       }
+
+      // Lunch period
+      html += '<td class="border px-1 py-1 text-xs text-center bg-amber-50">' +
+        (lunch ? formatTimeAMPM(lunch.startTime) : '-') +
+        '</td>';
+
+      // Closing ceremony / awards
+      html += '<td class="border px-1 py-1 text-xs text-center bg-red-50">' +
+        (closingCeremony ? formatTimeAMPM(closingCeremony.startTime) : '-') +
+        '</td>';
 
       html += '</tr>';
     }

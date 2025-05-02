@@ -165,6 +165,23 @@
                     <option value="60" <%= config?.lunchDuration === 60 ? 'selected' : '' %>>60 min</option>
                   </select>
                 </div>
+                <div class="col-span-2">
+                  <div class="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="skipLunch"
+                      name="skipLunch"
+                      class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      <%= config?.skipLunch ? 'checked' : '' %>
+                    >
+                    <label for="skipLunch" class="ml-2 block text-sm text-gray-700">
+                      Skip lunch (no lunch break in schedule)
+                    </label>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Enable this option if teams will not have a formal lunch break during the competition
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -417,6 +434,7 @@
               name="aiLunchTime" 
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="11:30"
+              <%= config?.skipLunch ? 'disabled' : '' %>
             >
             <div class="text-xs text-gray-500 mt-1">When lunch break should begin</div>
           </div>
@@ -428,8 +446,26 @@
               name="aiLunchDuration" 
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               value="45"
+              <%= config?.skipLunch ? 'disabled' : '' %>
             >
             <div class="text-xs text-gray-500 mt-1">How long teams have for lunch</div>
+          </div>
+          
+          <div class="md:col-span-2 mt-2">
+            <div class="flex items-center">
+              <input 
+                type="checkbox" 
+                id="aiSkipLunch" 
+                name="aiSkipLunch" 
+                class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                <%= config?.skipLunch ? 'checked' : '' %>
+                onchange="toggleLunchFields(this.checked)"
+              >
+              <label for="aiSkipLunch" class="ml-2 block text-sm text-gray-700">
+                Skip lunch (no lunch break in schedule)
+              </label>
+            </div>
+            <div class="text-xs text-gray-500 mt-1">Enable this option if teams will not have a formal lunch break during the competition</div>
           </div>
           
           <div>
@@ -567,7 +603,6 @@
   </div>
 </div>
 
-<!-- Add this script before the footer -->
 <script>
   // Store the team information in a hidden element to avoid EJS template issues
   var teamInfo = [];
@@ -737,7 +772,8 @@
         closingDuration: parseInt(formData.get('aiClosingDuration')),
         transitTime: parseInt(formData.get('aiTransitTime')),
         optimizationPriority: formData.get('aiOptimizationPriority'),
-        specialRequirements: formData.get('aiSpecialRequirements')
+        specialRequirements: formData.get('aiSpecialRequirements'),
+        skipLunch: formData.get('aiSkipLunch') === 'on'
       };
       
       // Basic form validation
@@ -758,7 +794,8 @@
                 `dayStart=${parameters.dayStart}&` +
                 `dayEnd=${parameters.dayEnd}&` +
                 `lunchTime=${parameters.lunchTime}&` +
-                `lunchDuration=${parameters.lunchDuration}`;
+                `lunchDuration=${parameters.lunchDuration}` +
+                (parameters.skipLunch ? '&skipLunch=true' : '');
             }, 1500);
           })
           .catch(error => {
@@ -879,6 +916,17 @@
       return (hours * 60) + minutes;
     }
   });
+
+  // Toggle lunch fields based on the skip lunch checkbox
+  function toggleLunchFields(skipLunch) {
+    const lunchTimeField = document.querySelector('input[name="aiLunchTime"]');
+    const lunchDurationField = document.querySelector('input[name="aiLunchDuration"]');
+    
+    if (lunchTimeField && lunchDurationField) {
+      lunchTimeField.disabled = skipLunch;
+      lunchDurationField.disabled = skipLunch;
+    }
+  }
 </script>
 
 <%- include('partials/_schedule_scripts') %>
