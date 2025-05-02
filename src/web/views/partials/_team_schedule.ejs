@@ -4,8 +4,21 @@
     <div class="flex justify-between items-start">
       <div>
         <p class="font-medium">
-          <%= event.type === 'tableRun' ? 'Robot Game' : event.type ===
-          'robotJudging' ? 'Robot Design Judging' : 'Project Judging' %>
+          <% if (event.type === 'tableRun') { %>
+          <span class="text-blue-600">Robot Game</span>
+          <% } else if (event.type === 'robotJudging') { %>
+          <span class="text-purple-600">Robot Design Judging</span>
+          <% } else if (event.type === 'projectJudging') { %>
+          <span class="text-green-600">Project Judging</span>
+          <% } else if (event.type === 'lunch') { %>
+          <span class="text-amber-600">Lunch Break</span>
+          <% } else if (event.type === 'openingCeremony') { %>
+          <span class="text-red-600">Opening Ceremony</span>
+          <% } else if (event.type === 'closingCeremony') { %>
+          <span class="text-red-600">Closing Ceremony</span>
+          <% } else if (event.type === 'awards') { %>
+          <span class="text-yellow-600">Awards</span>
+          <% } else { %> <%= event.type %> <% } %>
         </p>
         <p class="text-sm text-gray-500"><%= event.locationName %></p>
       </div>

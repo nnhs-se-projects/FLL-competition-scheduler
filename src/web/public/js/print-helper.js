@@ -1,135 +1,214 @@
 /**
  * Print helper functions for FLL Competition Scheduler
+ * Optimized for creating concise handouts for teams, judges, and table volunteers
  */
 
 // eslint-disable-next-line no-unused-vars
 function printSchedule() {
-  // Force all content to be visible for printing
-  document.querySelectorAll(".bg-gray-50, .bg-white").forEach((el) => {
-    el.setAttribute("data-original-display", el.style.display);
+  // Identify which page we're on and apply specific optimizations
+  const path = window.location.pathname;
+  const isTeamsPage = path.includes("/teams");
+  const isTablesPage = path.includes("/tables");
+  const isJudgingPage = path.includes("/judging");
+
+  // Show print preparation message
+  const message = document.createElement("div");
+  message.style.position = "fixed";
+  message.style.top = "50%";
+  message.style.left = "50%";
+  message.style.transform = "translate(-50%, -50%)";
+  message.style.background = "rgba(0,0,0,0.8)";
+  message.style.color = "white";
+  message.style.padding = "20px";
+  message.style.borderRadius = "8px";
+  message.style.zIndex = "9999";
+  message.textContent = "Preparing schedule for printing...";
+  document.body.appendChild(message);
+
+  // General print styling
+  const printStyles = document.createElement("style");
+  printStyles.id = "print-styles";
+  printStyles.textContent = `
+    @media print {
+      @page { 
+        size: portrait;
+        margin: 10mm; 
+      }
+      body { 
+        font-family: Arial, sans-serif; 
+        background: white;
+        color: black;
+        font-size: 11px;
+      }
+      .no-print, nav, footer, .summary-cards, button {
+        display: none !important;
+      }
+      .print-header {
+        text-align: center;
+        margin-bottom: 10mm;
+      }
+      .print-header h1 {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+      .print-header h2 {
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+      .print-header p {
+        font-size: 12px;
+        color: #666;
+      }
+      .print-container {
+        page-break-inside: avoid;
+      }
+      .team-schedule, .table-schedule, .judging-schedule {
+        page-break-inside: avoid;
+        margin-bottom: 5mm;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 5mm;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      .text-blue-600 { color: #2563eb !important; }
+      .text-purple-600 { color: #9333ea !important; }
+      .text-green-600 { color: #16a34a !important; }
+      .text-amber-600 { color: #d97706 !important; }
+      .text-red-600 { color: #dc2626 !important; }
+      .text-gray-600 { color: #4b5563 !important; }
+      .text-yellow-600 { color: #ca8a04 !important; }
+      .bg-gray-50 { background-color: #ffffff !important; }
+    }
+  `;
+  document.head.appendChild(printStyles);
+
+  // Ensure the print header is visible
+  document.querySelectorAll(".hidden.print\\:block").forEach((el) => {
+    el.classList.remove("hidden");
     el.style.display = "block";
-    el.setAttribute("data-original-bg", el.style.backgroundColor);
+  });
+
+  // Make all relevant containers visible for printing
+  document.querySelectorAll(".bg-gray-50, .bg-white").forEach((el) => {
+    el.style.display = "block";
     el.style.backgroundColor = "white";
   });
 
-  // Ensure tables are visible
-  document.querySelectorAll("table").forEach((el) => {
-    el.setAttribute("data-original-display", el.style.display);
-    el.style.display = "table";
-    el.style.tableLayout = "fixed";
-    el.style.width = "100%";
-  });
+  // Apply specific optimizations based on page type
+  if (isTeamsPage) {
+    // For team handouts, organize schedules compactly
+    document.querySelectorAll(".team-schedule").forEach((team) => {
+      // Ensure team name is visible
+      const teamHeader = team.querySelector("h3");
+      if (teamHeader) teamHeader.style.fontSize = "14px";
 
-  // Fix flex containers
-  document.querySelectorAll(".flex").forEach((el) => {
-    el.setAttribute("data-original-display", el.style.display);
-    el.style.display = "flex";
-  });
+      // Sort events chronologically
+      const events = Array.from(team.querySelectorAll(".schedule-item")).sort(
+        (a, b) => {
+          const timeA = a
+            .querySelector(".text-right p:first-child")
+            .textContent.trim();
+          const timeB = b
+            .querySelector(".text-right p:first-child")
+            .textContent.trim();
+          return timeA.localeCompare(timeB);
+        }
+      );
 
-  // Fix table cell whitespace
-  document.querySelectorAll(".whitespace-nowrap").forEach((el) => {
-    el.style.whiteSpace = "normal";
-    el.style.wordWrap = "break-word";
-  });
+      // Recreate events in a table for more concise display
+      const scheduleTable = document.createElement("table");
+      scheduleTable.className = "team-schedule-table";
 
-  // Fix table cell padding
-  document.querySelectorAll("td, th").forEach((el) => {
-    el.style.padding = "6px 8px";
-  });
+      // Create table header
+      const tableHeader = document.createElement("thead");
+      tableHeader.innerHTML = `
+        <tr>
+          <th>Time</th>
+          <th>Activity</th>
+          <th>Location</th>
+          <th>Duration</th>
+        </tr>
+      `;
+      scheduleTable.appendChild(tableHeader);
 
-  // Adjust Robot Game Tables (3 columns)
-  document.querySelectorAll(".table-schedule table").forEach((table) => {
-    // Time column
-    const timeColumns = table.querySelectorAll(
-      "th:nth-child(1), td:nth-child(1)"
-    );
-    timeColumns.forEach((col) => {
-      col.style.width = "20%";
+      // Create table body
+      const tableBody = document.createElement("tbody");
+      events.forEach((event) => {
+        const time = event
+          .querySelector(".text-right p:first-child")
+          .textContent.trim();
+        const duration = event
+          .querySelector(".text-right p:last-child")
+          .textContent.trim();
+        const activity = event
+          .querySelector("p.font-medium")
+          .textContent.trim();
+        const location = event
+          .querySelector("p.text-sm.text-gray-500")
+          .textContent.trim();
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${time}</td>
+          <td>${activity}</td>
+          <td>${location}</td>
+          <td>${duration}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+      scheduleTable.appendChild(tableBody);
+
+      // Replace the original content with the table
+      const scheduleContainer = team.querySelector(".space-y-3");
+      if (scheduleContainer) {
+        scheduleContainer.innerHTML = "";
+        scheduleContainer.appendChild(scheduleTable);
+      }
     });
+  } else if (isTablesPage || isJudgingPage) {
+    // For tables and judging, ensure consistent layout
+    document.querySelectorAll("table").forEach((table) => {
+      table.style.width = "100%";
+      table.style.tableLayout = "fixed";
 
-    // Team column
-    const teamColumns = table.querySelectorAll(
-      "th:nth-child(2), td:nth-child(2)"
-    );
-    teamColumns.forEach((col) => {
-      col.style.width = "40%";
-    });
+      // Fix column widths for better layout
+      const columns = table.querySelectorAll("th, td");
+      const columnCount = table.querySelectorAll("th").length;
+      const equalWidth = 100 / columnCount;
 
-    // Duration column
-    const durationColumns = table.querySelectorAll(
-      "th:nth-child(3), td:nth-child(3)"
-    );
-    durationColumns.forEach((col) => {
-      col.style.width = "40%";
+      columns.forEach((col) => {
+        col.style.width = `${equalWidth}%`;
+        col.style.padding = "5px";
+        col.style.border = "1px solid #ddd";
+      });
     });
-  });
-
-  // Adjust Judging Rooms (4 columns)
-  document.querySelectorAll(".judging-room table").forEach((table) => {
-    // Time column
-    const timeColumns = table.querySelectorAll(
-      "th:nth-child(1), td:nth-child(1)"
-    );
-    timeColumns.forEach((col) => {
-      col.style.width = "15%";
-    });
-
-    // Team column
-    const teamColumns = table.querySelectorAll(
-      "th:nth-child(2), td:nth-child(2)"
-    );
-    teamColumns.forEach((col) => {
-      col.style.width = "25%";
-    });
-
-    // Type column
-    const typeColumns = table.querySelectorAll(
-      "th:nth-child(3), td:nth-child(3)"
-    );
-    typeColumns.forEach((col) => {
-      col.style.width = "40%";
-    });
-
-    // Duration column
-    const durationColumns = table.querySelectorAll(
-      "th:nth-child(4), td:nth-child(4)"
-    );
-    durationColumns.forEach((col) => {
-      col.style.width = "20%";
-    });
-  });
+  }
 
   // Add a small delay to ensure styles are applied before printing
   setTimeout(() => {
+    document.body.removeChild(message);
+
     // Trigger print dialog
     window.print();
 
-    // Restore original styles after printing
+    // Clean up after printing
     setTimeout(() => {
-      document.querySelectorAll("[data-original-display]").forEach((el) => {
-        el.style.display = el.getAttribute("data-original-display");
-        el.removeAttribute("data-original-display");
-      });
+      document.getElementById("print-styles").remove();
 
-      document.querySelectorAll("[data-original-bg]").forEach((el) => {
-        el.style.backgroundColor = el.getAttribute("data-original-bg");
-        el.removeAttribute("data-original-bg");
-      });
-
-      document.querySelectorAll(".whitespace-nowrap").forEach((el) => {
-        el.style.whiteSpace = "nowrap";
-        el.style.wordWrap = "";
-      });
-
-      document.querySelectorAll("table").forEach((el) => {
-        el.style.tableLayout = "";
-        el.style.width = "";
-      });
-
-      document.querySelectorAll("td, th").forEach((el) => {
-        el.style.width = "";
-        el.style.padding = "";
+      // Restore original classes
+      document.querySelectorAll(".hidden.print\\:block").forEach((el) => {
+        el.classList.add("hidden");
       });
     }, 1000);
-  }, 100);
+  }, 500);
 }

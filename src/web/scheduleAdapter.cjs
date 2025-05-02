@@ -39,6 +39,9 @@ class FLLSchedule {
     // Ceremony durations
     this.openingCeremonyDuration = 20;
     this.closingCeremonyDuration = 30;
+
+    // Added for lunch scheduling
+    this.skipLunch = false;
   }
 
   /**
@@ -155,35 +158,53 @@ class FLLSchedule {
    * Generate a simple schedule without relying on external modules
    */
   generateSimpleSchedule() {
-    // Clear any existing genes
-    this.genes = [];
+    try {
+      // Clear any existing genes
+      this.genes = [];
 
-    // Schedule opening ceremony
-    this.scheduleOpeningCeremony();
+      // Validate configuration
+      if (this.numTeams <= 0)
+        throw new Error("Number of teams must be greater than zero");
+      if (this.numRobotTables <= 0)
+        throw new Error("Number of robot tables must be greater than zero");
+      if (this.numJudgingRooms <= 0)
+        throw new Error("Number of judging rooms must be greater than zero");
+      if (this.dayStart >= this.dayEnd)
+        throw new Error("Day start time must be before day end time");
+      if (this.lunchTime <= this.dayStart || this.lunchTime >= this.dayEnd)
+        throw new Error("Lunch time must be between day start and end times");
 
-    // Calculate lunch time
-    const lunchStartTime = this.lunchTime;
+      // Schedule opening ceremony
+      this.scheduleOpeningCeremony();
 
-    // Schedule judging sessions
-    this.scheduleJudgingSessions(lunchStartTime);
+      // Calculate lunch time
+      const lunchStartTime = this.lunchTime;
 
-    // Schedule first round of table runs (before lunch)
-    this.scheduleTableRunsBeforeLunch();
+      // Schedule judging sessions
+      this.scheduleJudgingSessions(lunchStartTime);
 
-    // Schedule lunch
-    this.scheduleLunch();
+      // Schedule first round of table runs (before lunch)
+      this.scheduleTableRunsBeforeLunch();
 
-    // Schedule remaining table runs (after lunch)
-    this.scheduleTableRunsAfterLunch();
+      // Schedule lunch
+      this.scheduleLunch();
 
-    // Schedule closing ceremony
-    this.scheduleClosingCeremony();
+      // Schedule remaining table runs (after lunch)
+      this.scheduleTableRunsAfterLunch();
 
-    // Sort events by start time
-    this.genes.sort((a, b) => a.startTime - b.startTime);
+      // Schedule closing ceremony
+      this.scheduleClosingCeremony();
 
-    // Set a reasonable score
-    this.score = 0.85;
+      // Sort events by start time
+      this.genes.sort((a, b) => a.startTime - b.startTime);
+
+      // Set a reasonable score
+      this.score = 0.85;
+    } catch (error) {
+      console.error("Error in generateSimpleSchedule:", error);
+      // Re-throw with more context
+      throw new Error(`Failed to generate schedule: ${error.message}`);
+    }
   }
 
   /**
@@ -286,15 +307,130 @@ class FLLSchedule {
    * Schedule lunch break for all teams
    */
   scheduleLunch() {
-    // All teams have lunch at the same time
+    // Skip lunch if "no lunch" is specified in config
+    if (this.skipLunch) {
+      console.log("Skipping lunch as per configuration");
+      return;
+    }
+
+    // Get a reference to the team schedule to find optimal lunch times
+    const teamSchedule = this.buildTeamsSchedule();
+
+    // Calculate mid-day time (average of day start and end)
+    const midDayTime = (this.dayStart + this.dayEnd) / 2;
+
+    // Prefer the configured lunch time, but adjust if needed for schedule consistency
+    const idealLunchTime = this.lunchTime;
+
+    // All teams have lunch at the same time by default
     for (let i = 0; i < this.numTeams; i++) {
       const teamId = i + 1;
 
+      // Get this team's schedule
+      const teamEvents = teamSchedule[teamId] || [];
+
+      // Find the best lunch time for this team
+      // (if no conflicts, use the ideal lunch time; otherwise, find a suitable gap)
+      let lunchStartTime = idealLunchTime;
+      let bestGap = null;
+
+      // Skip lunch scheduling if there are conflicts and try to find a better spot
+      let hasConflict = false;
+
+      // Check if ideal lunch time conflicts with any events
+      for (const event of teamEvents) {
+        // Skip ceremonies for conflict checks
+        if (
+          event.type === OPENING_CEREMONY_TYPE ||
+          event.type === CLOSING_CEREMONY_TYPE
+        ) {
+          continue;
+        }
+
+        // Check if lunch would overlap with this event (with 5-min buffer)
+        if (
+          lunchStartTime < event.startTime + event.duration + 5 &&
+          lunchStartTime + this.lunchDuration + 5 > event.startTime
+        ) {
+          hasConflict = true;
+          break;
+        }
+      }
+
+      // If there's a conflict, find the best gap for lunch
+      if (hasConflict) {
+        // Sort events by start time
+        const sortedEvents = [...teamEvents].sort(
+          (a, b) => a.startTime - b.startTime
+        );
+
+        // Find gaps between events
+        for (let j = 0; j < sortedEvents.length - 1; j++) {
+          const currentEvent = sortedEvents[j];
+          const nextEvent = sortedEvents[j + 1];
+
+          // Skip ceremonies for gap analysis
+          if (
+            currentEvent.type === OPENING_CEREMONY_TYPE ||
+            currentEvent.type === CLOSING_CEREMONY_TYPE ||
+            nextEvent.type === OPENING_CEREMONY_TYPE ||
+            nextEvent.type === CLOSING_CEREMONY_TYPE
+          ) {
+            continue;
+          }
+
+          // Calculate gap between events
+          const gapStart = currentEvent.startTime + currentEvent.duration + 5; // 5-min buffer
+          const gapEnd = nextEvent.startTime - 5; // 5-min buffer
+          const gapDuration = gapEnd - gapStart;
+
+          // Check if gap is large enough for lunch
+          if (gapDuration >= this.lunchDuration) {
+            // Calculate how close to mid-day this gap is
+            const gapMidPoint = gapStart + gapDuration / 2;
+            const distanceFromMidDay = Math.abs(gapMidPoint - midDayTime);
+
+            // If this is the first valid gap or closer to mid-day than the best so far, use it
+            if (!bestGap || distanceFromMidDay < bestGap.distanceFromMidDay) {
+              bestGap = {
+                start: gapStart,
+                end: gapEnd,
+                duration: gapDuration,
+                distanceFromMidDay,
+              };
+            }
+          }
+        }
+
+        // If we found a suitable gap, use it for lunch
+        if (bestGap) {
+          // Place lunch in the middle of the gap
+          lunchStartTime =
+            bestGap.start + (bestGap.duration - this.lunchDuration) / 2;
+        } else {
+          // If no good gap, try to place lunch after all events if they end early enough
+          const lastEvent = sortedEvents[sortedEvents.length - 1];
+          const potentialLunchTime =
+            lastEvent.startTime + lastEvent.duration + 5;
+
+          // Only use this if it ends before the closing ceremony
+          if (potentialLunchTime + this.lunchDuration < this.dayEnd - 30) {
+            lunchStartTime = potentialLunchTime;
+          } else {
+            // Last resort: use the configured lunch time and hope for the best
+            console.warn(
+              `Could not find suitable lunch time for team ${teamId}`
+            );
+          }
+        }
+      }
+
+      // Add lunch to the schedule
       this.genes.push(
         new FLLEvent(
           teamId,
           `Team ${teamId}`,
-          this.lunchTime,
+          lunchStartTime,
           this.lunchDuration,
           0, // Location ID doesn't matter for lunch
           "Cafeteria",
@@ -650,6 +786,14 @@ class FLLSchedule {
 
       console.log("");
     }
+  }
+
+  /**
+   * Set whether to skip lunch scheduling
+   * @param {boolean} skipLunch - Whether to skip lunch
+   */
+  setSkipLunch(skipLunch) {
+    this.skipLunch = !!skipLunch;
   }
 }
 
