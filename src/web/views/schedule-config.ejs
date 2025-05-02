@@ -584,6 +584,14 @@
         <div class="flex justify-end gap-3">
           <button 
             type="button"
+            id="saveAIConfigBtn"
+            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          >
+            Save Configuration
+          </button>
+          
+          <button 
+            type="button"
             id="closeAIModalBtn"
             class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
           >
@@ -740,6 +748,53 @@
     openBtn.addEventListener('click', function() {
       modal.classList.remove('hidden');
       document.body.classList.add('overflow-hidden');
+      
+      // Load saved AI configuration if available
+      fetch('/api/get-ai-config')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.config) {
+            // Populate form fields with saved configuration
+            const config = data.config;
+            
+            // Set numeric values
+            if (config.numTeams) form.elements['aiNumTeams'].value = config.numTeams;
+            if (config.numTables) form.elements['aiNumTables'].value = config.numTables;
+            if (config.numJudgingRooms) form.elements['aiNumJudgingRooms'].value = config.numJudgingRooms;
+            
+            // Set time values
+            if (config.startTime) form.elements['aiStartTime'].value = config.startTime;
+            if (config.endTime) form.elements['aiEndTime'].value = config.endTime;
+            if (config.lunchTime) form.elements['aiLunchTime'].value = config.lunchTime;
+            
+            // Set durations
+            if (config.lunchDuration) form.elements['aiLunchDuration'].value = config.lunchDuration;
+            if (config.tableDuration) form.elements['aiTableDuration'].value = config.tableDuration;
+            if (config.tableBuffer) form.elements['aiTableBuffer'].value = config.tableBuffer;
+            if (config.judgeDuration) form.elements['aiJudgeDuration'].value = config.judgeDuration;
+            if (config.judgeBuffer) form.elements['aiJudgeBuffer'].value = config.judgeBuffer;
+            if (config.openingDuration) form.elements['aiOpeningDuration'].value = config.openingDuration;
+            if (config.closingDuration) form.elements['aiClosingDuration'].value = config.closingDuration;
+            if (config.transitTime) form.elements['aiTransitTime'].value = config.transitTime;
+            
+            // Set select values
+            if (config.optimizationPriority) form.elements['aiOptimizationPriority'].value = config.optimizationPriority;
+            
+            // Set text areas
+            if (config.specialRequirements) form.elements['aiSpecialRequirements'].value = config.specialRequirements;
+            
+            // Set checkboxes
+            if (config.skipLunch !== undefined) {
+              form.elements['aiSkipLunch'].checked = config.skipLunch;
+              toggleLunchFields(config.skipLunch);
+            }
+            
+            console.log('Loaded saved AI configuration');
+          }
+        })
+        .catch(error => {
+          console.error('Error loading AI configuration:', error);
+        });
     });
     
     // Close modal
@@ -750,6 +805,48 @@
     
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', closeModal);
+    
+    // Save AI configuration
+    document.getElementById('saveAIConfigBtn').addEventListener('click', function() {
+      const formData = new FormData(form);
+      const configData = {
+        numTeams: parseInt(formData.get('aiNumTeams')),
+        numTables: parseInt(formData.get('aiNumTables')),
+        numJudgingRooms: parseInt(formData.get('aiNumJudgingRooms')),
+        startTime: formData.get('aiStartTime'),
+        endTime: formData.get('aiEndTime'),
+        lunchTime: formData.get('aiLunchTime'),
+        lunchDuration: parseInt(formData.get('aiLunchDuration')),
+        tableDuration: parseInt(formData.get('aiTableDuration')),
+        tableBuffer: parseInt(formData.get('aiTableBuffer')),
+        judgeDuration: parseInt(formData.get('aiJudgeDuration')),
+        judgeBuffer: parseInt(formData.get('aiJudgeBuffer')),
+        openingDuration: parseInt(formData.get('aiOpeningDuration')),
+        closingDuration: parseInt(formData.get('aiClosingDuration')),
+        transitTime: parseInt(formData.get('aiTransitTime')),
+        optimizationPriority: formData.get('aiOptimizationPriority'),
+        specialRequirements: formData.get('aiSpecialRequirements'),
+        skipLunch: formData.get('aiSkipLunch') === 'on'
+      };
+      
+      // Save configuration via API
+      saveAIConfiguration(configData)
+        .then(() => {
+          // Show success message
+          resultContainer.classList.remove('hidden');
+          resultMessage.innerHTML = '<span class="text-green-600">Configuration saved successfully!</span>';
+          
+          // Hide message after 3 seconds
+          setTimeout(() => {
+            resultContainer.classList.add('hidden');
+          }, 3000);
+        })
+        .catch(error => {
+          // Show error message
+          resultContainer.classList.remove('hidden');
+          resultMessage.innerHTML = `<span class="text-red-600">Error saving configuration: ${error.message}</span>`;
+        });
+    });
     
     // Handle form submission
     form.addEventListener('submit', function(e) {
@@ -925,6 +1022,35 @@
     if (lunchTimeField && lunchDurationField) {
       lunchTimeField.disabled = skipLunch;
       lunchDurationField.disabled = skipLunch;
+    }
+  }
+
+  // Function to save AI configuration
+  async function saveAIConfiguration(configData) {
+    try {
+      const response = await fetch('/api/save-ai-config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(configData)
+      });
+      
+      if (!response.ok) {
+        // Try to parse the error response as JSON
+        try {
+          const errorData = await response.json();
+          throw new Error(errorData.message || errorData.error || 'Failed to save configuration');
+        } catch (jsonError) {
+          // If we can't parse the JSON, use the status text
+          throw new Error(`Failed to save configuration: ${response.status} ${response.statusText}`);
+        }
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error saving AI configuration:', error);
+      throw error;
     }
   }
 </script>

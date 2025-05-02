@@ -1423,4 +1423,54 @@ route.post("/api/save-schedule", (req, res) => {
   }
 });
 
+// API endpoint to get AI configuration
+route.get("/api/get-ai-config", (req, res) => {
+  try {
+    // Return AI configuration from session
+    res.json({
+      success: true,
+      config: req.session.aiConfig || null,
+    });
+  } catch (error) {
+    console.error("Error retrieving AI configuration:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve AI configuration",
+      error: error.message,
+    });
+  }
+});
+
+// API endpoint to save AI configuration
+route.post("/api/save-ai-config", (req, res) => {
+  try {
+    const aiConfig = req.body;
+
+    // Validate required parameters
+    if (!aiConfig) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid configuration data",
+      });
+    }
+
+    // Store AI configuration in session
+    req.session.aiConfig = aiConfig;
+
+    console.log("AI configuration saved:", aiConfig);
+
+    res.json({
+      success: true,
+      message: "AI configuration saved successfully",
+    });
+  } catch (error) {
+    console.error("Error saving AI configuration:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to save AI configuration",
+      error: error.message,
+    });
+  }
+});
+
 export default route;
