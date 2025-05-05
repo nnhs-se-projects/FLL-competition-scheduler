@@ -36,7 +36,9 @@ route.get("/", (req, res) => {
 });
 
 route.post("/", async (req, res) => {
-  req.session.email = await verify(req.body.credential);
+  const userPayload = await verify(req.body.credential);
+  req.session.user = userPayload;
+  req.session.email = userPayload.email;
   res.status(201).json({ redirectUrl: "/overview" });
 });
 
