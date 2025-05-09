@@ -7,7 +7,9 @@
 // Array of authorized admin user emails
 const adminUsers = [
   // Add your admin email addresses here
-  "admin@example.com",
+  "kwang@stu.naperville203.org",
+  "asharma1@stu.naperville203.org",
+  "tsisaac@stu.naperville203.org",
   // Add more admin emails as needed
 ];
 
