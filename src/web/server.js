@@ -18,6 +18,9 @@ import connectDB from "./connection.js";
 import router from "./routes/router.js";
 import authRoutes from "./routes/auth.js";
 
+// Import admin user check
+import { isAdmin } from "./models/adminUsers.js";
+
 // Load environment variables
 dotenv.config();
 
@@ -26,7 +29,7 @@ connectDB();
 
 // Create Express application
 const app = express();
-
+//finished auth
 // Set up middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -68,8 +71,42 @@ app.use((req, res, next) => {
     res.redirect("/auth/");
     return;
   }
-  //return
+
+  // Store user's admin status in locals for views
+  res.locals.isAdmin = isAdmin(req.session.user);
+  res.locals.userEmail = req.session.email;
+
   next();
+});
+
+// Authorization middleware for configuration routes
+app.use((req, res, next) => {
+  // Check if the route is a configuration route
+  const configRoutes = [
+    "/schedule-config",
+    "/regenerate-schedule",
+    "/save-config",
+    "/api/save-schedule",
+    "/api/save-ai-config",
+    "/admin",
+  ];
+
+  const isConfigRoute = configRoutes.some((route) =>
+    req.path.startsWith(route)
+  );
+
+  // If it's a configuration route, check if user is an admin
+  if (isConfigRoute) {
+    if (isAdmin(req.session.user)) {
+      next();
+    } else {
+      // Non-admin users are redirected to the overview page
+      res.redirect("/overview?error=unauthorized");
+    }
+  } else {
+    // Non-configuration routes don't need authorization
+    next();
+  }
 });
 
 // Set up routes

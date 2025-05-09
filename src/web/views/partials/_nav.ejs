@@ -36,14 +36,26 @@
             class="nav-link <%= path === '/schedule-editor' ? 'active' : '' %>"
             >Schedule Editor</a
           >
+          <% if (locals.isAdmin) { %>
           <a
             href="/schedule-config"
             class="nav-link <%= path === '/schedule-config' ? 'active' : '' %>"
             >Configuration</a
           >
+          <a
+            href="/admin"
+            class="nav-link <%= path === '/admin' ? 'active' : '' %>"
+            >Admin</a
+          >
+          <% } %>
         </div>
       </div>
       <div class="flex items-center gap-4">
+        <% if (locals.userEmail) { %>
+        <span class="text-sm text-gray-600">
+          <%= locals.isAdmin ? '👑 Admin: ' : '' %><%= locals.userEmail %>
+        </span>
+        <% } %>
         <a
           href="/auth/logout"
           onclick="signOut()"

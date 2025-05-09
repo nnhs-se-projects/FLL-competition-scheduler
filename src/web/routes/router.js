@@ -20,6 +20,13 @@ const habitsOfMind = require("../models/habitsOfMind.json");
 // Import auth router
 import authRouter from "./auth.js";
 
+// Import admin controller
+import {
+  adminManagement,
+  addAdmin,
+  removeAdmin,
+} from "../controllers/adminController.js";
+
 /**
  * Helper function to generate a new schedule
  * @param {Object} options - Configuration options
@@ -235,6 +242,7 @@ route.get("/", (req, res) => {
     res.render("overview", {
       schedule: req.session.schedule,
       path: "/",
+      query: req.query,
     });
   } else {
     res.render("landing");
@@ -250,6 +258,7 @@ route.get("/overview", (req, res) => {
   res.render("overview", {
     schedule: req.session.schedule,
     path: "/overview",
+    query: req.query,
   });
 });
 
@@ -393,6 +402,11 @@ route.get("/example", (req, res) => {
 
 // Use the auth router for /auth routes
 route.use("/auth", authRouter);
+
+// Admin routes
+route.get("/admin", adminManagement);
+route.post("/admin/add", addAdmin);
+route.post("/admin/remove", removeAdmin);
 
 // Add this route to handle saving configuration
 route.post("/save-config", (req, res) => {
