@@ -1,57 +1,53 @@
-const express = require("express");
-const route = express.Router();
-const Entry = require("../model/entry");
+route.post("/save-config", (req, res) => {
+  const config = {
+    numTeams: parseInt(req.body.numTeams),
+    // ... other existing config properties ...
+    teamNames: req.body.teamNames || [],
+  };
 
-// easy way to assign static data (e.g., array of strings) to a variable
-const habitsOfMind = require("../model/habitsOfMind.json");
+  // Save to session
+  req.session.config = config;
 
-// pass a path (e.g., "/") and callback function to the get method
-//  when the client makes an HTTP GET request to the specified path,
-//  the callback function is executed
-route.get("/", async (req, res) => {
-  // the req parameter references the HTTP request object, which has a number
-  //  of properties
-  console.log("path requested: " + req.path);
+  // Clear existing schedule when config changes
+  req.session.schedule = null;
 
-  const entries = await Entry.find();
+  res.redirect("/schedule-config");
+});
 
-  // convert MongoDB objects to objects formatted for the EJS template
-  const formattedEntries = entries.map((entry) => {
-    return {
-      id: entry._id,
-      date: entry.date.toLocaleDateString(),
-      habit: entry.habit,
-      content: entry.content.slice(0, 20) + "...",
-    };
+// Modify the generateNewSchedule function to use custom team names
+function generateNewSchedule(config) {
+  const schedule = new FLLSchedule();
+  schedule.populateWithRandomGenes();
+
+  // Add team names to the schedule
+  const teamNames = config.teamNames || [];
+  const scheduleData = {
+    tableRuns: schedule.buildTableSchedule(),
+    judgingSchedule: schedule.buildJudgingSchedule(),
+    teamsSchedule: schedule.buildTeamsSchedule(),
+  };
+
+  // Replace default team numbers with custom names
+  [
+    scheduleData.tableRuns,
+    scheduleData.judgingSchedule,
+    scheduleData.teamsSchedule,
+  ].forEach((scheduleType) => {
+    if (Array.isArray(scheduleType)) {
+      scheduleType.forEach((item) => {
+        if (item.teamNumber !== undefined && teamNames[item.teamNumber]) {
+          item.teamName = teamNames[item.teamNumber];
+        }
+      });
+    }
   });
 
-  // the res parameter references the HTTP response object
-  res.render("index", { entries: formattedEntries });
+  return scheduleData;
+}
+
+// Update the schedule generation route
+route.get("/regenerate-schedule", (req, res) => {
+  const config = req.session.config || {};
+  req.session.schedule = generateNewSchedule(config);
+  res.redirect(req.headers.referer || "/schedule-config");
 });
-
-route.get("/createEntry", (req, res) => {
-  res.render("createEntry", { habits: habitsOfMind });
-});
-
-route.post("/createEntry", async (req, res) => {
-  const entry = new Entry({
-    date: req.body.date,
-    email: req.session.email,
-    habit: req.body.habit,
-    content: req.body.content,
-  });
-  await entry.save();
-
-  res.status(201).end();
-});
-
-route.get("/editEntry/:id", async (req, res) => {
-  const entry = await Entry.findById(req.params.id);
-  console.log(entry);
-  res.send(entry);
-});
-
-// delegate all authentication to the auth.js router
-route.use("/auth", require("./auth"));
-
-module.exports = route;

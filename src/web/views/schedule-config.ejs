@@ -1,0 +1,1060 @@
+<!-- include header -->
+<%- include('include/_header') %>
+<!-- /include header -->
+
+<!-- Main Site -->
+<%- include('partials/_nav') %>
+
+<main class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Error Alert -->
+    <% if (typeof session !== 'undefined' && session.error) { %>
+      <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Error: </strong>
+        <span class="block sm:inline"><%= session.error %></span>
+        <button onclick="this.parentElement.style.display='none'" class="absolute top-0 right-0 mt-2 mr-2">
+          <span class="text-red-700">&times;</span>
+        </button>
+      </div>
+      <% session.error = null; %>
+    <% } %>
+    
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-gray-900">Schedule Configuration</h2>
+      <p class="mt-2 text-gray-600">
+        Manage and configure your competition schedule
+      </p>
+    </div>
+
+    <!-- Configuration Options -->
+    <div class="bg-white rounded-lg shadow mb-8">
+      <div class="p-6">
+        <h3 class="text-lg font-medium mb-6">Schedule Generation</h3>
+
+        <div class="mb-8">
+          <form action="/save-config" method="POST" class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div>
+                <label
+                  for="numTeams"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Number of Teams</label
+                >
+                <input
+                  type="number"
+                  id="numTeams"
+                  name="numTeams"
+                  min="10"
+                  max="50"
+                  value="<%= typeof config !== 'undefined' ? config.numTeams : 32 %>"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  onchange="generateTeamNameInputs()"
+                />
+              </div>
+              <div>
+                <label
+                  for="numTables"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Number of Robot Tables</label
+                >
+                <input
+                  type="number"
+                  id="numTables"
+                  name="numTables"
+                  min="2"
+                  max="8"
+                  value="<%= config?.numTables || 4 %>"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label
+                  for="numJudgingRooms"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Number of Judging Rooms</label
+                >
+                <input
+                  type="number"
+                  id="numJudgingRooms"
+                  name="numJudgingRooms"
+                  min="4"
+                  max="16"
+                  value="<%= config?.numJudgingRooms || 8 %>"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-4 mt-4 mb-4">
+              <h4 class="font-medium text-gray-900 mb-4">Day Settings</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label
+                    for="dayStart"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Day Start Time</label
+                  >
+                  <select
+                    id="dayStart"
+                    name="dayStart"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="8" <%= config?.dayStart === 8 ? 'selected' : '' %>>8:00 AM</option>
+                    <option value="8.5" <%= config?.dayStart === 8.5 ? 'selected' : '' %>>8:30 AM</option>
+                    <option value="9" <%= config?.dayStart === 9 ? 'selected' : '' %>>9:00 AM</option>
+                    <option value="9.5" <%= config?.dayStart === 9.5 ? 'selected' : '' %>>9:30 AM</option>
+                    <option value="10" <%= config?.dayStart === 10 ? 'selected' : '' %>>10:00 AM</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    for="dayEnd"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Day End Time</label
+                  >
+                  <select
+                    id="dayEnd"
+                    name="dayEnd"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="16" <%= config?.dayEnd === 16 ? 'selected' : '' %>>4:00 PM</option>
+                    <option value="16.5" <%= config?.dayEnd === 16.5 ? 'selected' : '' %>>4:30 PM</option>
+                    <option value="17" <%= config?.dayEnd === 17 ? 'selected' : '' %>>5:00 PM</option>
+                    <option value="17.5" <%= config?.dayEnd === 17.5 ? 'selected' : '' %>>5:30 PM</option>
+                    <option value="18" <%= config?.dayEnd === 18 ? 'selected' : '' %>>6:00 PM</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-4 mt-4 mb-4">
+              <h4 class="font-medium text-gray-900 mb-4">Lunch Settings</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label
+                    for="lunchTime"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Lunch Start Time</label
+                  >
+                  <select
+                    id="lunchTime"
+                    name="lunchTime"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="11" <%= config?.lunchTime === 11 ? 'selected' : '' %>>11:00 AM</option>
+                    <option value="11.5" <%= config?.lunchTime === 11.5 ? 'selected' : '' %>>11:30 AM</option>
+                    <option value="12" <%= config?.lunchTime === 12 ? 'selected' : '' %>>12:00 PM</option>
+                    <option value="12.5" <%= config?.lunchTime === 12.5 ? 'selected' : '' %>>12:30 PM</option>
+                    <option value="13" <%= config?.lunchTime === 13 ? 'selected' : '' %>>1:00 PM</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    for="lunchDuration"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Lunch Duration (minutes)</label
+                  >
+                  <select
+                    id="lunchDuration"
+                    name="lunchDuration"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="30" <%= config?.lunchDuration === 30 ? 'selected' : '' %>>30 min</option>
+                    <option value="45" <%= config?.lunchDuration === 45 ? 'selected' : '' %>>45 min</option>
+                    <option value="60" <%= config?.lunchDuration === 60 ? 'selected' : '' %>>60 min</option>
+                  </select>
+                </div>
+                <div class="col-span-2">
+                  <div class="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="skipLunch"
+                      name="skipLunch"
+                      class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      <%= config?.skipLunch ? 'checked' : '' %>
+                    >
+                    <label for="skipLunch" class="ml-2 block text-sm text-gray-700">
+                      Skip lunch (no lunch break in schedule)
+                    </label>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    Enable this option if teams will not have a formal lunch break during the competition
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Team Names Section -->
+            <div class="border-t border-gray-200 mt-8 pt-8">
+              <h4 class="text-lg font-medium text-gray-900 mb-4">Team Names</h4>
+              <p class="text-sm text-gray-600 mb-4">
+                Select a team to customize its name.
+              </p>
+
+              <!-- Team Selection Dropdown -->
+              <div class="mb-4">
+                <label
+                  for="teamSelector"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Select Team
+                </label>
+                <select
+                  id="teamSelector"
+                  class="w-full md:w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  onchange="showTeamEdit()"
+                >
+                  <option value="">Choose a team...</option>
+                </select>
+              </div>
+
+              <!-- Team Edit Form -->
+              <div
+                id="teamEditForm"
+                class="hidden bg-gray-50 p-6 rounded-lg mb-6"
+              >
+                <div class="max-w-md space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Team Name
+                    </label>
+                    <input
+                      type="text"
+                      id="teamNameInput"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter team name"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Team #
+                    </label>
+                    <input
+                      type="number"
+                      id="teamNumberInput"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter team number"
+                    />
+                  </div>
+                  <div class="pt-2">
+                    <button
+                      type="button"
+                      onclick="updateTeamInfo()"
+                      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                    >
+                      Update
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Team Names List -->
+              <div
+                id="teamList"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              >
+                <!-- Team names will be displayed here -->
+              </div>
+
+              <!-- Hidden input to store team names -->
+              <div id="teamInfoContainer"></div>
+            </div>
+
+            <div class="mt-8 flex justify-end space-x-4">
+              <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-150 ease-in-out"
+              >
+                Save Configuration
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Hidden elements containing EJS data -->
+        <div id="team-info-data" style="display: none;"><%- JSON.stringify(config?.teamInfo || []) %></div>
+        <div id="num-teams-data" style="display: none;"><%= typeof config !== 'undefined' ? config.numTeams : 32 %></div>
+
+        <!-- Current Schedule Information -->
+        <div class="border-t border-gray-200 pt-6">
+          <h4 class="font-medium text-gray-900 mb-4">
+            Current Schedule Information
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-gray-50 p-4 rounded">
+              <p class="text-sm text-gray-500">Robot Game Tables</p>
+              <p class="text-xl font-bold text-blue-600">
+                <%= schedule.tableRuns.length %>
+              </p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <p class="text-sm text-gray-500">Judging Rooms</p>
+              <p class="text-xl font-bold text-green-600">
+                <%= schedule.judgingSchedule.length %>
+              </p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <p class="text-sm text-gray-500">Teams</p>
+              <p class="text-xl font-bold text-purple-600">
+                <%= schedule.teamsSchedule.length - 1 %>
+              </p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded">
+              <p class="text-sm text-gray-500">Schedule Score</p>
+              <p class="text-xl font-bold text-orange-600">
+                <%= schedule.score ? schedule.score.toFixed(2) : "N/A" %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Configuration Options -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="p-6">
+        <h3 class="text-lg font-medium mb-4">Advanced Configuration</h3>
+        <p class="text-gray-700 mb-4">
+          Fine-tune your competition schedule with these advanced options.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="border border-gray-200 p-4 rounded">
+            <h5 class="font-medium text-gray-900 mb-2">Timing Preferences</h5>
+            <p class="text-sm text-gray-600 mb-4">
+              Adjust durations for table runs and judging sessions.
+            </p>
+            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm"
+              >Configure Timing</a
+            >
+          </div>
+
+          <div class="border border-gray-200 p-4 rounded">
+            <h5 class="font-medium text-gray-900 mb-2">Genetic Algorithm</h5>
+            <p class="text-sm text-gray-600 mb-4">
+              Customize the optimization parameters for schedule generation.
+            </p>
+            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm"
+              >Configure Algorithm</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Schedule Optimizer -->
+    <div class="bg-white rounded-lg shadow mt-8">
+      <div class="p-6">
+        <h3 class="text-lg font-medium mb-4">AI Schedule Optimizer</h3>
+        <p class="text-gray-700 mb-4">
+          Use Google's Gemini AI to automatically generate an optimized schedule based on your requirements.
+        </p>
+        
+        <button 
+          id="openAIOptimizerBtn" 
+          class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-150 ease-in-out"
+        >
+          Open AI Optimizer
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- AI Schedule Optimizer Modal -->
+<div id="aiOptimizerModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="fixed inset-0 bg-black opacity-50" id="modalOverlay"></div>
+    
+    <div class="relative bg-white rounded-lg max-w-3xl w-full mx-auto p-6 shadow-xl z-10">
+      <h2 class="text-xl font-bold mb-4">AI Schedule Optimizer</h2>
+      
+      <form id="aiOptimizerForm" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Number of Teams</label>
+            <input 
+              type="number" 
+              name="aiNumTeams" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+              value="<%= config?.numTeams || 32 %>"
+            >
+            <div class="text-xs text-gray-500 mt-1">Total number of teams competing in the tournament</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Number of Robot Tables</label>
+            <input 
+              type="number" 
+              name="aiNumTables" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+              value="<%= config?.numTables || 4 %>"
+            >
+            <div class="text-xs text-gray-500 mt-1">Number of available robot game tables (usually in pairs)</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Number of Judging Rooms</label>
+            <input 
+              type="number" 
+              name="aiNumJudgingRooms" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="<%= config?.numJudgingRooms || 8 %>"
+            >
+            <div class="text-xs text-gray-500 mt-1">Total judging rooms across all categories</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Event Start Time</label>
+            <input 
+              type="time" 
+              name="aiStartTime" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="08:00"
+            >
+            <div class="text-xs text-gray-500 mt-1">When the first activities should begin</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Event End Time</label>
+            <input 
+              type="time" 
+              name="aiEndTime" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="17:00"
+            >
+            <div class="text-xs text-gray-500 mt-1">When all activities should be completed</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Lunch Start Time</label>
+            <input 
+              type="time" 
+              name="aiLunchTime" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="11:30"
+              <%= config?.skipLunch ? 'disabled' : '' %>
+            >
+            <div class="text-xs text-gray-500 mt-1">When lunch break should begin</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Lunch Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiLunchDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="45"
+              <%= config?.skipLunch ? 'disabled' : '' %>
+            >
+            <div class="text-xs text-gray-500 mt-1">How long teams have for lunch</div>
+          </div>
+          
+          <div class="md:col-span-2 mt-2">
+            <div class="flex items-center">
+              <input 
+                type="checkbox" 
+                id="aiSkipLunch" 
+                name="aiSkipLunch" 
+                class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                <%= config?.skipLunch ? 'checked' : '' %>
+                onchange="toggleLunchFields(this.checked)"
+              >
+              <label for="aiSkipLunch" class="ml-2 block text-sm text-gray-700">
+                Skip lunch (no lunch break in schedule)
+              </label>
+            </div>
+            <div class="text-xs text-gray-500 mt-1">Enable this option if teams will not have a formal lunch break during the competition</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Table Run Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiTableDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="5"
+            >
+            <div class="text-xs text-gray-500 mt-1">Time allocated for each robot game match</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Table Buffer Time (minutes)</label>
+            <input 
+              type="number" 
+              name="aiTableBuffer" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="2"
+            >
+            <div class="text-xs text-gray-500 mt-1">Time between table runs for setup</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Judging Session Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiJudgeDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="15"
+            >
+            <div class="text-xs text-gray-500 mt-1">Time for each judging presentation</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Judging Buffer Time (minutes)</label>
+            <input 
+              type="number" 
+              name="aiJudgeBuffer" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="3"
+            >
+            <div class="text-xs text-gray-500 mt-1">Time between judging sessions for transition</div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Opening Ceremony Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiOpeningDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="20"
+            >
+            <div class="text-xs text-gray-500 mt-1">Length of opening ceremony</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Closing Ceremony Duration (minutes)</label>
+            <input 
+              type="number" 
+              name="aiClosingDuration" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="30"
+            >
+            <div class="text-xs text-gray-500 mt-1">Length of closing ceremony</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Team Transit Time (minutes)</label>
+            <input 
+              type="number" 
+              name="aiTransitTime" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              value="5"
+            >
+            <div class="text-xs text-gray-500 mt-1">Time teams need to move between locations</div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Optimization Priority</label>
+            <select 
+              name="aiOptimizationPriority" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            >
+              <option value="balanced">Balanced (Default)</option>
+              <option value="compact">Compact Schedule</option>
+              <option value="spread">Spread Out Events</option>
+              <option value="team-friendly">Team Experience</option>
+              <option value="volunteer-friendly">Volunteer Experience</option>
+            </select>
+            <div class="text-xs text-gray-500 mt-1">What to prioritize in schedule generation</div>
+          </div>
+        </div>
+        
+        <div class="border-t border-gray-200 pt-4 mt-4">
+          <h4 class="font-medium text-gray-900 mb-4">Special Requirements</h4>
+          <textarea
+            name="aiSpecialRequirements"
+            rows="3"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
+            placeholder="Enter any special scheduling requirements or constraints..."
+          ></textarea>
+          <div class="text-xs text-gray-500 mt-1">Examples: "Team 5 needs to start later", "Keep judging blocks in morning"</div>
+        </div>
+        
+        <div id="aiScheduleResult" class="hidden bg-gray-50 p-4 rounded-lg">
+          <div class="flex items-center">
+            <div class="spinner mr-3 hidden">
+              <div class="w-6 h-6 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+            </div>
+            <div class="result-message"></div>
+          </div>
+        </div>
+        
+        <div class="flex justify-end gap-3">
+          <button 
+            type="button"
+            id="saveAIConfigBtn"
+            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          >
+            Save Configuration
+          </button>
+          
+          <button 
+            type="button"
+            id="closeAIModalBtn"
+            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          
+          <button 
+            type="submit"
+            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            id="generateAIScheduleBtn"
+          >
+            Generate Optimized Schedule
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Store the team information in a hidden element to avoid EJS template issues
+  var teamInfo = [];
+  var numTeams = 32;
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    try {
+      // Parse team info from the hidden element
+      teamInfo = JSON.parse(document.getElementById('team-info-data').textContent || '[]');
+      numTeams = parseInt(document.getElementById('num-teams-data').textContent || '32');
+    } catch (e) {
+      console.error("Error parsing team info:", e);
+      teamInfo = [];
+      numTeams = 32;
+    }
+    
+    // Initialize team info with the parsed data
+    initializeTeamInfo();
+  });
+
+  function initializeTeamInfo() {
+    // Initialize team info array if empty
+    if (!teamInfo.length) {
+      teamInfo = Array(numTeams).fill().map((_, i) => ({
+        name: `Team ${i + 1}`,
+        number: i + 1
+      }));
+    }
+
+    // Populate dropdown
+    const selector = document.getElementById('teamSelector');
+    selector.innerHTML = '<option value="">Choose a team...</option>';
+    teamInfo.forEach((team, index) => {
+      selector.innerHTML += `<option value="${index}">Team ${index + 1}: ${team.name} (#${team.number})</option>`;
+    });
+
+    // Update team list display
+    updateTeamList();
+    updateHiddenInputs();
+  }
+
+  function showTeamEdit() {
+    const selector = document.getElementById('teamSelector');
+    const form = document.getElementById('teamEditForm');
+    const nameInput = document.getElementById('teamNameInput');
+    const numberInput = document.getElementById('teamNumberInput');
+
+    if (selector.value !== '') {
+      const index = parseInt(selector.value);
+      const team = teamInfo[index];
+      nameInput.value = team.name;
+      numberInput.value = team.number;
+      form.classList.remove('hidden');
+    } else {
+      form.classList.add('hidden');
+    }
+  }
+
+  function updateTeamInfo() {
+    const selector = document.getElementById('teamSelector');
+    const nameInput = document.getElementById('teamNameInput');
+    const numberInput = document.getElementById('teamNumberInput');
+    const index = parseInt(selector.value);
+
+    if (nameInput.value.trim() && numberInput.value.trim()) {
+      teamInfo[index] = {
+        name: nameInput.value.trim(),
+        number: parseInt(numberInput.value)
+      };
+      updateTeamList();
+      updateHiddenInputs();
+
+      // Update dropdown option
+      const option = selector.options[index + 1];
+      option.text = `Team ${index + 1}: ${teamInfo[index].name} (#${teamInfo[index].number})`;
+
+      // Hide the edit form
+      document.getElementById('teamEditForm').classList.add('hidden');
+      selector.value = '';
+    }
+  }
+
+  function updateTeamList() {
+    const container = document.getElementById('teamList');
+    container.innerHTML = teamInfo.map((team, index) => `
+      <div class="bg-white p-4 rounded-lg shadow">
+        <div class="text-sm text-gray-500">Team ${index + 1}</div>
+        <div class="font-medium text-gray-900">${team.name}</div>
+        <div class="text-sm text-gray-600">Team #${team.number}</div>
+      </div>
+    `).join('');
+  }
+
+  function updateHiddenInputs() {
+    const container = document.getElementById('teamInfoContainer');
+    container.innerHTML = teamInfo.map((team, index) => `
+      <input type="hidden" name="teamNames[]" value="${team.name}">
+      <input type="hidden" name="teamNumbers[]" value="${team.number}">
+    `).join('');
+  }
+
+  // Update team info when number of teams changes
+  document.getElementById('numTeams').addEventListener('change', function() {
+    const newNumTeams = parseInt(this.value) || 32;
+
+    // Adjust team info array
+    if (newNumTeams > teamInfo.length) {
+      // Add new teams
+      for (let i = teamInfo.length; i < newNumTeams; i++) {
+        teamInfo.push({
+          name: `Team ${i + 1}`,
+          number: i + 1
+        });
+      }
+    } else if (newNumTeams < teamInfo.length) {
+      // Remove excess teams
+      teamInfo = teamInfo.slice(0, newNumTeams);
+    }
+
+    initializeTeamInfo();
+  });
+
+  // AI Optimizer Modal Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('aiOptimizerModal');
+    const openBtn = document.getElementById('openAIOptimizerBtn');
+    const closeBtn = document.getElementById('closeAIModalBtn');
+    const overlay = document.getElementById('modalOverlay');
+    const form = document.getElementById('aiOptimizerForm');
+    const resultContainer = document.getElementById('aiScheduleResult');
+    const spinner = resultContainer.querySelector('.spinner');
+    const resultMessage = resultContainer.querySelector('.result-message');
+    
+    // Open modal
+    openBtn.addEventListener('click', function() {
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+      
+      // Load saved AI configuration if available
+      fetch('/api/get-ai-config')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.config) {
+            // Populate form fields with saved configuration
+            const config = data.config;
+            
+            // Set numeric values
+            if (config.numTeams) form.elements['aiNumTeams'].value = config.numTeams;
+            if (config.numTables) form.elements['aiNumTables'].value = config.numTables;
+            if (config.numJudgingRooms) form.elements['aiNumJudgingRooms'].value = config.numJudgingRooms;
+            
+            // Set time values
+            if (config.startTime) form.elements['aiStartTime'].value = config.startTime;
+            if (config.endTime) form.elements['aiEndTime'].value = config.endTime;
+            if (config.lunchTime) form.elements['aiLunchTime'].value = config.lunchTime;
+            
+            // Set durations
+            if (config.lunchDuration) form.elements['aiLunchDuration'].value = config.lunchDuration;
+            if (config.tableDuration) form.elements['aiTableDuration'].value = config.tableDuration;
+            if (config.tableBuffer) form.elements['aiTableBuffer'].value = config.tableBuffer;
+            if (config.judgeDuration) form.elements['aiJudgeDuration'].value = config.judgeDuration;
+            if (config.judgeBuffer) form.elements['aiJudgeBuffer'].value = config.judgeBuffer;
+            if (config.openingDuration) form.elements['aiOpeningDuration'].value = config.openingDuration;
+            if (config.closingDuration) form.elements['aiClosingDuration'].value = config.closingDuration;
+            if (config.transitTime) form.elements['aiTransitTime'].value = config.transitTime;
+            
+            // Set select values
+            if (config.optimizationPriority) form.elements['aiOptimizationPriority'].value = config.optimizationPriority;
+            
+            // Set text areas
+            if (config.specialRequirements) form.elements['aiSpecialRequirements'].value = config.specialRequirements;
+            
+            // Set checkboxes
+            if (config.skipLunch !== undefined) {
+              form.elements['aiSkipLunch'].checked = config.skipLunch;
+              toggleLunchFields(config.skipLunch);
+            }
+            
+            console.log('Loaded saved AI configuration');
+          }
+        })
+        .catch(error => {
+          console.error('Error loading AI configuration:', error);
+        });
+    });
+    
+    // Close modal
+    function closeModal() {
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+    
+    // Save AI configuration
+    document.getElementById('saveAIConfigBtn').addEventListener('click', function() {
+      const formData = new FormData(form);
+      const configData = {
+        numTeams: parseInt(formData.get('aiNumTeams')),
+        numTables: parseInt(formData.get('aiNumTables')),
+        numJudgingRooms: parseInt(formData.get('aiNumJudgingRooms')),
+        startTime: formData.get('aiStartTime'),
+        endTime: formData.get('aiEndTime'),
+        lunchTime: formData.get('aiLunchTime'),
+        lunchDuration: parseInt(formData.get('aiLunchDuration')),
+        tableDuration: parseInt(formData.get('aiTableDuration')),
+        tableBuffer: parseInt(formData.get('aiTableBuffer')),
+        judgeDuration: parseInt(formData.get('aiJudgeDuration')),
+        judgeBuffer: parseInt(formData.get('aiJudgeBuffer')),
+        openingDuration: parseInt(formData.get('aiOpeningDuration')),
+        closingDuration: parseInt(formData.get('aiClosingDuration')),
+        transitTime: parseInt(formData.get('aiTransitTime')),
+        optimizationPriority: formData.get('aiOptimizationPriority'),
+        specialRequirements: formData.get('aiSpecialRequirements'),
+        skipLunch: formData.get('aiSkipLunch') === 'on'
+      };
+      
+      // Save configuration via API
+      saveAIConfiguration(configData)
+        .then(() => {
+          // Show success message
+          resultContainer.classList.remove('hidden');
+          resultMessage.innerHTML = '<span class="text-green-600">Configuration saved successfully!</span>';
+          
+          // Hide message after 3 seconds
+          setTimeout(() => {
+            resultContainer.classList.add('hidden');
+          }, 3000);
+        })
+        .catch(error => {
+          // Show error message
+          resultContainer.classList.remove('hidden');
+          resultMessage.innerHTML = `<span class="text-red-600">Error saving configuration: ${error.message}</span>`;
+        });
+    });
+    
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const scheduleParams = {
+        numTeams: parseInt(formData.get('aiNumTeams')),
+        numTables: parseInt(formData.get('aiNumTables')),
+        numJudgingRooms: parseInt(formData.get('aiNumJudgingRooms')),
+        startTime: formData.get('aiStartTime'),
+        endTime: formData.get('aiEndTime'),
+        lunchTime: formData.get('aiLunchTime'),
+        lunchDuration: parseInt(formData.get('aiLunchDuration')),
+        tableDuration: parseInt(formData.get('aiTableDuration')),
+        tableBuffer: parseInt(formData.get('aiTableBuffer')),
+        judgeDuration: parseInt(formData.get('aiJudgeDuration')),
+        judgeBuffer: parseInt(formData.get('aiJudgeBuffer')),
+        openingDuration: parseInt(formData.get('aiOpeningDuration')),
+        closingDuration: parseInt(formData.get('aiClosingDuration')),
+        transitTime: parseInt(formData.get('aiTransitTime')),
+        optimizationPriority: formData.get('aiOptimizationPriority'),
+        specialRequirements: formData.get('aiSpecialRequirements'),
+        skipLunch: formData.get('aiSkipLunch') === 'on'
+      };
+      
+      // Basic form validation
+      if (validateScheduleParams(scheduleParams, resultMessage)) {
+        // Call Gemini API via our backend
+        callGeminiAPI(scheduleParams)
+          .then(parameters => {
+            // Success - redirect to schedule page with the new schedule
+            spinner.classList.add('hidden');
+            resultMessage.innerHTML = '<span class="text-green-600">Success! Optimized schedule generated. Applying now...</span>';
+            
+            // Apply the schedule
+            setTimeout(() => {
+              window.location.href = '/regenerate-schedule?' + 
+                `numTeams=${parameters.numTeams}&` +
+                `numTables=${parameters.numTables}&` +
+                `numJudgingRooms=${parameters.numJudgingRooms}&` +
+                `dayStart=${parameters.dayStart}&` +
+                `dayEnd=${parameters.dayEnd}&` +
+                `lunchTime=${parameters.lunchTime}&` +
+                `lunchDuration=${parameters.lunchDuration}` +
+                (parameters.skipLunch ? '&skipLunch=true' : '');
+            }, 1500);
+          })
+          .catch(error => {
+            // Error
+            spinner.classList.add('hidden');
+            resultMessage.innerHTML = `<span class="text-red-600">Error: ${error.message}</span>`;
+          });
+      }
+    });
+    
+    // Validate schedule parameters
+    function validateScheduleParams(params, messageElement) {
+      // Convert time strings to comparable numbers
+      const startTimeMinutes = convertTimeToMinutes(params.startTime);
+      const endTimeMinutes = convertTimeToMinutes(params.endTime);
+      const lunchTimeMinutes = convertTimeToMinutes(params.lunchTime);
+      
+      // Check for invalid values
+      if (params.numTeams < 1 || params.numTeams > 200) {
+        messageElement.innerHTML = '<span class="text-red-600">Number of teams must be between 1 and 200</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      if (params.numTables < 1 || params.numTables > 20) {
+        messageElement.innerHTML = '<span class="text-red-600">Number of tables must be between 1 and 20</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      if (params.numJudgingRooms < 1 || params.numJudgingRooms > 20) {
+        messageElement.innerHTML = '<span class="text-red-600">Number of judging rooms must be between 1 and 20</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      if (endTimeMinutes <= startTimeMinutes) {
+        messageElement.innerHTML = '<span class="text-red-600">End time must be after start time</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      if (lunchTimeMinutes <= startTimeMinutes || lunchTimeMinutes >= endTimeMinutes) {
+        messageElement.innerHTML = '<span class="text-red-600">Lunch time must be between start and end times</span>';
+        resultContainer.classList.remove('hidden');
+        return false;
+      }
+      
+      return true;
+    }
+    
+    // Function to call Gemini API via our backend
+    async function callGeminiAPI(params) {
+      try {
+        // Show loading state
+        resultContainer.classList.remove('hidden');
+        spinner.classList.remove('hidden');
+        resultMessage.innerHTML = 'Generating optimized schedule with AI...';
+        
+        // Call our backend API that interfaces with Gemini
+        const response = await fetch('/api/gemini-optimize', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(params)
+        });
+        
+        // First check if the response is OK
+        if (!response.ok) {
+          // Try to parse the error response as JSON
+          try {
+            const errorData = await response.json();
+            throw new Error(errorData.message || errorData.error || 'Failed to generate schedule');
+          } catch (jsonError) {
+            // If we can't parse the JSON, use the status text
+            throw new Error(`Failed to generate schedule: ${response.status} ${response.statusText}`);
+          }
+        }
+        
+        // Parse the successful response
+        let data;
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          throw new Error('Invalid response format from server');
+        }
+        
+        // Make sure the data has the expected format
+        if (!data || !data.parameters) {
+          throw new Error('Invalid schedule data received from server');
+        }
+        
+        // Update UI with success message
+        spinner.classList.add('hidden');
+        resultMessage.innerHTML = '<span class="text-green-600">Success! Optimized schedule generated. Applying now...</span>';
+        
+        // Return the optimized parameters
+        return data.parameters;
+      } catch (error) {
+        console.error('Gemini API error:', error);
+        spinner.classList.add('hidden');
+        resultMessage.innerHTML = `<span class="text-red-600">Error: ${error.message}</span>
+          <p class="mt-2 text-sm text-red-500">Please try again or adjust your parameters.</p>`;
+        throw error; // Re-throw for the caller to handle
+      }
+    }
+    
+    // Helper function to convert time to hours (8:30 -> 8.5)
+    function convertTimeToHours(timeString) {
+      const [hours, minutes] = timeString.split(':').map(Number);
+      return hours + (minutes / 60);
+    }
+    
+    // Helper function to convert time to minutes since midnight
+    function convertTimeToMinutes(timeString) {
+      const [hours, minutes] = timeString.split(':').map(Number);
+      return (hours * 60) + minutes;
+    }
+  });
+
+  // Toggle lunch fields based on the skip lunch checkbox
+  function toggleLunchFields(skipLunch) {
+    const lunchTimeField = document.querySelector('input[name="aiLunchTime"]');
+    const lunchDurationField = document.querySelector('input[name="aiLunchDuration"]');
+    
+    if (lunchTimeField && lunchDurationField) {
+      lunchTimeField.disabled = skipLunch;
+      lunchDurationField.disabled = skipLunch;
+    }
+  }
+
+  // Function to save AI configuration
+  async function saveAIConfiguration(configData) {
+    try {
+      const response = await fetch('/api/save-ai-config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(configData)
+      });
+      
+      if (!response.ok) {
+        // Try to parse the error response as JSON
+        try {
+          const errorData = await response.json();
+          throw new Error(errorData.message || errorData.error || 'Failed to save configuration');
+        } catch (jsonError) {
+          // If we can't parse the JSON, use the status text
+          throw new Error(`Failed to save configuration: ${response.status} ${response.statusText}`);
+        }
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error saving AI configuration:', error);
+      throw error;
+    }
+  }
+</script>
+
+<%- include('partials/_schedule_scripts') %>
+<!-- include footer -->
+<%- include('include/_footer') %>

@@ -1,0 +1,93 @@
+<!-- include header -->
+<%- include('include/_header') %>
+<!-- /include header -->
+
+<!-- Main Site -->
+<%- include('partials/_nav') %>
+
+<main class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Summary Cards -->
+    <div class="no-print">
+      <%- include('partials/_summary_cards') %>
+
+      <!-- Export Button -->
+      <div class="flex justify-end mb-4" id="exportBtnContainer">
+        <!-- Export PDF button will be added here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Print Header -->
+    <div class="hidden print:block mb-8 print-header">
+      <h1 class="text-3xl font-bold text-center">FLL Competition Schedule</h1>
+      <h2 class="text-xl font-medium text-center mt-2">Judging Rooms</h2>
+      <p class="text-center text-gray-600 mt-2">
+        Generated: <%= new Date().toLocaleDateString() %>
+      </p>
+      <p class="text-center text-gray-600 mt-1">
+        Judges should use buffer time between sessions for deliberation and
+        preparation.
+      </p>
+      <div class="text-xs max-w-lg mx-auto mt-3 px-4">
+        <p class="font-bold mb-1">Judging Session Types:</p>
+        <div class="grid grid-cols-2 gap-2">
+          <p>
+            <span class="inline-block w-3 h-3 bg-purple-100 mr-1"></span>
+            <span class="font-medium">Robot Design:</span> Assess technical
+            innovation and engineering process
+          </p>
+          <p>
+            <span class="inline-block w-3 h-3 bg-green-100 mr-1"></span>
+            <span class="font-medium">Project:</span> Evaluate research problem,
+            solution, and presentation
+          </p>
+          <p>
+            <span class="inline-block w-3 h-3 bg-indigo-100 mr-1"></span>
+            <span class="font-medium">Core Values:</span> Observe teamwork,
+            inclusion, and discovery
+          </p>
+          <p>
+            <span class="inline-block w-3 h-3 bg-gray-100 mr-1"></span>
+            <span class="font-medium">Deliberation:</span> Complete scoring
+            rubrics between sessions
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Judging Rooms Content -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <% if (schedule && schedule.judgingSchedule &&
+        schedule.judgingSchedule.length > 0) { %> <%
+        schedule.judgingSchedule.forEach((room, roomIndex) => { %>
+        <div class="bg-gray-50 rounded-lg p-4 judging-schedule">
+          <h3 class="text-lg font-medium mb-4">
+            Judging Room <%= roomIndex + 1 %>
+          </h3>
+          <%- include('partials/_judging_schedule', { room }) %>
+        </div>
+        <% }); %> <% } else if (schedule && schedule.judgingRooms &&
+        schedule.judgingRooms.length > 0) { %> <%
+        schedule.judgingRooms.forEach((room, roomIndex) => { %>
+        <div class="bg-gray-50 rounded-lg p-4 judging-schedule">
+          <h3 class="text-lg font-medium mb-4">
+            Judging Room <%= roomIndex + 1 %>
+          </h3>
+          <%- include('partials/_judging_schedule', { room }) %>
+        </div>
+        <% }); %> <% } else { %>
+        <div class="col-span-2 text-center py-8">
+          <p class="text-gray-500">No judging rooms scheduled yet.</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- include footer -->
+<%- include('include/_footer') %>
+
+<!-- PDF Export Script -->
+<script src="/js/export-pdf.js"></script>

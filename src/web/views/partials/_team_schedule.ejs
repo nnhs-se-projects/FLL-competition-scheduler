@@ -1,0 +1,35 @@
+<div class="space-y-3">
+  <% team.sort((a, b) => a.startTime - b.startTime).forEach(event => { %>
+  <div class="bg-white rounded p-3 shadow-sm schedule-item">
+    <div class="flex justify-between items-start">
+      <div>
+        <p class="font-medium">
+          <% if (event.type === 'tableRun') { %>
+          <span class="text-blue-600">Robot Game</span>
+          <% } else if (event.type === 'robotJudging') { %>
+          <span class="text-purple-600">Robot Design Judging</span>
+          <% } else if (event.type === 'projectJudging') { %>
+          <span class="text-green-600">Project Judging</span>
+          <% } else if (event.type === 'lunch') { %>
+          <span class="text-amber-600">Lunch Break</span>
+          <% } else if (event.type === 'openingCeremony') { %>
+          <span class="text-red-600">Opening Ceremony</span>
+          <% } else if (event.type === 'closingCeremony') { %>
+          <span class="text-red-600">Closing Ceremony</span>
+          <% } else if (event.type === 'awards') { %>
+          <span class="text-yellow-600">Awards</span>
+          <% } else { %> <%= event.type %> <% } %>
+        </p>
+        <p class="text-sm text-gray-500"><%= event.locationName %></p>
+      </div>
+      <div class="text-right">
+        <p class="font-medium">
+          <%= Math.floor(event.startTime/60) %>:<%=
+          String(event.startTime%60).padStart(2, '0') %>
+        </p>
+        <p class="text-sm text-gray-500"><%= event.duration %> min</p>
+      </div>
+    </div>
+  </div>
+  <% }); %>
+</div>

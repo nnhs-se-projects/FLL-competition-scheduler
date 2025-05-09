@@ -1,0 +1,230 @@
+/**
+ * FLL Competition Scheduler - Schedule Editor CSS
+ */
+
+/* Main schedule grid container */
+.schedule-editor-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+/* Schedule grid */
+#scheduleGrid {
+  display: flex;
+  flex-direction: column;
+  min-width: 800px;
+  position: relative;
+}
+
+/* Grid header row */
+.grid-header {
+  display: flex;
+  height: 50px;
+  border-bottom: 2px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  background-color: #f9fafb;
+  z-index: 10;
+}
+
+/* Resource header cells */
+.resource-header {
+  flex: 1;
+  padding: 8px;
+  font-weight: 600;
+  text-align: center;
+  border-right: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+/* Time rows */
+.time-row {
+  display: flex;
+  height: 30px;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+/* Time label */
+.time-label {
+  width: 70px;
+  padding: 4px;
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: right;
+  background-color: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+  position: sticky;
+  left: 0;
+  z-index: 5;
+}
+
+/* Schedule cells */
+.schedule-cell {
+  flex: 1;
+  border-right: 1px solid #e5e7eb;
+  position: relative;
+  min-width: 120px;
+}
+
+/* Schedule cell highlight when dragging over */
+.schedule-cell.drop-target {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Schedule events */
+.schedule-event {
+  position: absolute;
+  width: calc(100% - 4px);
+  margin: 0 2px;
+  border-radius: 4px;
+  padding: 4px;
+  overflow: hidden;
+  cursor: grab;
+  z-index: 2;
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Active dragging */
+.schedule-event.dragging {
+  opacity: 0.6;
+}
+
+/* Event title */
+.event-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Event details */
+.event-details {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Event time */
+.event-time {
+  font-size: 0.7rem;
+  opacity: 0.9;
+}
+
+/* Controls container */
+.schedule-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+/* Conflict warnings */
+#conflictWarnings {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+/* AI changes display */
+#aiChanges {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+/* Resource filters */
+.resource-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.resource-filter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.resource-filter-btn.active {
+  font-weight: 600;
+}
+
+/* Filter buttons by type */
+.filter-tables {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid #bfdbfe;
+}
+
+.filter-tables.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.filter-judging {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid #a7f3d0;
+}
+
+.filter-judging.active {
+  background-color: #10b981;
+  color: white;
+}
+
+.filter-ceremonies {
+  background-color: rgba(236, 72, 153, 0.1);
+  color: #ec4899;
+  border: 1px solid #fbcfe8;
+}
+
+.filter-ceremonies.active {
+  background-color: #ec4899;
+  color: white;
+}
+
+/* Spinner */
+.ai-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .schedule-controls {
+    flex-direction: column;
+  }
+
+  .resource-header,
+  .schedule-cell {
+    min-width: 100px;
+  }
+}

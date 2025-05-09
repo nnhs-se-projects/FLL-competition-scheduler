@@ -1,0 +1,64 @@
+<!-- include header -->
+<%- include('include/_header') %>
+<!-- /include header -->
+
+<!-- Main Site -->
+<%- include('partials/_nav') %>
+
+<main class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Notifications -->
+    <%- include('partials/_notification', { query: query || {} }) %>
+
+    <!-- Admin Management -->
+    <div class="bg-white rounded-lg shadow mb-6">
+      <div class="p-6">
+        <h2 class="text-2xl font-bold mb-4">Admin User Management</h2>
+        <p class="mb-4">
+          Add or remove admin users who can access configuration settings.
+        </p>
+
+        <div class="border rounded-lg p-4 mb-6">
+          <h3 class="text-lg font-medium mb-2">Current Admin Users</h3>
+          <ul class="space-y-2 mb-4">
+            <% admins.forEach(admin => { %>
+            <li class="flex items-center justify-between">
+              <span><%= admin %></span>
+              <form action="/admin/remove" method="POST" class="inline">
+                <input type="hidden" name="email" value="<%= admin %>" />
+                <button type="submit" class="text-red-600 hover:text-red-800">
+                  Remove
+                </button>
+              </form>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+
+        <div class="border rounded-lg p-4">
+          <h3 class="text-lg font-medium mb-2">Add New Admin</h3>
+          <form action="/admin/add" method="POST">
+            <div class="flex gap-4">
+              <input
+                type="email"
+                name="email"
+                placeholder="user@example.com"
+                required
+                class="flex-grow p-2 border rounded"
+              />
+              <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Add Admin
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- include footer -->
+<%- include('include/_footer') %>

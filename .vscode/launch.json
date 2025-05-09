@@ -16,6 +16,50 @@
       "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}/assets",
       "outputCapture": "std"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug jrGeneticAlg.js",
+      "program": "${workspaceFolder}/jrGeneticAlg.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug crossover.js",
+      "program": "${workspaceFolder}/crossover.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug mergedSchedule.js",
+      "program": "${workspaceFolder}/mergedSchedule.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug attempt.js",
+      "program": "${workspaceFolder}/attempt.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug main.js",
+      "program": "${workspaceFolder}/tspPort/main.js"
+    },
+    {
+      "name": "Debug Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "--experimental-modules",
+        "--experimental-vm-modules",
+        "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "--runInBand"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }

@@ -1,0 +1,67 @@
+<!-- include header -->
+<%- include('include/_header') %>
+<!-- /include header -->
+
+<!-- Main Site -->
+<%- include('partials/_nav') %>
+
+<main class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Summary Cards -->
+    <div class="no-print">
+      <%- include('partials/_summary_cards') %>
+
+      <!-- Export Button -->
+      <div class="flex justify-end mb-4" id="exportBtnContainer">
+        <!-- Export PDF button will be added here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Print Header -->
+    <div class="hidden print:block mb-8 print-header">
+      <h1 class="text-3xl font-bold text-center">FLL Competition Schedule</h1>
+      <h2 class="text-xl font-medium text-center mt-2">Robot Game Tables</h2>
+      <p class="text-center text-gray-600 mt-2">
+        Generated: <%= new Date().toLocaleDateString() %>
+      </p>
+      <p class="text-center text-gray-600 mt-1">
+        Table volunteers should verify team numbers and ensure teams are ready
+        before each match.
+      </p>
+      <div class="text-xs max-w-lg mx-auto mt-3 px-4">
+        <p class="font-bold mb-1">Table Instructions:</p>
+        <ul class="list-disc ml-4 mb-2">
+          <li>Teams should arrive 5 minutes before their scheduled time</li>
+          <li>Verify team numbers against the schedule</li>
+          <li>Allow teams to set up their robots during the buffer time</li>
+          <li>
+            <span class="text-blue-600 font-bold">Robot Game</span>: Standard
+            match (2:30 min match time)
+          </li>
+          <li>
+            <span class="text-teal-600 font-bold">Practice Run</span>: Allow for
+            adjustments and coaching
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tables Content -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <% schedule.tableRuns.forEach((table, tableIndex) => { %>
+        <div class="bg-gray-50 rounded-lg p-4 table-schedule">
+          <h3 class="text-lg font-medium mb-4">Table <%= tableIndex + 1 %></h3>
+          <%- include('partials/_table_schedule', { table }) %>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- include footer -->
+<%- include('include/_footer') %>
+
+<!-- PDF Export Script -->
+<script src="/js/export-pdf.js"></script>
