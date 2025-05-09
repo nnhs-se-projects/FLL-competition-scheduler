@@ -29,7 +29,7 @@ connectDB();
 
 // Create Express application
 const app = express();
-
+//finished aut
 // Set up middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
