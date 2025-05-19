@@ -19,7 +19,6 @@ The scheduler:
 
 - **Windows**: Windows 10 or later
 - **macOS**: macOS 11 Big Sur or later
-- **Linux/Raspberry Pi OS**: Raspberry Pi OS Bullseye or later
 
 ### Prerequisites
 
@@ -72,48 +71,6 @@ The scheduler:
 
    ```
    brew services start mongodb-community@6.0
-   ```
-
-4. Clone the repository:
-
-   ```
-   git clone https://github.com/yourusername/fll-competition-scheduler.git
-   cd fll-competition-scheduler
-   ```
-
-5. Install dependencies:
-
-   ```
-   npm install
-   ```
-
-6. Run the setup script:
-   ```
-   npm run setup
-   ```
-
-### Raspberry Pi OS
-
-1. Update your system:
-
-   ```
-   sudo apt update
-   sudo apt upgrade
-   ```
-
-2. Install Node.js:
-
-   ```
-   curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-   sudo apt install -y nodejs
-   ```
-
-3. Install MongoDB:
-
-   ```
-   sudo apt install -y mongodb
-   sudo systemctl enable mongodb
-   sudo systemctl start mongodb
    ```
 
 4. Clone the repository:
@@ -335,6 +292,15 @@ fll-competition-scheduler/
   }
 }
 ```
+## AI-Assisted Scheduling (Gemini API Integration)
+
+To enhance flexibility and reduce manual fine-tuning, the FLL Competition Scheduler integrates with the **Gemini API**—a generative AI system that interprets natural language constraints and guides the scheduling algorithm accordingly.
+
+#### How It Works
+
+1. **Natural Language Input**: The user enters optional preferences (e.g., “spread out judging sessions,” “schedule lunch near the midpoint”).
+2. **Prompt Generation**: `aiScheduler.js` transforms this input and the current competition parameters into a Gemini-compatible prompt written in plaintext which you can edit.
+3. **Gemini Response Parsing**: The Gemini API returns JSON or structured text with a completed schedule.
 
 ## Product Backlog
 
