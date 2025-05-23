@@ -9,9 +9,8 @@
 import express from "express";
 const route = express.Router();
 
-// Google OAuth client ID
-const CLIENT_ID =
-  "1022838194773-p8g5ac0qr11mfko61qurgnqdb9jitpjf.apps.googleusercontent.com";
+// Google OAuth client ID from environment variables
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 // Import Google Auth Library
 import { OAuth2Client } from "google-auth-library";
@@ -32,7 +31,7 @@ async function verify(token) {
 }
 
 route.get("/", (req, res) => {
-  res.render("auth");
+  res.render("auth", { googleClientId: CLIENT_ID });
 });
 
 route.post("/", async (req, res) => {
