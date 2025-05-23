@@ -9,9 +9,6 @@
 import express from "express";
 const route = express.Router();
 
-// Google OAuth client ID from environment variables
-const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-
 // Import Google Auth Library
 import { OAuth2Client } from "google-auth-library";
 const client = new OAuth2Client();
@@ -24,20 +21,19 @@ const client = new OAuth2Client();
 async function verify(token) {
   const ticket = await client.verifyIdToken({
     idToken: token,
-    audience: CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
+    audience: process.env.GOOGLE_CLIENT_ID, // Access environment variable directly
   });
   const payload = ticket.getPayload();
   return payload;
 }
 
 route.get("/", (req, res) => {
-  res.render("auth", { googleClientId: CLIENT_ID });
+  const googleClientId = process.env.GOOGLE_CLIENT_ID;
+  res.render("auth", { googleClientId });
 });
 
 route.post("/", async (req, res) => {
-  const userPayload = await verify(req.body.credential);
-  req.session.user = userPayload;
-  req.session.email = userPayload.email;
+  req.session.email = await verify(req.body.credential);
   res.status(201).json({ redirectUrl: "/overview" });
 });
 

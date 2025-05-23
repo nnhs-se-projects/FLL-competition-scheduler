@@ -4,11 +4,14 @@
  * This file contains the Express server configuration for the FLL Competition Scheduler.
  */
 
+// Load environment variables first
+import dotenv from "dotenv";
+dotenv.config();
+
 // Import required modules
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import dotenv from "dotenv";
 import session from "express-session";
 
 // Import database connection
@@ -20,9 +23,6 @@ import authRoutes from "./routes/auth.js";
 
 // Import admin user check
 import { isAdmin } from "./models/adminUsers.js";
-
-// Load environment variables
-dotenv.config();
 
 // Connect to the database
 connectDB();
